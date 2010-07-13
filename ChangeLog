@@ -1,0 +1,601 @@
+2010-07-13  Hilko Bengen  <bengen@debian.org>
+
+	There is no perl/Hivex.c.
+
+	Work with local gnulib
+
+2010-07-12  Richard Jones  <rjones@redhat.com>
+
+	Don't try to process junk after a string value as UTF-16.
+	Thanks to Hilko Bengen for characterizing the issue and
+	providing an initial version of this patch.
+
+2010-07-12  Hilko Bengen  <bengen@hilluzination.de>
+
+	Call iconv_close along error path out of function.
+
+2010-07-12  Richard Jones  <rjones@redhat.com>
+
+	perl: Fix generated XS code for value_dword binding.
+	Thanks to Hilko Bengen for spotting the problem.
+
+2010-07-08  Conrad Meyer  <cemeyer@cs.washington.edu>
+
+	Add hivex_set_value API call, and ocaml and perl bindings, and tests.
+
+2010-06-13  Richard Jones  <rjones@redhat.com>
+
+	hivex_value_type: Returns -1 on error.  Fix documentation.
+
+2010-05-13  Richard Jones  <rjones@redhat.com>
+
+	Include a test for regimport of values containing backslash chars.
+
+2010-04-30  Richard Jones  <rjones@redhat.com>
+
+	regedit: Fix documentation for CurrentControlSet (thanks Yuval Kashtan).
+
+2010-04-28  Richard Jones  <rjones@redhat.com>
+
+	Version 1.2.2.
+
+	regedit: Add implicit nul-termination when importing strings.
+	When you import a string value like:
+	  "Foo"="Bar"
+	using Windows regedit program, implicit nul-termination is added
+	to the value (not the key), so what is stored in the value would
+	be something like:
+	  hex(1):42,00,61,00,72,00,00,00
+	where two of the trailing zero bytes come from the implicit
+	terminator.  This corrects the reg_import function so it works
+	the same way.
+
+2010-04-20  Richard Jones  <rjones@redhat.com>
+
+	Remove checks for Test::Pod and Test::Pod::Coverage.
+	Although these modules are optionally used by the Perl tests,
+	they aren't necessary and won't break the build if they are not
+	there.  These modules aren't available in RHEL 5.  Therefore
+	remove these checks.
+
+2010-04-03  Richard Jones  <rjones@redhat.com>
+
+	Add a linker script to limit visibility to exported symbols.
+
+2010-04-03  TJ  <linux@tjworld.net>
+
+	Remove explicit dependency on ncurses.
+
+	Spelling: reencode -> re-encode.
+
+2010-04-02  TJ  <linux@tjworld.net>
+
+	Add CLEANFILES rules.
+
+2010-04-01  Yulia  <ypoyarko@redhat.com>
+
+	New Russian translation (RHBZ#578347).
+
+2010-03-30  Richard Jones  <rjones@redhat.com>
+
+	Update PO files.
+
+	Add maintainer rule for updating the website.
+
+	hivexml: Fix path so HTML documentation is generated correctly.
+
+	Prepare for version 1.2.1.
+
+	hivexregedit: Low-level tool for merging and export in regedit format.
+
+	Win::Hivex::Regedit module for importing and exporting regedit format files.
+
+	hivexsh: '-f' option takes an argument (found by Marko Myllynen).
+
+2010-03-29  Richard Jones  <rjones@redhat.com>
+
+	Zero all new block allocations.
+	Make sure all new block allocations (from allocate_block)
+	are zeroed.  It can happen that junk from previous hive pages
+	can end up in new block allocations, if the hive previously
+	shrank.
+
+	(Thanks to Marko Myllynen for finding an example where this
+	happened).
+
+	Increase HIVEX_MAX_VALUES from 1000 to 10000.
+	I was sent a genuine Windows XP hive by Marko Myllynen which
+	had a key with > 1000 values attached.
+
+2010-03-26  Richard Jones  <rjones@redhat.com>
+
+	Increase HIVEX_MAX_SUBKEYS to 15000.
+	Windows 7 registry has a hive key which contains 11908 subkeys,
+	larger than the existing limit (10000).  The key is:
+	  HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\SideBySide\Winners
+
+	hivex: Add debugging message when returning ERANGE error.
+
+	hivexsh: Fix building of HTML-format manpages.
+
+2010-03-25  Richard Jones  <rjones@redhat.com>
+
+	perl: Fix $h->value_value method when returning an empty value.
+	Previously this didn't correctly return an empty registry
+	value.  In this case the length argument to newSVpv would
+	be 0 which tells Perl to try to calculate the length (we
+	want newSVpvn instead).
+
+	Fix generation of po/POTFILES.in.
+	Contains some obsolete code copied in from libguestfs, and we
+	need to exclude Perl 'blib' files.
+
+	perl: Small fix to 006-pod-coverage test.
+	Some code copied over from libguestfs, fixed.
+
+	perl: Fix $h->value_type and $h->value_value methods.
+	These were passing the type & len arguments the wrong way round
+	to the C function, resulting in data corruption in the returned
+	values.
+
+2010-03-08  Richard Jones  <rjones@redhat.com>
+
+	Fix documentation for Win::Hivex->open
+
+2010-03-01  Richard Jones  <rjones@redhat.com>
+
+	RHEL 5: Fixes for old version of OCaml in EPEL 5.
+
+	Prepare for version 1.2.0.
+	Fix hivexsh_SOURCES.
+
+	Update PO files.
+
+2010-03-01  Daniel Cabrera  <logan@fedoraproject.org>
+
+	Update Spanish translations (RHBZ#569178).
+
+2010-03-01  Richard Jones  <rjones@redhat.com>
+
+	Update PO files.
+
+2010-03-01  Piotr Drąg  <piotrdrag@gmail.com>
+
+	Update Polish translations (RHBZ#502533).
+
+2010-02-26  Richard W.M. Jones  <rjones@redhat.com>
+
+	NO Python bindings - ran out of time.
+	This commit disables parts of the build related to Python
+	and notes in the README that we didn't have time to finish
+	Python bindings.
+
+	generator: Perl bindings.
+	This also adds a small test suite for the Perl bindings.
+
+	generator: Clarify LGPLv2 boilerplate.
+
+	More documentation in README file.
+
+	hivexsh: Fix compilation on 32 bit machines.
+
+2010-02-25  Richard Jones  <rjones@redhat.com>
+
+	Remove bogus msgstr from kn.po.
+
+2010-02-24  Richard Jones  <rjones@redhat.com>
+
+	generator: Add OCaml bindings.
+	Also we tighten up the definition of hivex_close (it disposes of handles)
+	and hivex_node_get_child (unusual "not found" non-error condition).
+
+	This also adds tests of the OCaml bindings.
+
+	Add build framework for OCaml, Perl, Python bindings.
+	(No bindings are actually built, this just adds the build, test
+	and generator framework for them).
+
+	configure: Comment out Ruby, Java, Haskell detection.
+	We will not be implementing bindings for Ruby, Java or Haskell
+	unless someone pitches in to do the work.  Therefore comment out
+	the code which detects these languages in the configure script.
+
+	(This leaves OCaml, Perl, Python, which we will be writing
+	bindings for).
+
+	Create separate toplevel directories for hivexsh and hivexml.
+
+	Rename hivex/ -> lib/
+
+	Move test images to images/ and add a large, generated test image.
+	Previously we had one minimal test image.  This was located in
+	hivex/t (a subdirectory of the main library).
+
+	This adds a large, procedurally generated test image.  Because
+	this needs to be built using hivex code, and because subdirectories
+	are built before the parent directory by automake, we have to
+	also move the directory location to a top-level directory called
+	images/.
+
+2010-02-24  Shankar Prasad  <svenkate@redhat.com>
+
+	Added Kannada translation (RHBZ#567860).
+
+2010-02-23  Richard Jones  <rjones@redhat.com>
+
+	hivex: Fix allocations that may move C heap buffer.
+	When heavily extending existing hive files, the malloc-allocated
+	in-memory copy of the hive may be moved when we reallocate it
+	(to increase its size).  However we didn't adjust existing
+	pointers to cope with this, so sometimes you could get a segfault.
+
+	This patch fixes the issue by adjusting pointers as necessary
+	after calling (directly or indirectly) to the allocate_block
+	function.
+
+	With this patch I was able to allocate 10,000's of blocks in
+	a deeply nested hive structure without any problems being reported
+	by valgrind.
+
+	Link gnulib in to the hivex library, not end-user programs.
+	Gnulib should be statically linked into the hivex library, so
+	it gets included into end-user programs automatically.  Otherwise
+	end-user programs would have to link explicitly with gnulib.
+
+2010-02-22  Richard Jones  <rjones@redhat.com>
+
+	generator: More minor formatting adjustments to POD documentation.
+
+	generator: Minor adjustments to the C POD documentation.
+
+	Add a generator for generating bindings to other languages.
+	At the moment the generator just generates the C header file
+	and C POD documentation.  This just so we can compare the existing
+	hand-written code with the generated code to make sure that our
+	description of the API within the generator is correct.
+
+	Remove bogus reference to src/ directory which no longer exists.
+
+	Update copyright notice and change libguestfs to hivex.
+
+	Version 1.1.2
+
+	Install hivex.h in $includedir.
+
+	Version 1.1.1.
+	Also some minor fixes to the build system.
+
+2010-02-19  Richard Jones  <rjones@redhat.com>
+
+	Move README, LICENSE files to the toplevel directory.
+
+	gnulib: Remove some unused modules.
+
+	Version 1.1.0
+
+	po: Import pofiles and various build fixes.
+
+	Sort and complete m4/.gitignore file.
+
+	Add gettext.h, omitted from earlier import.
+
+	gnulib: Include xstrtol, xstrtoll modules.
+	These were omitted from the earlier code import from libguestfs.
+
+	Add html/ directory, include POD CSS.
+
+	hivexsh: Print hex bytes >= 0x80 correctly.
+	These were being interpreted as signed chars, and thus printed
+	as "ffffff80" etc.
+
+	Remove some unused variables.
+	Since we have to compile with -Wno-unused-variables, we don't
+	spot unused variables in code.  I found these by compiling the
+	code in Ubuntu.
+
+	Add scripts to EXTRA_DIST.
+
+	hivex: example6: Don't double backslashes.
+
+	hivex: example6: Hypothetical addition of keys for viostor.
+
+	hivex: Fix handling of inline VKs.
+
+	hivexsh: Set correct type for 'expandstring' values.
+
+	hivex: Documentation and cleanups.
+
+	hivex: Make limits into macros.
+
+	hivexsh: Remove unused variable.
+	This removes an unused variable left over by
+	commit ab608f3948d903af64e814b2e67949a1a71d93a4.
+
+	hivex: Complete the implementation of adding child nodes.
+
+	hivex: More debugging around nk 'unknown2' field.
+
+	hivex: Check hash fields in lf/lh records.
+
+	hivexsh: del command: Fix error message.
+
+	hivexsh: lsval: Remove stray quotation mark.
+
+	hivexsh: cd command: fix error handling
+	The error behaviour of hivex_node_get_child is subtle, so the 'cd'
+	command wouldn't always report errors correctly.  This fixes it.
+
+	hivex: allocate_block should update valid block bitmap.
+	The internal allocate_block() function wasn't updating the bitmap,
+	so if you revisited a block which you had allocated in the same
+	session, you could get an EFAULT error.
+
+	hivex: More debug messages.
+
+	hivex: Documentation update.
+	ntreg_lf_record can have id "lf" (old-style hashes) or "lh" (new-
+	style hashes).
+
+	hivex: Some missing le32toh endianness conversions.
+
+	hivexsh: Document some peculiarities of the "cd" command.
+
+	hivex: Implement deleting child nodes.
+
+	hivex: Add flags argument to internal get_children() function.
+	When we later call get_children to visit the intermediate
+	ri/lf/lh records, we have already deleted the subkey nk-records,
+	so checking that those nk-records are still valid is not very
+	helpful.
+
+	This commit adds a flag to turn these checks off.
+
+	hivex: Don't die on valid registries which have bad declared data lengths.
+	Some apparently valid registries contain value data length
+	declarations which exceed the allocated block size for the
+	value.
+
+	Previously the code would return EFAULT for such registries.
+	However since these appear to be otherwise valid registries,
+	turn this into a warning and just use the allocated block size
+	as the data length (in other words, truncate the value).
+
+	hivex: Minimal registry example.
+	This is the smallest registry you can make and still have it
+	load correctly in Windows regedit.
+
+	hivexsh: Add 'setval' and 'commit' commands.
+	This adds the 'setval' and 'commit' commands to the hivex shell.
+
+	Also adds some example scripts showing use of these.
+
+	hivex: Begin implementation of writing to hives.
+	This implements hivex_node_set_values which is used to
+	delete the (key, value) pairs at a node and optionally
+	replace them with a new set.
+
+	This also implements hivex_commit which is used to commit
+	changes to hives back to disk.
+
+	hivex: Add HIVEX_OPEN_WRITE flag to allow hive to be opened for writing.
+	If this flag is omitted (as in the case for all existing callers)
+	then the hive is still opened read-only.
+
+	We add a 'writable' flag to the hive handle, and we change the way
+	that the hive file (data) is stored.  The data is still mmapped if
+	the file is opened read-only, since that is more efficient and allows
+	us to handle larger hives.  However if we need to write to the file
+	then we have to read it all into memory, since if we had to extend the
+	file we need to realloc that data.
+
+	Note the manpage section L</WRITING TO HIVE FILES> comes in a later
+	commit.
+
+	Tools for analyzing and reverse engineering hive files.
+	This commit is not of general interest.  It contains the tools which
+	I used to reverse engineer the hive format and to test changes.
+	Keeping these with the rest of the code is useful in case in future
+	we encounter a hive file that we fail to modify.
+
+	Note that the tools are not compiled by default.  You have to compile
+	each explicitly with:
+
+	  make -C hivex/tools <toolname>.opt
+
+	You will also need ocaml-extlib-devel and ocaml-bitstring-devel.
+
+	hivexsh: Change some exit(1) -> exit(EXIT_FAILURE)
+
+	hivexsh: Only print final \n when interactive.
+	When hivexsh was called non-interactively, it would print an
+	annoying extra line.  Only print this line if we are being
+	used interactively.
+
+	hivexsh: Change handling of prompt argument to rl_gets()
+	Make the result of isatty into a global variable (is_tty).
+
+	Change the rl_gets() function so it takes the prompt string
+	instead of a "display prompt?" flag.  rl_gets() then consults
+	the global to find out if it should display the prompt at all.
+
+	Document that this flag is clear for default keys.
+
+	Misc documentation and gitignore update.
+
+	Move htole*/le*toh macros into a separate header file.
+	This allows us to reuse these macros in hivexsh later.
+
+	hivex: Reimplement hivexget as a simple shell script.
+	hivexget is currently a large C program.  Now that we have hivexsh
+	(the shell) we can reimplement hivexget as a simple bash script that
+	calls out to hivexsh.
+
+	hivex: Add 'hivexsh' program (shell for navigating registry hives).
+
+	Set locale in C programs so l10n works (RHBZ#559962).
+	This commit adds the calls to setlocale &c to all of the current
+	C programs.
+
+	It also adds l10n support to hivexget and hivexml which lacked them
+	previously.
+
+	To test this, try:
+
+	LANG=pa_IN.UTF-8 guestfish --cmd-help
+
+	(You can only do this test after installing the package, or at
+	least the 'pa.mo' mo-file in the correct place).
+
+	hivex: Const-correctness fix on header_checksum (thanks Jim Meyering).
+
+	hivex: Update some previously unknown nk-record fields.
+	Update these fields with what we found out from reverse engineering
+	the file.  Also bring the unknownX field names into line with
+	visualizer.ml.
+
+	hivex: Fix calculation of block size for vk data blocks.
+
+	hivex: Display incorrect block size as unsigned in an error message.
+
+	hivex: display bad block offset in hex
+
+	hivex: hive type in vk-record is an unsigned 32 bit int
+
+	hivex: Add missing le32toh conversion around field access.
+	This was missing.  It only worked because we test on a little
+	endian platform.
+
+	hivex: Clarify some more fields.
+	Taken from sentinelchicken.com documentation.
+
+	hivex: Modify children/values functions to return intermediate blocks.
+	Modify the functions that return child subnodes and values so they
+	can also be used to return a list of the intermediate blocks.  This
+	is so we can delete those intermediate blocks (in a later commit).
+
+	We also introduce an offset_list structure which is used for collecting
+	lists of offsets, ie. lists of nodes, values or blocks.
+
+	Note that this commit should not change the semantics of the code.
+
+	hivex: Add value_any callback to the visitor.
+	The visitor currently contains lots of value_* callbacks, such as
+	value_string which is called back when the value has type string.
+
+	This is fine but it makes it complicated to deal with the case where
+	you just want to see 'a value', and don't care about its type.
+
+	The value_any callback allows visitors to see values generically.
+
+	hivex: Move header checksum code into a function.
+	This function can be reused later.
+
+	hivex: page 'offset_next' field is really 'page_size'.
+	The documentation, as usual, is contradictory.  However this
+	field is definitely the page size in all observed registries.
+	Furthermore the following field marked 'unknown' is always
+	zero, although this contradicts what the sentinelchicken.com
+	paper says.
+
+	hivex: Collect more statistics about registries.
+
+	hivex: Store filename in hive handle.
+
+	hivex: Various improvements in header parsing, thanks to better documentation.
+
+	hivex: Print header fields.  Print all offsets in hex (in debug output).
+
+	hivex: Reenable checksum calculations, but don't check result.
+
+	hivex: Update documentation.
+
+	hivex: Send all debug messages to stderr.
+
+	hivex: Remove stray debugging message.
+
+	hivex: Documentation: Add environment variables section.
+
+	hivex: Whitespace change.
+
+	hivex: Move STR* macros into C file.
+	Don't pollute the public header file with these macros.
+
+	hivex: Small updates to the documentation.
+
+2010-02-19  Jim Meyering  <meyering@redhat.com>
+
+	maint: use EXIT_* symbol (not constant, 2) to indicate key/path not found
+	* hivex/hivexget.c (EXIT_NOT_FOUND): Define.
+	(main): Use exit (EXIT_NOT_FOUND), not "exit (2)".
+
+	maint: use EXIT_SUCCESS and EXIT_FAILURE, not 0 and 1 to exit
+	Convert all uses automatically, via these two commands:
+	git grep -l '\<exit *(1)' \
+	  | grep -vEf .x-sc_prohibit_magic_number_exit \
+	  | xargs --no-run-if-empty \
+	    perl -pi -e 's/\b(exit ?)\(1\)/$1(EXIT_FAILURE)/'
+	git grep -l '\<exit *(0)' \
+	  | grep -vEf .x-sc_prohibit_magic_number_exit \
+	  | xargs --no-run-if-empty \
+	  perl -pi -e 's/\b(exit ?)\(0\)/$1(EXIT_SUCCESS)/'
+	* .x-sc_prohibit_magic_number_exit: New file.
+
+	Edit (RWMJ): Don't change Java code.
+
+	use STREQ, not strcmp: part 1
+	git grep -l 'strcmp *([^=]*== *0'|xargs \
+	  perl -pi -e 's/\bstrcmp( *\(.*?\)) *== *0/STREQ$1/g'
+
+	change strncmp() == 0 to STREQLEN()
+	git grep -l 'strncmp *([^=]*== *0'|xargs \
+	  perl -pi -e 's/\bstrncmp( *\(.*?\)) *== *0\b/STREQLEN$1/g'
+
+	convert uses of strcasecmp to STRCASEEQ
+	git grep -l 'strcasecmp *([^=]*== *0'| xargs \
+	  perl -pi -e 's/\bstrcasecmp( *\(.*?\)) *== *0/STRCASEEQ$1/'
+
+	define STREQ, STRNEQ, STREQLEN, STRCASEQ, etc.
+	* src/guestfs.h: Define STREQ and company.
+	* daemon/daemon.h: Likewise.
+	* hivex/hivex.h: Likewise.
+
+	indent with spaces, not TABs
+	* HACKING: Expand indentation TABs.
+	* configure.ac: Likewise.
+	* daemon/daemon.h: Likewise.
+	* daemon/guestfsd.c: Likewise.
+	* fuse/guestmount.c: Likewise.
+	* hivex/LICENSE: Likewise.
+	* src/generator.ml: Likewise.
+	* tools/virt-win-reg: Likewise.
+
+	placate 'make syntax-check'
+	* hivex/hivex.c: Remove unused "#include <assert.h>".
+
+2010-02-19  Jim Meyering  <jim@meyering.net>
+
+	hivex: fail upon integer overflow
+	* hivex/hivex.c (windows_utf16_to_utf8): Avoid overflow and a
+	potential infloop.
+
+2010-02-19  Richard Jones  <rjones@redhat.com>
+
+	hivex: Check unchecked calloc (Jim Meyering).
+
+	Add HTML documentation to website.
+
+	Fix misspelling in previous commit.
+
+	RHEL 5: Also add le{16,64}toh functions
+
+	RHEL 5: Detect endianness functions and supply them.
+
+	Prepare for version 1.0.75.
+
+	Support for Windows Registry.
+	In hivex/:  This mini-library allows us to extract Windows
+	Registry binary files ("hives").
+
+	There are also two tools: hivexml converts a hive to a
+	self-describing XML format.  hivexget can be used to extract
+	single subkeys from a hive.
