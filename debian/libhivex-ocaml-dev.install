@@ -1,0 +1,4 @@
+usr/lib/ocaml/hivex/META
+usr/lib/ocaml/hivex/*.a
+usr/lib/ocaml/hivex/*.cm*
+usr/lib/ocaml/hivex/*.ml*

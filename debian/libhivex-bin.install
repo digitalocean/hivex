@@ -1,0 +1,10 @@
+usr/bin/hivexsh
+usr/share/man/man1/hivexsh.1
+
+usr/bin/hivexml 
+usr/share/man/man1/hivexml.1
+
+usr/bin/hivexget
+usr/share/man/man1/hivexget.1
+
+usr/share/locale

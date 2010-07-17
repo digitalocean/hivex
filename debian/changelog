@@ -1,0 +1,5 @@
+hivex (1.2.2+git20100712-1) unstable; urgency=low
+
+  * Initial release (Closes: #573070)
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 17 Jul 2010 16:12:37 +0200

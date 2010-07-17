@@ -1,0 +1,13 @@
+libhivex0
+libhivex-dev
+libhivex-dbg
+libhivex-doc
+libhivex-bin
+libhivex-perl
+libhivex-ocaml
+libhivex-ocaml-dev
+files
+*.debhelper.log
+*.debhelper
+*.substvars
+*~

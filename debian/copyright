@@ -1,0 +1,49 @@
+This work was packaged for Debian by:
+
+    Hilko Bengen <bengen@debian.org>
+
+It was downloaded from:
+
+    <http://libguestfs.org/>, <git://git.annexia.org/git/hivex.git>
+
+Upstream Author(s):
+
+    Richard W.M. Jones <rjones@redhat.com>
+
+Copyright:
+
+    Copyright (C) 2009-2010 Red Hat Inc.
+
+License (libhivex):
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation;
+    version 2.1 of the License.
+
+License (Perl modules, OCaml bindings):
+
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2 of the License, or (at your option) any later version.
+
+License (hivexget, hivexsh, hivexregedit, hivexml)
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+The Debian packaging is:
+
+    Copyright (C) 2010 Hilko Bengen <bengen@debian.org>
+
+and is licensed under the GNU General Public License version 2 or
+later.
+
+On Debian systems, the complete text of the GNU Lesser General Public
+License can be found in "/usr/share/common-licenses/LGPL-2".
+
+On Debian systems, the complete text of the GNU General Public License
+version 2 can be found in "/usr/share/common-licenses/GPL-2".

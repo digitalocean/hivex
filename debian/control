@@ -1,0 +1,94 @@
+Source: hivex
+Section: libs
+Priority: extra
+Maintainer: Hilko Bengen <bengen@debian.org>
+Build-Depends: debhelper (>= 7.0.50~),
+ autotools-dev,
+ libio-stringy-perl,
+ ocaml-findlib, dh-ocaml (>= 0.9~), ocaml-nox (>= 3.11.1-3~) 
+Standards-Version: 3.8.4
+Homepage: http://libguestfs.org/
+
+Package: libhivex0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: library for reading and writing Windows Registry hives
+ libhivex is a self-contained library for reading and writing Windows
+ Registry "hive" binary files.
+ .
+ Unlike many other tools in this area, it doesn't use the textual .REG
+ format for output, because parsing that is as much trouble as parsing
+ the original binary format. Instead it makes the file available
+ through a C API, or there is a separate program to export the hive as
+ XML.
+
+Package: libhivex-dev
+Section: libdevel
+Architecture: any
+Depends: ${misc:Depends}, libhivex0 (= ${binary:Version})
+Description: library for reading and writing Windows Registry hives
+ libhivex is a self-contained library for reading and writing Windows
+ Registry "hive" binary files.
+ .
+ This package provides static libraries and header files.
+
+Package: libhivex0-dbg
+Section: debug
+Architecture: any
+Depends: libhivex0, ${shlibs:Depends}, ${misc:Depends}
+Description: library for reading and writing Windows Registry hives
+ libhivex is a self-contained library for reading and writing Windows
+ Registry "hive" binary files.
+ .
+ This package contains debug symbols for libhivex.
+
+Package: libhivex-bin
+Section: otherosfs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: utilities for reading and writing Windows Registry hives
+ libhivex is a self-contained library for reading and writing Windows
+ Registry "hive" binary files.
+ .
+ This package contains a few command line programs that utilize libhivex.
+
+Package: libwin-hivex-perl
+Section: perl
+Architecture: any
+Depends: ${perl:Depends}, ${shlibs:Depends}, ${misc:Depends}
+Description: Perl bindings to hivex
+ libhivex is a self-contained library for reading and writing Windows
+ Registry "hive" binary files.
+ .
+ This package contains the Perl bindings to libhivex and hivexregedit,
+ a low-level tool for manipulating hives using a text format as
+ understood and produced by regedit.exe.
+
+Package: libhivex-ocaml
+Architecture: any
+Section: ocaml
+Depends: ${ocaml:Depends}, ${shlibs:Depends}, ${misc:Depends}
+Provides: ${ocaml:Provides}
+Description: OCaml bindings for hivex -- runtime files
+ OCaml bindings for libhivex, a library for reading and writing
+ Windows Registry "hive" binary files.
+ .
+ This package contains only the shared runtime stub libraries.
+ 
+Package: libhivex-ocaml-dev
+Architecture: any
+Section: ocaml
+Depends: ${ocaml:Depends}, libhivex-dev, ${shlibs:Depends},  ${misc:Depends}
+Provides: ${ocaml:Provides}
+Description: OCaml bindings for hivex -- developtment files
+ OCaml bindings for libhivex, a library for reading and writing
+ Windows Registry "hive" binary files.
+ .
+ This package contains all the development stuff you need to use
+ libhivex-ocaml in your programs.
+
+# Package: libhivex-doc
+# Architecture: all
+# Description: documentation for hivex
+# <insert long description, indented with spaces>
