@@ -18,4 +18,6 @@
 
 set -e
 
+LD_LIBRARY_PATH=../lib/.libs
+export LD_LIBRARY_PATH
 make -f Makefile-pl test "$@"
