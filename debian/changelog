@@ -1,3 +1,11 @@
+hivex (1.2.2+git20100712-2) unstable; urgency=low
+
+  * Added missing build dependencies. How embarrassing. Closes: #589546
+  * Reverted unnecessary patch to perl/run-perl-tests script
+  * Added gnulib to debian/copyright
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 19 Jul 2010 12:47:34 +0200
+
 hivex (1.2.2+git20100712-1) unstable; urgency=low
 
   * Initial release (Closes: #573070)
