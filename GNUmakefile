@@ -49,7 +49,7 @@ include $(srcdir)/maint.mk
 
 # Allow cfg.mk to override these.
 _build-aux ?= build-aux
-_autoreconf ?= autoreconf -v
+_autoreconf ?= autoreconf
 
 # Ensure that $(VERSION) is up to date for dist-related targets, but not
 # for others: rerunning autoreconf and recompiling everything isn't cheap.
@@ -60,10 +60,8 @@ ifeq ($(_have-git-version-gen)0,yes$(MAKELEVEL))
     $(filter maintainer-% dist% alpha beta major,$(MAKECMDGOALS)))
   _is-install-target ?= $(filter-out %check, $(filter install%,$(MAKECMDGOALS)))
   ifneq (,$(_is-dist-target)$(_is-install-target))
-    _curr-ver := $(shell cd $(srcdir)				\
-                   && $(_build-aux)/git-version-gen		\
-                         .tarball-version			\
-                         $(git-version-gen-tag-sed-script))
+    _curr-ver := $(shell cd $(srcdir) \
+                   && $(_build-aux)/git-version-gen .tarball-version)
     ifneq ($(_curr-ver),$(VERSION))
       ifeq ($(_curr-ver),UNKNOWN)
         $(info WARNING: unable to verify if $(VERSION) is the correct version)
@@ -80,8 +78,7 @@ ifeq ($(_have-git-version-gen)0,yes$(MAKELEVEL))
           $(info run '$(MAKE) _version' to fix it)
         else
           $(info INFO: running autoreconf for new version string: $(_curr-ver))
-GNUmakefile: _version
-	touch GNUmakefile
+          _dummy := $(shell $(MAKE) $(AM_MAKEFLAGS) _version)
         endif
       endif
     endif
@@ -91,7 +88,6 @@ endif
 .PHONY: _version
 _version:
 	cd $(srcdir) && rm -rf autom4te.cache .version && $(_autoreconf)
-	$(MAKE) $(AM_MAKEFLAGS) Makefile
 
 else
 

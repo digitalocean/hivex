@@ -50,8 +50,6 @@
 #endif
 
 
-/* The definitions of _GL_FUNCDECL_RPL etc. are copied here.  */
-
 /* The definition of _GL_ARG_NONNULL is copied here.  */
 
 /* The definition of _GL_WARN_ON_USE is copied here.  */
@@ -59,21 +57,18 @@
 
 /* Declare overridden functions.  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if @GNULIB_FCNTL@
 # if @REPLACE_FCNTL@
-#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
-#   undef fcntl
-#   define fcntl rpl_fcntl
-#  endif
-_GL_FUNCDECL_RPL (fcntl, int, (int fd, int action, ...));
-_GL_CXXALIAS_RPL (fcntl, int, (int fd, int action, ...));
-# else
-#  if !@HAVE_FCNTL@
-_GL_FUNCDECL_SYS (fcntl, int, (int fd, int action, ...));
-#  endif
-_GL_CXXALIAS_SYS (fcntl, int, (int fd, int action, ...));
+#  undef fcntl
+#  define fcntl rpl_fcntl
 # endif
-_GL_CXXALIASWARN (fcntl);
+# if !@HAVE_FCNTL@ || @REPLACE_FCNTL@
+extern int fcntl (int fd, int action, ...);
+# endif
 #elif defined GNULIB_POSIXCHECK
 # undef fcntl
 # if HAVE_RAW_DECL_FCNTL
@@ -84,17 +79,10 @@ _GL_WARN_ON_USE (fcntl, "fcntl is not always POSIX compliant - "
 
 #if @GNULIB_OPEN@
 # if @REPLACE_OPEN@
-#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
-#   undef open
-#   define open rpl_open
-#  endif
-_GL_FUNCDECL_RPL (open, int, (const char *filename, int flags, ...)
-                             _GL_ARG_NONNULL ((1)));
-_GL_CXXALIAS_RPL (open, int, (const char *filename, int flags, ...));
-# else
-_GL_CXXALIAS_SYS (open, int, (const char *filename, int flags, ...));
+#  undef open
+#  define open rpl_open
+extern int open (const char *filename, int flags, ...) _GL_ARG_NONNULL ((1));
 # endif
-_GL_CXXALIASWARN (open);
 #elif defined GNULIB_POSIXCHECK
 # undef open
 /* Assume open is always declared.  */
@@ -104,25 +92,13 @@ _GL_WARN_ON_USE (open, "open is not always POSIX compliant - "
 
 #if @GNULIB_OPENAT@
 # if @REPLACE_OPENAT@
-#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
-#   undef openat
-#   define openat rpl_openat
-#  endif
-_GL_FUNCDECL_RPL (openat, int,
-                  (int fd, char const *file, int flags, /* mode_t mode */ ...)
-                  _GL_ARG_NONNULL ((2)));
-_GL_CXXALIAS_RPL (openat, int,
-                  (int fd, char const *file, int flags, /* mode_t mode */ ...));
-# else
-#  if !@HAVE_OPENAT@
-_GL_FUNCDECL_SYS (openat, int,
-                  (int fd, char const *file, int flags, /* mode_t mode */ ...)
-                  _GL_ARG_NONNULL ((2)));
-#  endif
-_GL_CXXALIAS_SYS (openat, int,
-                  (int fd, char const *file, int flags, /* mode_t mode */ ...));
+#  undef openat
+#  define openat rpl_openat
 # endif
-_GL_CXXALIASWARN (openat);
+# if !@HAVE_OPENAT@ || @REPLACE_OPENAT@
+extern int openat (int fd, char const *file, int flags, /* mode_t mode */ ...)
+     _GL_ARG_NONNULL ((2));
+# endif
 #elif defined GNULIB_POSIXCHECK
 # undef openat
 # if HAVE_RAW_DECL_OPENAT
@@ -131,6 +107,9 @@ _GL_WARN_ON_USE (openat, "openat is not portable - "
 # endif
 #endif
 
+#ifdef __cplusplus
+}
+#endif
 
 /* Fix up the FD_* macros, only known to be missing on mingw.  */
 

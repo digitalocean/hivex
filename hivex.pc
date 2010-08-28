@@ -1,10 +1,10 @@
-prefix=/usr/local
+prefix=/usr
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib
 includedir=${prefix}/include
 
 Name: hivex
-Version: 1.2.2
+Version: 1.2.3
 Description: Read and write Windows Registry Hive files.
 Requires:
 Cflags:

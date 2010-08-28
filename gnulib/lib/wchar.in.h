@@ -75,22 +75,20 @@
 #ifndef _GL_WCHAR_H
 #define _GL_WCHAR_H
 
-/* The definitions of _GL_FUNCDECL_RPL etc. are copied here.  */
-
 /* The definition of _GL_ARG_NONNULL is copied here.  */
 
 /* The definition of _GL_WARN_ON_USE is copied here.  */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-/* Define wint_t and WEOF.  (Also done in wctype.in.h.)  */
+
+/* Define wint_t.  (Also done in wctype.in.h.)  */
 #if !@HAVE_WINT_T@ && !defined wint_t
 # define wint_t int
 # ifndef WEOF
 #  define WEOF -1
-# endif
-#else
-# ifndef WEOF
-#  define WEOF ((wint_t) -1)
 # endif
 #endif
 
@@ -109,19 +107,12 @@ typedef int rpl_mbstate_t;
 /* Convert a single-byte character to a wide character.  */
 #if @GNULIB_BTOWC@
 # if @REPLACE_BTOWC@
-#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
-#   undef btowc
-#   define btowc rpl_btowc
-#  endif
-_GL_FUNCDECL_RPL (btowc, wint_t, (int c));
-_GL_CXXALIAS_RPL (btowc, wint_t, (int c));
-# else
-#  if !@HAVE_BTOWC@
-_GL_FUNCDECL_SYS (btowc, wint_t, (int c));
-#  endif
-_GL_CXXALIAS_SYS (btowc, wint_t, (int c));
+#  undef btowc
+#  define btowc rpl_btowc
 # endif
-_GL_CXXALIASWARN (btowc);
+# if !@HAVE_BTOWC@ || @REPLACE_BTOWC@
+extern wint_t btowc (int c);
+# endif
 #elif defined GNULIB_POSIXCHECK
 # undef btowc
 # if HAVE_RAW_DECL_BTOWC
@@ -134,20 +125,13 @@ _GL_WARN_ON_USE (btowc, "btowc is unportable - "
 /* Convert a wide character to a single-byte character.  */
 #if @GNULIB_WCTOB@
 # if @REPLACE_WCTOB@
-#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
-#   undef wctob
-#   define wctob rpl_wctob
-#  endif
-_GL_FUNCDECL_RPL (wctob, int, (wint_t wc));
-_GL_CXXALIAS_RPL (wctob, int, (wint_t wc));
-# else
-#  if !defined wctob && !@HAVE_DECL_WCTOB@
-/* wctob is provided by gnulib, or wctob exists but is not declared.  */
-_GL_FUNCDECL_SYS (wctob, int, (wint_t wc));
-#  endif
-_GL_CXXALIAS_SYS (wctob, int, (wint_t wc));
+#  undef wctob
+#  define wctob rpl_wctob
 # endif
-_GL_CXXALIASWARN (wctob);
+# if (!defined wctob && !@HAVE_DECL_WCTOB@) || @REPLACE_WCTOB@
+/* wctob is provided by gnulib, or wctob exists but is not declared.  */
+extern int wctob (wint_t wc);
+# endif
 #elif defined GNULIB_POSIXCHECK
 # undef wctob
 # if HAVE_RAW_DECL_WCTOB
@@ -160,19 +144,12 @@ _GL_WARN_ON_USE (wctob, "wctob is unportable - "
 /* Test whether *PS is in the initial state.  */
 #if @GNULIB_MBSINIT@
 # if @REPLACE_MBSINIT@
-#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
-#   undef mbsinit
-#   define mbsinit rpl_mbsinit
-#  endif
-_GL_FUNCDECL_RPL (mbsinit, int, (const mbstate_t *ps));
-_GL_CXXALIAS_RPL (mbsinit, int, (const mbstate_t *ps));
-# else
-#  if !@HAVE_MBSINIT@
-_GL_FUNCDECL_SYS (mbsinit, int, (const mbstate_t *ps));
-#  endif
-_GL_CXXALIAS_SYS (mbsinit, int, (const mbstate_t *ps));
+#  undef mbsinit
+#  define mbsinit rpl_mbsinit
 # endif
-_GL_CXXALIASWARN (mbsinit);
+# if !@HAVE_MBSINIT@ || @REPLACE_MBSINIT@
+extern int mbsinit (const mbstate_t *ps);
+# endif
 #elif defined GNULIB_POSIXCHECK
 # undef mbsinit
 # if HAVE_RAW_DECL_MBSINIT
@@ -185,23 +162,12 @@ _GL_WARN_ON_USE (mbsinit, "mbsinit is unportable - "
 /* Convert a multibyte character to a wide character.  */
 #if @GNULIB_MBRTOWC@
 # if @REPLACE_MBRTOWC@
-#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
-#   undef mbrtowc
-#   define mbrtowc rpl_mbrtowc
-#  endif
-_GL_FUNCDECL_RPL (mbrtowc, size_t,
-                  (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps));
-_GL_CXXALIAS_RPL (mbrtowc, size_t,
-                  (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps));
-# else
-#  if !@HAVE_MBRTOWC@
-_GL_FUNCDECL_SYS (mbrtowc, size_t,
-                  (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps));
-#  endif
-_GL_CXXALIAS_SYS (mbrtowc, size_t,
-                  (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps));
+#  undef mbrtowc
+#  define mbrtowc rpl_mbrtowc
 # endif
-_GL_CXXALIASWARN (mbrtowc);
+# if !@HAVE_MBRTOWC@ || @REPLACE_MBRTOWC@
+extern size_t mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps);
+# endif
 #elif defined GNULIB_POSIXCHECK
 # undef mbrtowc
 # if HAVE_RAW_DECL_MBRTOWC
@@ -214,19 +180,12 @@ _GL_WARN_ON_USE (mbrtowc, "mbrtowc is unportable - "
 /* Recognize a multibyte character.  */
 #if @GNULIB_MBRLEN@
 # if @REPLACE_MBRLEN@
-#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
-#   undef mbrlen
-#   define mbrlen rpl_mbrlen
-#  endif
-_GL_FUNCDECL_RPL (mbrlen, size_t, (const char *s, size_t n, mbstate_t *ps));
-_GL_CXXALIAS_RPL (mbrlen, size_t, (const char *s, size_t n, mbstate_t *ps));
-# else
-#  if !@HAVE_MBRLEN@
-_GL_FUNCDECL_SYS (mbrlen, size_t, (const char *s, size_t n, mbstate_t *ps));
-#  endif
-_GL_CXXALIAS_SYS (mbrlen, size_t, (const char *s, size_t n, mbstate_t *ps));
+#  undef mbrlen
+#  define mbrlen rpl_mbrlen
 # endif
-_GL_CXXALIASWARN (mbrlen);
+# if !@HAVE_MBRLEN@ || @REPLACE_MBRLEN@
+extern size_t mbrlen (const char *s, size_t n, mbstate_t *ps);
+# endif
 #elif defined GNULIB_POSIXCHECK
 # undef mbrlen
 # if HAVE_RAW_DECL_MBRLEN
@@ -239,27 +198,13 @@ _GL_WARN_ON_USE (mbrlen, "mbrlen is unportable - "
 /* Convert a string to a wide string.  */
 #if @GNULIB_MBSRTOWCS@
 # if @REPLACE_MBSRTOWCS@
-#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
-#   undef mbsrtowcs
-#   define mbsrtowcs rpl_mbsrtowcs
-#  endif
-_GL_FUNCDECL_RPL (mbsrtowcs, size_t,
-                  (wchar_t *dest, const char **srcp, size_t len, mbstate_t *ps)
-                  _GL_ARG_NONNULL ((2)));
-_GL_CXXALIAS_RPL (mbsrtowcs, size_t,
-                  (wchar_t *dest, const char **srcp, size_t len,
-                   mbstate_t *ps));
-# else
-#  if !@HAVE_MBSRTOWCS@
-_GL_FUNCDECL_SYS (mbsrtowcs, size_t,
-                  (wchar_t *dest, const char **srcp, size_t len, mbstate_t *ps)
-                  _GL_ARG_NONNULL ((2)));
-#  endif
-_GL_CXXALIAS_SYS (mbsrtowcs, size_t,
-                  (wchar_t *dest, const char **srcp, size_t len,
-                   mbstate_t *ps));
+#  undef mbsrtowcs
+#  define mbsrtowcs rpl_mbsrtowcs
 # endif
-_GL_CXXALIASWARN (mbsrtowcs);
+# if !@HAVE_MBSRTOWCS@ || @REPLACE_MBSRTOWCS@
+extern size_t mbsrtowcs (wchar_t *dest, const char **srcp, size_t len, mbstate_t *ps)
+     _GL_ARG_NONNULL ((2));
+# endif
 #elif defined GNULIB_POSIXCHECK
 # undef mbsrtowcs
 # if HAVE_RAW_DECL_MBSRTOWCS
@@ -272,29 +217,13 @@ _GL_WARN_ON_USE (mbsrtowcs, "mbsrtowcs is unportable - "
 /* Convert a string to a wide string.  */
 #if @GNULIB_MBSNRTOWCS@
 # if @REPLACE_MBSNRTOWCS@
-#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
-#   undef mbsnrtowcs
-#   define mbsnrtowcs rpl_mbsnrtowcs
-#  endif
-_GL_FUNCDECL_RPL (mbsnrtowcs, size_t,
-                  (wchar_t *dest, const char **srcp, size_t srclen, size_t len,
-                   mbstate_t *ps)
-                  _GL_ARG_NONNULL ((2)));
-_GL_CXXALIAS_RPL (mbsnrtowcs, size_t,
-                  (wchar_t *dest, const char **srcp, size_t srclen, size_t len,
-                   mbstate_t *ps));
-# else
-#  if !@HAVE_MBSNRTOWCS@
-_GL_FUNCDECL_SYS (mbsnrtowcs, size_t,
-                  (wchar_t *dest, const char **srcp, size_t srclen, size_t len,
-                   mbstate_t *ps)
-                  _GL_ARG_NONNULL ((2)));
-#  endif
-_GL_CXXALIAS_SYS (mbsnrtowcs, size_t,
-                  (wchar_t *dest, const char **srcp, size_t srclen, size_t len,
-                   mbstate_t *ps));
+#  undef mbsnrtowcs
+#  define mbsnrtowcs rpl_mbsnrtowcs
 # endif
-_GL_CXXALIASWARN (mbsnrtowcs);
+# if !@HAVE_MBSNRTOWCS@ || @REPLACE_MBSNRTOWCS@
+extern size_t mbsnrtowcs (wchar_t *dest, const char **srcp, size_t srclen, size_t len, mbstate_t *ps)
+     _GL_ARG_NONNULL ((2));
+# endif
 #elif defined GNULIB_POSIXCHECK
 # undef mbsnrtowcs
 # if HAVE_RAW_DECL_MBSNRTOWCS
@@ -307,19 +236,12 @@ _GL_WARN_ON_USE (mbsnrtowcs, "mbsnrtowcs is unportable - "
 /* Convert a wide character to a multibyte character.  */
 #if @GNULIB_WCRTOMB@
 # if @REPLACE_WCRTOMB@
-#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
-#   undef wcrtomb
-#   define wcrtomb rpl_wcrtomb
-#  endif
-_GL_FUNCDECL_RPL (wcrtomb, size_t, (char *s, wchar_t wc, mbstate_t *ps));
-_GL_CXXALIAS_RPL (wcrtomb, size_t, (char *s, wchar_t wc, mbstate_t *ps));
-# else
-#  if !@HAVE_WCRTOMB@
-_GL_FUNCDECL_SYS (wcrtomb, size_t, (char *s, wchar_t wc, mbstate_t *ps));
-#  endif
-_GL_CXXALIAS_SYS (wcrtomb, size_t, (char *s, wchar_t wc, mbstate_t *ps));
+#  undef wcrtomb
+#  define wcrtomb rpl_wcrtomb
 # endif
-_GL_CXXALIASWARN (wcrtomb);
+# if !@HAVE_WCRTOMB@ || @REPLACE_WCRTOMB@
+extern size_t wcrtomb (char *s, wchar_t wc, mbstate_t *ps);
+# endif
 #elif defined GNULIB_POSIXCHECK
 # undef wcrtomb
 # if HAVE_RAW_DECL_WCRTOMB
@@ -332,27 +254,13 @@ _GL_WARN_ON_USE (wcrtomb, "wcrtomb is unportable - "
 /* Convert a wide string to a string.  */
 #if @GNULIB_WCSRTOMBS@
 # if @REPLACE_WCSRTOMBS@
-#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
-#   undef wcsrtombs
-#   define wcsrtombs rpl_wcsrtombs
-#  endif
-_GL_FUNCDECL_RPL (wcsrtombs, size_t,
-                  (char *dest, const wchar_t **srcp, size_t len, mbstate_t *ps)
-                  _GL_ARG_NONNULL ((2)));
-_GL_CXXALIAS_RPL (wcsrtombs, size_t,
-                  (char *dest, const wchar_t **srcp, size_t len,
-                   mbstate_t *ps));
-# else
-#  if !@HAVE_WCSRTOMBS@
-_GL_FUNCDECL_SYS (wcsrtombs, size_t,
-                  (char *dest, const wchar_t **srcp, size_t len, mbstate_t *ps)
-                  _GL_ARG_NONNULL ((2)));
-#  endif
-_GL_CXXALIAS_SYS (wcsrtombs, size_t,
-                  (char *dest, const wchar_t **srcp, size_t len,
-                   mbstate_t *ps));
+#  undef wcsrtombs
+#  define wcsrtombs rpl_wcsrtombs
 # endif
-_GL_CXXALIASWARN (wcsrtombs);
+# if !@HAVE_WCSRTOMBS@ || @REPLACE_WCSRTOMBS@
+extern size_t wcsrtombs (char *dest, const wchar_t **srcp, size_t len, mbstate_t *ps)
+     _GL_ARG_NONNULL ((2));
+# endif
 #elif defined GNULIB_POSIXCHECK
 # undef wcsrtombs
 # if HAVE_RAW_DECL_WCSRTOMBS
@@ -365,29 +273,13 @@ _GL_WARN_ON_USE (wcsrtombs, "wcsrtombs is unportable - "
 /* Convert a wide string to a string.  */
 #if @GNULIB_WCSNRTOMBS@
 # if @REPLACE_WCSNRTOMBS@
-#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
-#   undef wcsnrtombs
-#   define wcsnrtombs rpl_wcsnrtombs
-#  endif
-_GL_FUNCDECL_RPL (wcsnrtombs, size_t,
-                  (char *dest, const wchar_t **srcp, size_t srclen, size_t len,
-                   mbstate_t *ps)
-                  _GL_ARG_NONNULL ((2)));
-_GL_CXXALIAS_RPL (wcsnrtombs, size_t,
-                  (char *dest, const wchar_t **srcp, size_t srclen, size_t len,
-                   mbstate_t *ps));
-# else
-#  if !@HAVE_WCSNRTOMBS@
-_GL_FUNCDECL_SYS (wcsnrtombs, size_t,
-                  (char *dest, const wchar_t **srcp, size_t srclen, size_t len,
-                   mbstate_t *ps)
-                  _GL_ARG_NONNULL ((2)));
-#  endif
-_GL_CXXALIAS_SYS (wcsnrtombs, size_t,
-                  (char *dest, const wchar_t **srcp, size_t srclen, size_t len,
-                   mbstate_t *ps));
+#  undef wcsnrtombs
+#  define wcsnrtombs rpl_wcsnrtombs
 # endif
-_GL_CXXALIASWARN (wcsnrtombs);
+# if !@HAVE_WCSNRTOMBS@ || @REPLACE_WCSNRTOMBS@
+extern size_t wcsnrtombs (char *dest, const wchar_t **srcp, size_t srclen, size_t len, mbstate_t *ps)
+     _GL_ARG_NONNULL ((2));
+# endif
 #elif defined GNULIB_POSIXCHECK
 # undef wcsnrtombs
 # if HAVE_RAW_DECL_WCSNRTOMBS
@@ -400,20 +292,15 @@ _GL_WARN_ON_USE (wcsnrtombs, "wcsnrtombs is unportable - "
 /* Return the number of screen columns needed for WC.  */
 #if @GNULIB_WCWIDTH@
 # if @REPLACE_WCWIDTH@
-#  if !(defined __cplusplus && defined GNULIB_NAMESPACE)
-#   undef wcwidth
-#   define wcwidth rpl_wcwidth
-#  endif
-_GL_FUNCDECL_RPL (wcwidth, int, (wchar_t));
-_GL_CXXALIAS_RPL (wcwidth, int, (wchar_t));
+#  undef wcwidth
+#  define wcwidth rpl_wcwidth
+extern int wcwidth (wchar_t);
 # else
-#  if !@HAVE_DECL_WCWIDTH@
+#  if !defined wcwidth && !@HAVE_DECL_WCWIDTH@
 /* wcwidth exists but is not declared.  */
-_GL_FUNCDECL_SYS (wcwidth, int, (wchar_t));
+extern int wcwidth (int /* actually wchar_t */);
 #  endif
-_GL_CXXALIAS_SYS (wcwidth, int, (wchar_t));
 # endif
-_GL_CXXALIASWARN (wcwidth);
 #elif defined GNULIB_POSIXCHECK
 # undef wcwidth
 # if HAVE_RAW_DECL_WCWIDTH
@@ -422,6 +309,10 @@ _GL_WARN_ON_USE (wcwidth, "wcwidth is unportable - "
 # endif
 #endif
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _GL_WCHAR_H */
 #endif /* _GL_WCHAR_H */

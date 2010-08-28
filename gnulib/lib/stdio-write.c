@@ -63,6 +63,7 @@
     }
 
 #  if !REPLACE_PRINTF_POSIX /* avoid collision with printf.c */
+#   if !DEPENDS_ON_LIBINTL /* avoid collision with intl/printf.c */
 int
 printf (const char *format, ...)
 {
@@ -75,6 +76,7 @@ printf (const char *format, ...)
 
   return retval;
 }
+#   endif
 #  endif
 
 #  if !REPLACE_FPRINTF_POSIX /* avoid collision with fprintf.c */

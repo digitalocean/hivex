@@ -47,65 +47,14 @@
 /* Define to make the limit macros in <stdint.h> visible. */
 #undef GL_TRIGGER_STDC_LIMIT_MACROS
 
+/* Define to 1 when using the gnulib module getopt-gnu. */
+#undef GNULIB_GETOPT_GNU
+
+/* Define to 1 when using the gnulib module open. */
+#undef GNULIB_OPEN
+
 /* enable some gnulib portability checks */
 #undef GNULIB_PORTCHECK
-
-/* Define to 1 when the gnulib module dup2 should be tested. */
-#undef GNULIB_TEST_DUP2
-
-/* Define to 1 when the gnulib module environ should be tested. */
-#undef GNULIB_TEST_ENVIRON
-
-/* Define to 1 when the gnulib module getopt-gnu should be tested. */
-#undef GNULIB_TEST_GETOPT_GNU
-
-/* Define to 1 when the gnulib module lstat should be tested. */
-#undef GNULIB_TEST_LSTAT
-
-/* Define to 1 when the gnulib module malloc-posix should be tested. */
-#undef GNULIB_TEST_MALLOC_POSIX
-
-/* Define to 1 when the gnulib module memchr should be tested. */
-#undef GNULIB_TEST_MEMCHR
-
-/* Define to 1 when the gnulib module open should be tested. */
-#undef GNULIB_TEST_OPEN
-
-/* Define to 1 when the gnulib module putenv should be tested. */
-#undef GNULIB_TEST_PUTENV
-
-/* Define to 1 when the gnulib module setenv should be tested. */
-#undef GNULIB_TEST_SETENV
-
-/* Define to 1 when the gnulib module stat should be tested. */
-#undef GNULIB_TEST_STAT
-
-/* Define to 1 when the gnulib module strerror should be tested. */
-#undef GNULIB_TEST_STRERROR
-
-/* Define to 1 when the gnulib module strndup should be tested. */
-#undef GNULIB_TEST_STRNDUP
-
-/* Define to 1 when the gnulib module strnlen should be tested. */
-#undef GNULIB_TEST_STRNLEN
-
-/* Define to 1 when the gnulib module strtoll should be tested. */
-#undef GNULIB_TEST_STRTOLL
-
-/* Define to 1 when the gnulib module strtoull should be tested. */
-#undef GNULIB_TEST_STRTOULL
-
-/* Define to 1 when the gnulib module symlink should be tested. */
-#undef GNULIB_TEST_SYMLINK
-
-/* Define to 1 when the gnulib module unsetenv should be tested. */
-#undef GNULIB_TEST_UNSETENV
-
-/* Define to 1 when the gnulib module vasprintf should be tested. */
-#undef GNULIB_TEST_VASPRINTF
-
-/* Define to 1 when the gnulib module write should be tested. */
-#undef GNULIB_TEST_WRITE
 
 /* Define to 1 if you have 'alloca' after including <alloca.h>, a header that
    may be supplied by this distribution. */
@@ -142,10 +91,6 @@
 /* Define to 1 if you have the declaration of `getenv', and to 0 if you don't.
    */
 #undef HAVE_DECL_GETENV
-
-/* Define to 1 if you have the declaration of `getopt_clip', and to 0 if you
-   don't. */
-#undef HAVE_DECL_GETOPT_CLIP
 
 /* Define to 1 if you have the declaration of `imaxabs', and to 0 if you
    don't. */
@@ -378,9 +323,6 @@
 /* Define to 1 if getusershell is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_GETUSERSHELL
 
-/* Define to 1 if grantpt is declared even after undefining macros. */
-#undef HAVE_RAW_DECL_GRANTPT
-
 /* Define to 1 if imaxabs is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_IMAXABS
 
@@ -474,12 +416,6 @@
 /* Define to 1 if pread is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_PREAD
 
-/* Define to 1 if ptsname is declared even after undefining macros. */
-#undef HAVE_RAW_DECL_PTSNAME
-
-/* Define to 1 if pwrite is declared even after undefining macros. */
-#undef HAVE_RAW_DECL_PWRITE
-
 /* Define to 1 if random_r is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_RANDOM_R
 
@@ -540,9 +476,6 @@
 /* Define to 1 if strdup is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_STRDUP
 
-/* Define to 1 if strncat is declared even after undefining macros. */
-#undef HAVE_RAW_DECL_STRNCAT
-
 /* Define to 1 if strndup is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_STRNDUP
 
@@ -585,20 +518,11 @@
 /* Define to 1 if symlinkat is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_SYMLINKAT
 
-/* Define to 1 if tmpfile is declared even after undefining macros. */
-#undef HAVE_RAW_DECL_TMPFILE
-
-/* Define to 1 if ttyname_r is declared even after undefining macros. */
-#undef HAVE_RAW_DECL_TTYNAME_R
-
 /* Define to 1 if unlink is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_UNLINK
 
 /* Define to 1 if unlinkat is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_UNLINKAT
-
-/* Define to 1 if unlockpt is declared even after undefining macros. */
-#undef HAVE_RAW_DECL_UNLOCKPT
 
 /* Define to 1 if unsetenv is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_UNSETENV
@@ -647,11 +571,6 @@
 
 /* Define to 1 if you have the `snprintf' function. */
 #undef HAVE_SNPRINTF
-
-/* Define if the return value of the snprintf function is the number of of
-   bytes (excluding the terminating NUL) that would have been produced if the
-   buffer had been large enough. */
-#undef HAVE_SNPRINTF_RETVAL_C99
 
 /* Define to 1 if stdbool.h conforms to C99. */
 #undef HAVE_STDBOOL_H
@@ -901,10 +820,6 @@
 /* Define to 1 if strerror_r returns char *. */
 #undef STRERROR_R_CHAR_P
 
-/* Define to the prefix of C symbols at the assembler and linker level, either
-   an underscore or empty. */
-#undef USER_LABEL_PREFIX
-
 /* Version number of package */
 #undef VERSION
 
@@ -1013,14 +928,13 @@
    nothing if this is not supported.  Do not define if restrict is
    supported directly.  */
 #undef restrict
-/* Work around a bug in Sun C++: it does not support _Restrict or
-   __restrict__, even though the corresponding Sun C compiler ends up with
-   "#define restrict _Restrict" or "#define restrict __restrict__" in the
-   previous line.  Perhaps some future version of Sun C++ will work with
-   restrict; if so, hopefully it defines __RESTRICT like Sun C does.  */
+/* Work around a bug in Sun C++: it does not support _Restrict, even
+   though the corresponding Sun C compiler does, which causes
+   "#define restrict _Restrict" in the previous line.  Perhaps some future
+   version of Sun C++ will work with _Restrict; if so, it'll probably
+   define __RESTRICT, just as Sun C does.  */
 #if defined __SUNPRO_CC && !defined __RESTRICT
 # define _Restrict
-# define __restrict__
 #endif
 
 /* Define to `unsigned int' if <sys/types.h> does not define. */
@@ -1028,6 +942,9 @@
 
 /* Define as a signed type of the same size as size_t. */
 #undef ssize_t
+
+/* Define to rpl_strnlen if the replacement function should be used. */
+#undef strnlen
 
 /* Define as a marker that can be attached to declarations that might not
     be used.  This helps to reduce warnings, such as from
