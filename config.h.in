@@ -214,6 +214,9 @@
 /* Define to 1 if you have the `pathconf' function. */
 #undef HAVE_PATHCONF
 
+/* Define to 1 if you have the `PyCapsule_New' function. */
+#undef HAVE_PYCAPSULE_NEW
+
 /* Define to 1 if you have the <random.h> header file. */
 #undef HAVE_RANDOM_H
 

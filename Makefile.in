@@ -53,11 +53,12 @@ build_triplet = @build@
 host_triplet = @host@
 @HAVE_OCAML_TRUE@am__append_1 = ocaml
 @HAVE_PERL_TRUE@am__append_2 = perl regedit
+@HAVE_PYTHON_TRUE@am__append_3 = python
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(srcdir)/hivex.pc.in $(top_srcdir)/configure ABOUT-NLS \
-	ChangeLog build-aux/compile build-aux/config.guess \
+	build-aux/compile build-aux/config.guess \
 	build-aux/config.rpath build-aux/config.sub build-aux/depcomp \
 	build-aux/install-sh build-aux/ltmain.sh build-aux/missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -159,7 +160,7 @@ AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
 ETAGS = etags
 CTAGS = ctags
 DIST_SUBDIRS = gnulib/lib lib images gnulib/tests sh xml po ocaml perl \
-	regedit
+	regedit python
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -627,6 +628,11 @@ PRAGMA_SYSTEM_HEADER = @PRAGMA_SYSTEM_HEADER@
 PRIPTR_PREFIX = @PRIPTR_PREFIX@
 PRI_MACROS_BROKEN = @PRI_MACROS_BROKEN@
 PTRDIFF_T_SUFFIX = @PTRDIFF_T_SUFFIX@
+PYTHON = @PYTHON@
+PYTHON_INCLUDEDIR = @PYTHON_INCLUDEDIR@
+PYTHON_PREFIX = @PYTHON_PREFIX@
+PYTHON_SITE_PACKAGES = @PYTHON_SITE_PACKAGES@
+PYTHON_VERSION = @PYTHON_VERSION@
 RANLIB = @RANLIB@
 REPLACE_BTOWC = @REPLACE_BTOWC@
 REPLACE_CANONICALIZE_FILE_NAME = @REPLACE_CANONICALIZE_FILE_NAME@
@@ -792,7 +798,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
@@ -810,12 +815,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = gnulib/lib lib images gnulib/tests sh xml po $(am__append_1) \
-	$(am__append_2)
-
-# Not yet written.
-#if HAVE_PYTHON
-#SUBDIRS += python
-#endif
+	$(am__append_2) $(am__append_3)
 EXTRA_DIST = hivex.pc hivex.pc.in README LICENSE
 
 # Pkgconfig.

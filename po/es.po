@@ -1,18 +1,23 @@
-# translation of pl.po to Polish
-# Piotr Drąg <piotrdrag@gmail.com>, 2009.
+# Fedora Spanish translation of hivex.master.hivex.
+# This file is distributed under the same license as the hivex.master.hivex package.
+#
+# Héctor Daniel Cabrera <logan@fedoraproject.org>, 2010.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: pl\n"
+"Project-Id-Version: hivex 1.1.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-12-02 15:28+0000\n"
-"PO-Revision-Date: 2010-02-26 18:41+0100\n"
-"Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
-"Language-Team: Polish <trans-pl@lists.fedoraproject.org>\n"
-"Language: pl\n"
+"PO-Revision-Date: 2010-02-28 12:15-0300\n"
+"Last-Translator: Héctor Daniel Cabrera <logan@fedoraproject.org>\n"
+"Language-Team: Fedora Spanish <trans-es@lists.fedoraproject.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: Spanish\n"
+"X-Poedit-Country: ARGENTINA\n"
 
 #: sh/hivexsh.c:149
 #, c-format
@@ -26,40 +31,38 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Witaj w hivexsh, interaktywnej powłoce hivex do sprawdzania\n"
-"binarnych plików typu \"hive\" Rejestru systemu Windows.\n"
+"Bienvenido a hivexsh, el entorno interactivo de hivex para examinar\n"
+"archivos binarios hive de registro Windows.\n"
 "\n"
-"Proszę podać: \"help\", aby uzyskać podsumowanie pomocy\n"
-"              \"quit\", aby zakończyć powłokę\n"
+"Ingrese: 'help' para obtener ayuda\n"
+"      'quit' para abandonar este entorno\n"
 "\n"
 
 #: sh/hivexsh.c:263
 #, c-format
 msgid "hivexsh: error getting parent of node %zu\n"
-msgstr "hivexsh: błąd podczas uzyskiwania nadrzędnego węzła %zu\n"
+msgstr "hivexsh: error al intentar obtener padre del nodo %zu\n"
 
 #: sh/hivexsh.c:273
 #, c-format
 msgid "hivexsh: error getting node name of node %zx\n"
-msgstr "hivexsh: błąd podczas uzyskiwania nazwy węzła %zx\n"
+msgstr "hivexsh: error al intentar obtener el nombre-nodo del nodo %zu\n"
 
 #: sh/hivexsh.c:412
 #, c-format
 msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
-msgstr ""
-"hivexsh: należy najpierw wczytać plik \"hive\" używając \"load plik_hive\"\n"
+msgstr "hivexsh: debe caragr un archivo hive utilizando 'load hivefile'\n"
 
 #: sh/hivexsh.c:433
 #, c-format
 msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
-msgstr ""
-"hivexsh: nieznane polecenie \"%s\", należy użyć \"help\", aby uzyskać "
-"podsumowanie pomocy\n"
+msgstr "hivexsh: comando '%s' desconocido, utilice 'help' para obtener ayuda\n"
 
 #: sh/hivexsh.c:443
 #, c-format
 msgid "hivexsh: load: no hive file name given to load\n"
-msgstr "hivexsh: load: nie podano nazwy pliku \"hive\" do wczytania\n"
+msgstr ""
+"hivexsh: cargar: no se ha indicado un nombre de archivo hive para cargar\n"
 
 #: sh/hivexsh.c:459
 #, c-format
@@ -72,18 +75,21 @@ msgid ""
 "which fails into a bug report at https://bugzilla.redhat.com/\n"
 "\n"
 msgstr ""
-"hivexsh: otwarcie pliku \"hive\" nie powiodło się: %s: %m\n"
+"hivexsh: falló al intentar abrir el archivo hive: %s: %m\n"
 "\n"
-"Jeśli ten plik jest binarnym plikiem \"hive\" systemu Windows (a _nie_\n"
-"plikiem *.reg programu regedit), proszę wykonać te polecenie ponownie,\n"
-"używając opcji \"-d\" programu hivexsh i dołączyć pełne wyjście _oraz_ ten\n"
-"plik \"hive\" do zgłoszenia błędu na https://bugzilla.redhat.com/\n"
+"Si considera que este archivo es un archivo hive binario de windows válido\n"
+"(_no_ un archivo regedit *.reg), entonces por favor ejecute el siguiente "
+"comando\n"
+"nuevamente, utilizando la opción hivexsh '-d', y adjunte la salida completa "
+"_y_\n"
+"el archivo hive que ha fallado, en un reporte de error en https://bugzilla."
+"redhat.com/\n"
 "\n"
 
 #: sh/hivexsh.c:492 sh/hivexsh.c:601 sh/hivexsh.c:1067
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
-msgstr "hivexsh: polecenie \"%s\" nie przyjmuje parametrów\n"
+msgstr "hivexsh: el comando '%s' no debería necesitar argumentos\n"
 
 #: sh/hivexsh.c:534
 #, c-format
@@ -91,13 +97,13 @@ msgid ""
 "%s: %s: \\ characters in path are doubled - are you escaping the path "
 "parameter correctly?\n"
 msgstr ""
-"%s: %s: znaki \\ w ścieżce są podwójne - czy parametr ścieżki jest poprawnie "
-"poprzedzony znakiem modyfikacji?\n"
+"%s: %s: \\ los caracteres en la ruta se encuentran duplicados - ¿está "
+"escapando el parámetro correctamente?\n"
 
 #: sh/hivexsh.c:572
 #, c-format
 msgid "hivexsh: cd: subkey '%s' not found\n"
-msgstr "hivexsh: cd: nie odnaleziono podklucza \"%s\"\n"
+msgstr "hivexsh: cd: no se encuentra la subllave '%s'\n"
 
 #: sh/hivexsh.c:590
 #, c-format
@@ -106,42 +112,43 @@ msgid ""
 "contained a filesystem, and use 'ls' to list the subkeys of the\n"
 "current key.  Full documentation is in the hivexsh(1) manual page.\n"
 msgstr ""
-"Należy nawigować między kluczami \"hive\" używając polecenia \"cd\", jakby\n"
-"zawierały system plików oraz \"ls\" do wyświetlania podkluczy bieżącego\n"
-"klucza. Pełna dokumentacja znajduje się na stronie podręcznika hivexsh(1).\n"
+"Desplácese a través de las llaves hive utilizando el comando 'cd',\n"
+"como si fuera un sistema de archivos, y utilice 'ls' para listar las\n"
+"subllaves de la llave actual. Puede encontrar documentación completa\n"
+"en la página man de hivexsh(1).\n"
 
 #: sh/hivexsh.c:665
 #, c-format
 msgid "%s: %s: key not found\n"
-msgstr "%s: %s: nie odnaleziono klucza\n"
+msgstr "%s: %s: no se ha encontrado la llave\n"
 
 #: sh/hivexsh.c:841 sh/hivexsh.c:945 sh/hivexsh.c:971 sh/hivexsh.c:1000
 #, c-format
 msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
-msgstr "%s: %s: nieprawidłowy parametr liczby całkowitej (%s zwróciło %d)\n"
+msgstr "%s: %s: parámetro entero no válido (%s devolvió %d)\n"
 
 #: sh/hivexsh.c:846 sh/hivexsh.c:951 sh/hivexsh.c:977 sh/hivexsh.c:1006
 #, c-format
 msgid "%s: %s: integer out of range\n"
-msgstr "%s: %s: liczba całkowita spoza zakresu\n"
+msgstr "%s: %s: el entero se encuentra fuera del rango\n"
 
 #: sh/hivexsh.c:868 sh/hivexsh.c:886
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
-msgstr "hivexsh: setval: nieoczekiwany koniec wejścia\n"
+msgstr "hivexsh: setval: final inesperado de la salida\n"
 
 #: sh/hivexsh.c:907 sh/hivexsh.c:926
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
 msgstr ""
-"hivexsh: string(utf16le): tylko 7 bitowe ciągi ASCII są obsługiwane dla "
-"wejścia\n"
+"hivexsh: string(utf16le): para la entrada, solo existe soporte para cadenas "
+"ASCII de 7 bit\n"
 
 #: sh/hivexsh.c:1037
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
-msgstr "hivexsh: setval: uszkodzone wartości po ciągu ósemkowym\n"
+msgstr "hivexsh: setval: rastreando basura luego de la cadena hex\n"
 
 #: sh/hivexsh.c:1044
 #, c-format
@@ -149,25 +156,25 @@ msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
 "hivexsh(1) for help: %s\n"
 msgstr ""
-"hivexsh: setval: nie można przetworzyć ciągu wartości. Proszę zobaczyć "
-"stronę podręcznika hivexsh(1), aby uzyskać pomoc: %s\n"
+"hivexsh: setval: no es posible analizar el valor de la cadena, por favor "
+"consulte la página man de hivexsh(1) para obtener ayuda: %s\n"
 
 #: sh/hivexsh.c:1073
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
-msgstr "hivexsh: del: główny węzeł nie może zostać usunięty\n"
+msgstr "hivexsh: del: el nodo raíz no puede ser eliminado\n"
 
 #: xml/hivexml.c:70
 #, c-format
 msgid "%s: failed to write XML document\n"
-msgstr "%s: zapisanie dokumentu XML nie powiodło się\n"
+msgstr "%s: falló al escribir documento XML\n"
 
 #: xml/hivexml.c:101
 #, c-format
 msgid "hivexml: missing name of input file\n"
-msgstr "hivexml: brak nazwy pliku wejściowego\n"
+msgstr "hivexml: no se encuentra el nombre del archivo de entrada\n"
 
 #: xml/hivexml.c:120
 #, c-format
 msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
-msgstr "xmlNewTextWriterFilename: utworzenie zapisu XML nie powiodło się\n"
+msgstr "xmlNewTextWriterFilename: falló al crear escritor XML\n"
