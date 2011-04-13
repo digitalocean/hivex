@@ -1,3 +1,73 @@
+2011-04-13  Richard W.M. Jones  <rjones@redhat.com>
+
+	Version 1.2.5.
+	Updated PO files.
+
+	Remove no longer used internal function utf16_string_len_in_bytes.
+
+	hivex_value_multiple_strings: Don't read uninitialized data.
+	If hivex_value_multiple_strings was given a value which had an odd
+	length or if the data in the value was unterminated,
+	hivex_value_multiple_strings could read uninitialized data.
+
+	Potentially (although very unlikely) this could cause a
+	non-exploitable segfault in the calling program.
+
+	Handle odd-length "UTF16" strings.
+	If the length of the buffer is not even, then this would read a byte
+	of uninitialized data.  Fix the length check to avoid this.
+
+	Return real length of buffer from hivex_value_value.
+	In real registries, often the length declared in the header does not
+	match the length of the block.  In this case hivex_value_value would
+	only allocate a value with a size which is the shorter of the two
+	length values, which is correct and safe.
+
+	However user code could do:
+
+	  buf = hivex_value_value (h, v, &t, &len);
+	  memcpy (somewhere, buf, len);
+
+	which would copy uninitialized data.
+
+	If hivex_value_value truncates a value like this, we also need to
+	return the shorter length to the user as well.
+
+	Really fix the case where a UTF-16 string contains junk after the string.
+	The previous commit b71b88f588f8660935a7d462e97b84aa2d669249 attempted
+	to fix this, but got the test the wrong way round so the length would
+	never be shorter.
+
+2011-04-12  Richard W.M. Jones  <rjones@redhat.com>
+
+	Fix use-after-free in hivex_close.
+	Found using valgrind.
+
+2011-04-02  Richard W.M. Jones  <rjones@redhat.com>
+
+	Pull translations from Transifex.
+
+2011-04-01  Richard W.M. Jones  <rjones@redhat.com>
+
+	debian: Fix python test script for bash.
+
+2011-03-07  Richard W.M. Jones  <rjones@redhat.com>
+
+	Import hivex into transifex.
+	http://www.transifex.net/projects/p/hivex/
+
+2010-12-23  Richard W.M. Jones  <rjones@redhat.com>
+
+	Refresh documentation.
+
+2010-12-16  Richard W.M. Jones  <rjones@redhat.com>
+
+	ocaml: Fix segfault in Hivex.value_value binding.
+
+2010-12-02  Richard W.M. Jones  <rjones@redhat.com>
+
+	Version 1.2.4.
+
 2010-11-28  Richard W.M. Jones  <rjones@redhat.com>
 
 	Python bindings.

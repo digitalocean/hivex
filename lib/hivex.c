@@ -62,7 +62,6 @@
 #define HIVEX_MAX_ALLOCATION  1000000
 
 static char *windows_utf16_to_utf8 (/* const */ char *input, size_t len);
-static size_t utf16_string_len_in_bytes (const char *str);
 static size_t utf16_string_len_in_bytes_max (const char *str, size_t len);
 
 struct hive_h {
@@ -534,6 +533,9 @@ hivex_close (hive_h *h)
 {
   int r;
 
+  if (h->msglvl >= 1)
+    fprintf (stderr, "hivex_close\n");
+
   free (h->bitmap);
   if (!h->writable)
     munmap (h->addr, h->size);
@@ -542,9 +544,6 @@ hivex_close (hive_h *h)
   r = close (h->fd);
   free (h->filename);
   free (h);
-
-  if (h->msglvl >= 1)
-    fprintf (stderr, "hivex_close\n");
 
   return r;
 }
@@ -1245,6 +1244,10 @@ hivex_value_value (hive_h *h, hive_value_h value,
       fprintf (stderr, "hivex_value_value: warning: declared data length is longer than the block it is in (data 0x%zx, data len %zu, block len %zu)\n",
                data_offset, len, blen);
     len = blen - 4;
+
+    /* Return the smaller length to the caller too. */
+    if (len_rtn)
+      *len_rtn = len;
   }
 
   char *data = h->addr + data_offset + 4;
@@ -1335,7 +1338,7 @@ hivex_value_string (hive_h *h, hive_value_h value)
    * (Found by Hilko Bengen in a fresh Windows XP SOFTWARE hive).
    */
   size_t slen = utf16_string_len_in_bytes_max (data, len);
-  if (slen > len)
+  if (slen < len)
     len = slen;
 
   char *ret = windows_utf16_to_utf8 (data, len);
@@ -1359,28 +1362,15 @@ free_strings (char **argv)
 }
 
 /* Get the length of a UTF-16 format string.  Handle the string as
- * pairs of bytes, looking for the first \0\0 pair.
+ * pairs of bytes, looking for the first \0\0 pair.  Only read up to
+ * 'len' maximum bytes.
  */
-static size_t
-utf16_string_len_in_bytes (const char *str)
-{
-  size_t ret = 0;
-
-  while (str[0] || str[1]) {
-    str += 2;
-    ret += 2;
-  }
-
-  return ret;
-}
-
-/* As for utf16_string_len_in_bytes but only read up to a maximum length. */
 static size_t
 utf16_string_len_in_bytes_max (const char *str, size_t len)
 {
   size_t ret = 0;
 
-  while (len > 0 && (str[0] || str[1])) {
+  while (len >= 2 && (str[0] || str[1])) {
     str += 2;
     ret += 2;
     len -= 2;
@@ -1417,7 +1407,8 @@ hivex_value_multiple_strings (hive_h *h, hive_value_h value)
   char *p = data;
   size_t plen;
 
-  while (p < data + len && (plen = utf16_string_len_in_bytes (p)) > 0) {
+  while (p < data + len &&
+         (plen = utf16_string_len_in_bytes_max (p, data + len - p)) > 0) {
     nr_strings++;
     char **ret2 = realloc (ret, (1 + nr_strings) * sizeof (char *));
     if (ret2 == NULL) {

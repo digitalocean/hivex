@@ -62,29 +62,40 @@ Link with I<-lhivex>.
 
 =head1 DESCRIPTION
 
-libhivex is a library for extracting the contents of Windows Registry
+Hivex is a library for extracting the contents of Windows Registry
 "hive" files.  It is designed to be secure against buggy or malicious
 registry files.
 
-Unlike many other tools in this area, it doesn't use the textual .REG
-format for output, because parsing that is as much trouble as parsing
-the original binary format.  Instead it makes the file available
-through a C API, or there is a separate program to export the hive as
-XML (see L<hivexml(1)>), or to navigate the file (see L<hivexsh(1)>).
+Unlike other tools in this area, it doesn't use the textual .REG
+format, because parsing that is as much trouble as parsing the
+original binary format.  Instead it makes the file available
+through a C API, and then wraps this API in higher level scripting
+and GUI tools.
+
+There is a separate program to export the hive as XML
+(see L<hivexml(1)>), or to navigate the file (see L<hivexsh(1)>).
+There is also a Perl script to export and merge the
+file as a textual .REG (regedit) file, see L<hivexregedit(1)>.
+
+If you just want to export or modify the Registry of a Windows
+virtual machine, you should look at L<virt-win-reg(1)>.
+
+Hivex is also comes with language bindings for
+OCaml, Perl and Python.
 
 =head1 TYPES
 
-=head2 hive_h *
+=head2 C<hive_h *>
 
 This handle describes an open hive file.
 
-=head2 hive_node_h
+=head2 C<hive_node_h>
 
 This is a node handle, an integer but opaque outside the library.
 Valid node handles cannot be 0.  The library returns 0 in some
 situations to indicate an error.
 
-=head2 hive_type
+=head2 C<hive_type>
 
 The enum below describes the possible types for the value(s)
 stored at each node.  Note that you should not trust the
@@ -120,13 +131,13 @@ programs store everything (including strings) in binary blobs.
    hive_t_REG_QWORD = 11,
 };
 
-=head2 hive_value_h
+=head2 C<hive_value_h>
 
 This is a value handle, an integer but opaque outside the library.
 Valid value handles cannot be 0.  The library returns 0 in some
 situations to indicate an error.
 
-=head2 hive_set_value
+=head2 C<hive_set_value>
 
 The typedef C<hive_set_value> is used in conjunction with the
 C<hivex_node_set_values> call described below.
@@ -155,7 +166,7 @@ here.  Often it's not documented at all.
 
 =head2 hivex_open
 
-hive_h *hivex_open (const char *filename, int flags);
+ hive_h *hivex_open (const char *filename, int flags);
 
 Opens the hive named C<filename> for reading.
 
@@ -189,7 +200,7 @@ On error this returns NULL and sets errno.
 
 =head2 hivex_close
 
-int hivex_close (hive_h *h);
+ int hivex_close (hive_h *h);
 
 Close a hive handle and free all associated resources.
 
@@ -204,17 +215,16 @@ The hive handle must not be used again after calling this function.
 
 =head2 hivex_root
 
-hive_node_h hivex_root (hive_h *h);
+ hive_node_h hivex_root (hive_h *h);
 
-Return root node of the hive.  All valid registries must contain
-a root node.
+Return root node of the hive.  All valid hives must contain a root node.
 
 Returns a node handle.
 On error this returns 0 and sets errno.
 
 =head2 hivex_node_name
 
-char *hivex_node_name (hive_h *h, hive_node_h node);
+ char *hivex_node_name (hive_h *h, hive_node_h node);
 
 Return the name of the node.
 
@@ -231,7 +241,7 @@ On error this returns NULL and sets errno.
 
 =head2 hivex_node_children
 
-hive_node_h *hivex_node_children (hive_h *h, hive_node_h node);
+ hive_node_h *hivex_node_children (hive_h *h, hive_node_h node);
 
 Return an array of nodes which are the subkeys
 (children) of C<node>.
@@ -242,7 +252,7 @@ On error this returns NULL and sets errno.
 
 =head2 hivex_node_get_child
 
-hive_node_h hivex_node_get_child (hive_h *h, hive_node_h node, const char *name);
+ hive_node_h hivex_node_get_child (hive_h *h, hive_node_h node, const char *name);
 
 Return the child of node with the name C<name>, if it exists.
 
@@ -254,7 +264,7 @@ On error this returns 0 and sets errno.
 
 =head2 hivex_node_parent
 
-hive_node_h hivex_node_parent (hive_h *h, hive_node_h node);
+ hive_node_h hivex_node_parent (hive_h *h, hive_node_h node);
 
 Return the parent of C<node>.
 
@@ -267,7 +277,7 @@ On error this returns 0 and sets errno.
 
 =head2 hivex_node_values
 
-hive_value_h *hivex_node_values (hive_h *h, hive_node_h node);
+ hive_value_h *hivex_node_values (hive_h *h, hive_node_h node);
 
 Return the array of (key, value) pairs attached to this node.
 
@@ -277,7 +287,7 @@ On error this returns NULL and sets errno.
 
 =head2 hivex_node_get_value
 
-hive_value_h hivex_node_get_value (hive_h *h, hive_node_h node, const char *key);
+ hive_value_h hivex_node_get_value (hive_h *h, hive_node_h node, const char *key);
 
 Return the value attached to this node which has the name C<key>,
 if it exists.
@@ -294,7 +304,7 @@ On error this returns 0 and sets errno.
 
 =head2 hivex_value_key
 
-char *hivex_value_key (hive_h *h, hive_value_h val);
+ char *hivex_value_key (hive_h *h, hive_value_h val);
 
 Return the key (name) of a (key, value) pair.  The name
 is reencoded as UTF-8 and returned as a string.
@@ -312,7 +322,7 @@ On error this returns NULL and sets errno.
 
 =head2 hivex_value_type
 
-int hivex_value_type (hive_h *h, hive_value_h val, hive_type *t, size_t *len);
+ int hivex_value_type (hive_h *h, hive_value_h val, hive_type *t, size_t *len);
 
 Return the data length and data type of the value in this (key, value)
 pair.  See also C<hivex_value_value> which returns all this
@@ -325,7 +335,7 @@ On error this returns -1 and sets errno.
 
 =head2 hivex_value_value
 
-char *hivex_value_value (hive_h *h, hive_value_h val, hive_type *t, size_t *len);
+ char *hivex_value_value (hive_h *h, hive_value_h val, hive_type *t, size_t *len);
 
 Return the value of this (key, value) pair.  The value should
 be interpreted according to its type (see C<hive_type>).
@@ -336,7 +346,7 @@ On error this returns NULL and sets errno.
 
 =head2 hivex_value_string
 
-char *hivex_value_string (hive_h *h, hive_value_h val);
+ char *hivex_value_string (hive_h *h, hive_value_h val);
 
 If this value is a string, return the string reencoded as UTF-8
 (as a C string).  This only works for values which have type
@@ -348,7 +358,7 @@ On error this returns NULL and sets errno.
 
 =head2 hivex_value_multiple_strings
 
-char **hivex_value_multiple_strings (hive_h *h, hive_value_h val);
+ char **hivex_value_multiple_strings (hive_h *h, hive_value_h val);
 
 If this value is a multiple-string, return the strings reencoded
 as UTF-8 (in C, as a NULL-terminated array of C strings, in other
@@ -362,21 +372,21 @@ On error this returns NULL and sets errno.
 
 =head2 hivex_value_dword
 
-int32_t hivex_value_dword (hive_h *h, hive_value_h val);
+ int32_t hivex_value_dword (hive_h *h, hive_value_h val);
 
 If this value is a DWORD (Windows int32), return it.  This only works
 for values which have type C<hive_t_dword> or C<hive_t_dword_be>.
 
 =head2 hivex_value_qword
 
-int64_t hivex_value_qword (hive_h *h, hive_value_h val);
+ int64_t hivex_value_qword (hive_h *h, hive_value_h val);
 
 If this value is a QWORD (Windows int64), return it.  This only
 works for values which have type C<hive_t_qword>.
 
 =head2 hivex_commit
 
-int hivex_commit (hive_h *h, const char *filename, int flags);
+ int hivex_commit (hive_h *h, const char *filename, int flags);
 
 Commit (write) any changes which have been made.
 
@@ -396,7 +406,7 @@ On error this returns -1 and sets errno.
 
 =head2 hivex_node_add_child
 
-hive_node_h hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name);
+ hive_node_h hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name);
 
 Add a new child node named C<name> to the existing node C<parent>.
 The new child initially has no subnodes and contains no keys or
@@ -412,7 +422,7 @@ On error this returns 0 and sets errno.
 
 =head2 hivex_node_delete_child
 
-int hivex_node_delete_child (hive_h *h, hive_node_h node);
+ int hivex_node_delete_child (hive_h *h, hive_node_h node);
 
 Delete the node C<node>.  All values at the node and all subnodes are
 deleted (recursively).  The C<node> handle and the handles of all
@@ -423,7 +433,7 @@ On error this returns -1 and sets errno.
 
 =head2 hivex_node_set_values
 
-int hivex_node_set_values (hive_h *h, hive_node_h node, size_t nr_values, const hive_set_value *values, int flags);
+ int hivex_node_set_values (hive_h *h, hive_node_h node, size_t nr_values, const hive_set_value *values, int flags);
 
 This call can be used to set all the (key, value) pairs
 stored in C<node>.
@@ -444,11 +454,11 @@ On error this returns -1 and sets errno.
 
 =head2 hivex_node_set_value
 
-int hivex_node_set_value (hive_h *h, hive_node_h node, const hive_set_value *val, int flags);
+ int hivex_node_set_value (hive_h *h, hive_node_h node, const hive_set_value *val, int flags);
 
-This call can be used to replace a single (key, value) pair
-stored in C<node>. If the key does not already exist, then a
-new key is added. Key matching is case insensitive.
+This call can be used to replace a single C<(key, value)> pair
+stored in C<node>.  If the key does not already exist, then a
+new key is added.  Key matching is case insensitive.
 
 C<node> is the node to modify.
 
@@ -508,7 +518,9 @@ Changing the root node.
 =item *
 
 Creating a new hive file from scratch.  This is impossible at present
-because not all fields in the header are understood.
+because not all fields in the header are understood.  In the hivex
+source tree is a file called C<images/minimal> which could be used as
+the basis for a new hive (but I<caveat emptor>).
 
 =item *
 
@@ -623,18 +635,21 @@ empty string for the default key).  The value is a typed object
 
 =head2 RELATIONSHIP TO .REG FILES
 
-Although this library does not care about or deal with Windows reg
-files, it's useful to look at the relationship between the registry
-itself and reg files because they are so common.
+The hivex C library does not care about or deal with Windows .REG
+files.  Instead we push this complexity up to the Perl
+L<Win::Hivex(3)> library and the Perl programs
+L<hivexregedit(1)> and L<virt-win-reg(1)>.
+Nevertheless it is useful to look at the relationship between the
+Registry and .REG files because they are so common.
 
-A reg file is a text representation of the registry, or part of the
+A .REG file is a textual representation of the registry, or part of the
 registry.  The actual registry hives that Windows uses are binary
 files.  There are a number of Windows and Linux tools that let you
-generate reg files, or merge reg files back into the registry hives.
+generate .REG files, or merge .REG files back into the registry hives.
 Notable amongst them is Microsoft's REGEDIT program (formerly known as
 REGEDT32).
 
-A typical reg file will contain many sections looking like this:
+A typical .REG file will contain many sections looking like this:
 
  [HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Stack]
  "@"="Generic Stack"
@@ -653,7 +668,8 @@ Taking this one piece at a time:
 
 This is the path to this node in the registry tree.  The first part,
 C<HKEY_LOCAL_MACHINE\SOFTWARE> means that this comes from a hive
-(file) called C<SOFTWARE>.  C<\Classes\Stack> is the real path part,
+file called C<C:\WINDOWS\SYSTEM32\CONFIG\SOFTWARE>.
+C<\Classes\Stack> is the real path part,
 starting at the root node of the C<SOFTWARE> hive.
 
 Below the node name is a list of zero or more key-value pairs.  Any
@@ -747,9 +763,12 @@ useful for debugging problems with the library itself.
 
 =head1 SEE ALSO
 
+L<hivexget(1)>,
 L<hivexml(1)>,
 L<hivexsh(1)>,
+L<hivexregedit(1)>,
 L<virt-win-reg(1)>,
+L<Win::Hivex(3)>,
 L<guestfs(3)>,
 L<http://libguestfs.org/>,
 L<virt-cat(1)>,

@@ -8,15 +8,14 @@ msgstr ""
 "Project-Id-Version: hivex\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-04-13 15:09+0100\n"
-"PO-Revision-Date: 2011-03-22 15:29+0000\n"
-"Last-Translator: rjones <rjones@redhat.com>\n"
-"Language-Team: Russian <trans-ru@lists.fedoraproject.org>\n"
-"Language: ru\n"
+"PO-Revision-Date: 2011-03-23 17:07+0000\n"
+"Last-Translator: Taylon <taylon@taylon.eti.br>\n"
+"Language-Team: Portuguese (Brazilian) <trans-pt_br@lists.fedoraproject.org>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #: sh/hivexsh.c:149
 #, c-format
@@ -30,40 +29,41 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Добро пожаловать в hivexsh &mdash; интерактивную оболочку для\n"
-"анализа двоичных файлов куста реестра Windows.\n"
+"Bem-vindo ao hivexsh, o shell interativo hivex usado para examinar\n"
+"arquivos hive de registros binários do Windows.\n"
 "\n"
-"Введите «help» для получения помощи, \n"
-"     «quit» для выхода из оболочки\n"
+"Digite: 'help' para o sumário de ajuda\n"
+"      'quit' para sair do shell\n"
 "\n"
 
 #: sh/hivexsh.c:263
 #, c-format
 msgid "hivexsh: error getting parent of node %zu\n"
-msgstr "hivexsh: ошибка получения родительского узла для %zu\n"
+msgstr "hivexsh: erro ao obter a herança do nó %zu\n"
 
 #: sh/hivexsh.c:273
 #, c-format
 msgid "hivexsh: error getting node name of node %zx\n"
-msgstr "hivexsh: ошибка получения имени узла для %zx\n"
+msgstr "hivexsh: erro ao obter o nome do nó %zx\n"
 
 #: sh/hivexsh.c:412
 #, c-format
 msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
 msgstr ""
-"hivexsh: сначала необходимо загрузить файл с помощью команды «load "
-"hivefile»\n"
+"hivexsh: você deve carregar um arquivo hive antes de usar 'load hivefile'\n"
 
 #: sh/hivexsh.c:433
 #, c-format
 msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
 msgstr ""
-"hivexsh: неизвестная команда «%s». Выполните «help» для получения помощи\n"
+"hivexsh: comando desconhecido '%s', use 'help' para ver o sumário de ajuda\n"
 
 #: sh/hivexsh.c:443
 #, c-format
 msgid "hivexsh: load: no hive file name given to load\n"
-msgstr "hivexsh: load: не задан файл для загрузки\n"
+msgstr ""
+"hivexsh: carregar: não foi dado nenhum nome de arquivo hive para ser "
+"carregado\n"
 
 #: sh/hivexsh.c:459
 #, c-format
@@ -76,18 +76,19 @@ msgid ""
 "which fails into a bug report at https://bugzilla.redhat.com/\n"
 "\n"
 msgstr ""
-"hivexsh: не удалось открыть файл %s: %m\n"
+"hivexsh: falha ao abrir o arquivo hive: %s: %m\n"
 "\n"
-"Если вы уверены, что этот файл является двоичным файлом куста Windows\n"
-"(НЕ файл *.reg), повторно выполните команду с опцией «-d»\n"
-"и включите её вывод и сам файл куста в отчёт Bugzilla:\n"
-"https://bugzilla.redhat.com/\n"
+"Se você acha que esse é um arquivo hive válido (e _não_\n"
+"um arquivo do regedit *.reg) então por favor, execute esse comando novamente "
+"usando a\n"
+"opção '-d' do hivexsh e anexe a saída completa _e_ o arquivo hive\n"
+"que causou o erro em um relato de bug em https://bugzilla.redhat.com/\n"
 "\n"
 
 #: sh/hivexsh.c:492 sh/hivexsh.c:601 sh/hivexsh.c:1067
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
-msgstr "hivexsh: не передавайте аргументы команде «%s»\n"
+msgstr "hivexsh: argumentos não devem ser dados ao comando '%s'\n"
 
 #: sh/hivexsh.c:534
 #, c-format
@@ -95,13 +96,13 @@ msgid ""
 "%s: %s: \\ characters in path are doubled - are you escaping the path "
 "parameter correctly?\n"
 msgstr ""
-"%s: %s: \\ символы в пути повторяются. Проверьте правильность управляющей "
-"последовательности.\n"
+"%s: %s: os caracteres \\ no caminho estão duplicados - você está escapando o "
+"parâmetro do caminho corretamente?\n"
 
 #: sh/hivexsh.c:572
 #, c-format
 msgid "hivexsh: cd: subkey '%s' not found\n"
-msgstr "hivexsh: cd: подраздел «%s» не найден\n"
+msgstr "hivexsh: cd: subchave '%s' não encontrada\n"
 
 #: sh/hivexsh.c:590
 #, c-format
@@ -110,43 +111,43 @@ msgid ""
 "contained a filesystem, and use 'ls' to list the subkeys of the\n"
 "current key.  Full documentation is in the hivexsh(1) manual page.\n"
 msgstr ""
-"Переход между разделами куста осуществляется с помощью команды «cd»,\n"
-"аналогично навигации в файловой системе.\n"
-"«ls» позволяет просмотреть список подразделов.\n"
-"Подробную информацию можно найти на странице помощи hivexsh(1).\n"
+"Navegar pelas chaves do arquivo hive usando o comando 'cd' como se ele\n"
+"estivesse em um sistema de arquivos, e usar 'ls' para listar as subchaves "
+"da\n"
+"chave atual.  A documentação completa está na página de manual hivexsh(1).\n"
 
 #: sh/hivexsh.c:665
 #, c-format
 msgid "%s: %s: key not found\n"
-msgstr "%s: %s: раздел не найден\n"
+msgstr "%s: %s: chave não encontrada\n"
 
 #: sh/hivexsh.c:841 sh/hivexsh.c:945 sh/hivexsh.c:971 sh/hivexsh.c:1000
 #, c-format
 msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
-msgstr "%s: %s: недопустимое целое значение параметра (%s вернул %d)\n"
+msgstr "%s: %s: parâmetro inteiro inválido (%s retornou %d)\n"
 
 #: sh/hivexsh.c:846 sh/hivexsh.c:951 sh/hivexsh.c:977 sh/hivexsh.c:1006
 #, c-format
 msgid "%s: %s: integer out of range\n"
-msgstr "%s: %s: целое значение выходит за пределы диапазона\n"
+msgstr "%s: %s: inteiro fora do limite\n"
 
 #: sh/hivexsh.c:868 sh/hivexsh.c:886
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
-msgstr "hivexsh: setval: непредвиденный конец ввода\n"
+msgstr "hivexsh: setval: fim da entrada inesperado\n"
 
 #: sh/hivexsh.c:907 sh/hivexsh.c:926
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
 msgstr ""
-"hivexsh: string(utf16le): при вводе поддерживаются только 7-битные строки "
-"ASCII\n"
+"hivexsh: string(utf16le): na entrada, apenas strings ASCII 7 bit são "
+"suportadas\n"
 
 #: sh/hivexsh.c:1037
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
-msgstr "hivexsh: setval: мусор в конце шестнадцатеричной строки\n"
+msgstr ""
 
 #: sh/hivexsh.c:1044
 #, c-format
@@ -154,25 +155,25 @@ msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
 "hivexsh(1) for help: %s\n"
 msgstr ""
-"hivexsh: setval: не удалось разобрать значение. Обратитесь к странице помощи "
-"hivexsh(1): %s\n"
+"hivexsh: setval: não foi possível analisar o valor da string, por favor, "
+"consulte a página de manual hivexsh(1) para obter ajuda: %s\n"
 
 #: sh/hivexsh.c:1073
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
-msgstr "hivexsh: del: невозможно удалить корневой элемент\n"
+msgstr "hivexsh: del: o nó raiz não pode ser deletado\n"
 
 #: xml/hivexml.c:70
 #, c-format
 msgid "%s: failed to write XML document\n"
-msgstr "%s: не удалось записать XML\n"
+msgstr "%s: falha ao escrever o documento XML\n"
 
 #: xml/hivexml.c:101
 #, c-format
 msgid "hivexml: missing name of input file\n"
-msgstr "hivexml: отсутствует имя входного файла\n"
+msgstr "hivexml: faltando o nome do arquivo de entrada\n"
 
 #: xml/hivexml.c:120
 #, c-format
 msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
-msgstr "xmlNewTextWriterFilename: не удалось создать модуль записи XML\n"
+msgstr "xmlNewTextWriterFilename: falha ao criar o escritor de XML\n"
