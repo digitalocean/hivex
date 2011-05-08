@@ -63,12 +63,11 @@ Section: perl
 Architecture: any
 Depends: ${perl:Depends}, ${shlibs:Depends}, ${misc:Depends}
 Description: Perl bindings to hivex
- libhivex is a self-contained library for reading and writing Windows
- Registry "hive" binary files.
+ Perl bindings for libhivex, a library for reading and writing
+ Windows Registry "hive" binary files.
  .
- This package contains the Perl bindings to libhivex and hivexregedit,
- a low-level tool for manipulating hives using a text format as
- understood and produced by regedit.exe.
+ This package also contains hivexregedit, a low-level command-line
+ tool for manipulating and dumping registry hives.
 
 Package: libhivex-ocaml
 Architecture: any
@@ -79,8 +78,8 @@ Description: OCaml bindings for hivex -- runtime files
  OCaml bindings for libhivex, a library for reading and writing
  Windows Registry "hive" binary files.
  .
- This package contains only the shared runtime stub libraries.
- 
+ This package include only the shared runtime stub libraries.
+
 Package: libhivex-ocaml-dev
 Architecture: any
 Section: ocaml
@@ -90,18 +89,16 @@ Description: OCaml bindings for hivex -- developtment files
  OCaml bindings for libhivex, a library for reading and writing
  Windows Registry "hive" binary files.
  .
- This package contains all the development stuff you need to use
- libhivex-ocaml in your programs.
+ This package contains all the files needed to develop OCaml programs
+ wich use OCaml bindings to libhivex.
 
 Package: python-hivex
 Architecture: any
 Section: python
 Depends: ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
 Description: Python bindings for hivex
- libhivex is a self-contained library for reading and writing Windows
- Registry "hive" binary files.
- .
- This package contains the Python bindings to libhivex.
+ Python bindings for libhivex, a library for reading and writing
+ Windows Registry "hive" binary files.
 
 # Package: libhivex-doc
 # Architecture: all
