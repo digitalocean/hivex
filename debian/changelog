@@ -1,3 +1,17 @@
+hivex (1.2.6-1) unstable; urgency=low
+
+  * New upstream version
+  * Python bindings
+  * Switched source format to 1.0.
+  * Provided patches to upstream that allow building on big-endian
+    architectures and on arhitectures where no native OCaml compilers are
+    available. (Closes: #589809)
+  * No longer include .la files in libhivex-dev. (Closes: #621653)
+  * Made libhivex conflict against old unofficial libguestfs package
+    (Closes: #602443)
+
+ -- Hilko Bengen <bengen@debian.org>  Thu, 12 May 2011 22:54:29 +0200
+
 hivex (1.2.2+git20100712-2) unstable; urgency=low
 
   * Added missing build dependencies. How embarrassing. Closes: #589546
