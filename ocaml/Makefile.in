@@ -1215,10 +1215,14 @@ uninstall-am:
 @HAVE_OCAML_TRUE@install-data-hook:
 @HAVE_OCAML_TRUE@	mkdir -p $(DESTDIR)$(OCAMLLIB)
 @HAVE_OCAML_TRUE@	mkdir -p $(DESTDIR)$(OCAMLLIB)/stublibs
-@HAVE_OCAML_TRUE@	$(OCAMLFIND) install \
-@HAVE_OCAML_TRUE@	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
-@HAVE_OCAML_TRUE@	  hivex \
-@HAVE_OCAML_TRUE@	  META *.so *.a *.cma *.cmx *.cmxa *.cmi *.mli
+@HAVE_OCAMLOPT_TRUE@@HAVE_OCAML_TRUE@	$(OCAMLFIND) install \
+@HAVE_OCAMLOPT_TRUE@@HAVE_OCAML_TRUE@	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
+@HAVE_OCAMLOPT_TRUE@@HAVE_OCAML_TRUE@	  hivex \
+@HAVE_OCAMLOPT_TRUE@@HAVE_OCAML_TRUE@	  META *.so *.a *.cma *.cmx *.cmxa *.cmi *.mli
+@HAVE_OCAMLOPT_FALSE@@HAVE_OCAML_TRUE@	$(OCAMLFIND) install \
+@HAVE_OCAMLOPT_FALSE@@HAVE_OCAML_TRUE@	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
+@HAVE_OCAMLOPT_FALSE@@HAVE_OCAML_TRUE@	  hivex \
+@HAVE_OCAMLOPT_FALSE@@HAVE_OCAML_TRUE@	  META *.so *.a *.cma *.cmi *.mli
 
 # Tell version 3.79 and up of GNU make to not build goals in this
 # directory in parallel.  (See RHBZ#502309).
