@@ -18,7 +18,7 @@
 # major/minor/release must be numbers
 m4_define([hivex_major],   [1])
 m4_define([hivex_minor],   [2])
-m4_define([hivex_release], [5])
+m4_define([hivex_release], [6])
 # extra can be any string
 m4_define([hivex_extra],   [])
 
@@ -40,7 +40,7 @@ AC_DEFINE([PACKAGE_VERSION_EXTRA],["hivex_extra"],[Extra version string])
 gl_EARLY
 gl_INIT
 
-AC_PROG_LIBTOOL
+AM_PROG_LIBTOOL
 
 dnl Check for basic C environment.
 AC_PROG_CC_STDC
@@ -174,6 +174,7 @@ dnl Check for OCaml (optional, for OCaml bindings).
 AC_PROG_OCAML
 AC_PROG_FINDLIB
 AM_CONDITIONAL([HAVE_OCAML],[test "x$OCAMLC" != "xno" -a "x$OCAMLFIND" != "xno"])
+AM_CONDITIONAL([HAVE_OCAMLOPT], [test "x$OCAMLOPT" != "xno" -a "x$OCAMLFIND" != "xno"])
 
 if test "x$OCAMLC" != "xno"; then
     dnl Check if we have caml/unixsupport.h header (OCaml bindings only).
@@ -192,9 +193,9 @@ if test "x$OCAMLC" != "xno"; then
     echo "char $f (); char foo() { return $f (); }" > conftest.c
     rm -f conftest_ml.ml
     touch conftest_ml.ml
-    if $OCAMLOPT -c conftest.c 2>/dev/null && \
-       $OCAMLOPT -c conftest_ml.ml 2>/dev/null && \
-       $OCAMLOPT conftest.o conftest_ml.cmx -o conftest 2>/dev/null ; then
+    if $OCAMLC -c conftest.c 2>/dev/null && \
+       $OCAMLC -c conftest_ml.ml 2>/dev/null && \
+       $OCAMLC conftest.o conftest_ml.cmo -o conftest 2>/dev/null ; then
         AC_DEFINE([HAVE_CAML_RAISE_WITH_ARGS],[1],
                   [Defined if function caml_raise_with_args exists.])
         AC_MSG_RESULT([found])
@@ -232,47 +233,25 @@ AC_CHECK_PROG([PYTHON],[python],[python],[no])
 
 PYTHON_PREFIX=
 PYTHON_VERSION=
-PYTHON_INCLUDEDIR=
-PYTHON_SITE_PACKAGES=
 
 if test "x$PYTHON" != "xno"; then
     PYTHON_PREFIX=`$PYTHON -c "import sys; print sys.prefix"`
     PYTHON_VERSION=`$PYTHON -c "import sys; print sys.version[[0:3]]"`
-    for d in \
-        $PYTHON_PREFIX/include/python$PYTHON_VERSION \
-        /usr/include/python$PYTHON_VERSION \
-        /usr/local/include/python$PYTHON_VERSION
-    do
-        AC_MSG_CHECKING([Python.h in $d])
-        if test -r "$d/Python.h"; then
-            AC_MSG_RESULT([found])
-            PYTHON_INCLUDEDIR=$d
-            break
-        fi
-        AC_MSG_RESULT([not found])
-    done
-    if test "x$PYTHON_INCLUDEDIR" = "x"; then
-        AC_MSG_WARN([Python include directory not found])
-    fi
 
-    for d in \
-        $PYTHON_PREFIX/lib64/python$PYTHON_VERSION/site-packages \
-        $PYTHON_PREFIX/lib/python$PYTHON_VERSION/site-packages \
-        /usr/lib64/python$PYTHON_VERSION/site-packages \
-        /usr/lib/python$PYTHON_VERSION/site-packages \
-        /usr/local/lib/python$PYTHON_VERSION/site-packages
-    do
-        AC_MSG_CHECKING([for $d])
-        if test -d "$d"; then
-            AC_MSG_RESULT([found])
-            PYTHON_SITE_PACKAGES=$d
-            break
-        fi
-        AC_MSG_RESULT([not found])
-    done
-    if test "x$PYTHON_SITE_PACKAGES" = "x"; then
-        AC_MSG_WARN([Python site-packages directory not found])
+    AC_MSG_CHECKING([for Python include path])
+    if test -z "$PYTHON_INCLUDEDIR"; then
+        python_path=`$PYTHON -c "import distutils.sysconfig; \
+                                 print (distutils.sysconfig.get_python_inc ());"`
+        PYTHON_INCLUDEDIR=$python_path
     fi
+    AC_MSG_RESULT([$PYTHON_INCLUDEDIR])
+
+    AC_MSG_CHECKING([for Python site-packages path])
+    if test -z "$PYTHON_SITE_PACKAGES"; then
+        PYTHON_SITE_PACKAGES=`$PYTHON -c "import distutils.sysconfig; \
+                print (distutils.sysconfig.get_python_lib(1,0));"`
+    fi
+    AC_MSG_RESULT([$PYTHON_SITE_PACKAGES])
 
     old_LIBS="$LIBS"
     LIBS="$LIBS -lpython$PYTHON_VERSION"
@@ -444,6 +423,7 @@ dnl     [test "x$GHC" != "xno"])
 dnl Produce output files.
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile
+                 generator/Makefile
                  gnulib/lib/Makefile
                  gnulib/tests/Makefile
                  hivex.pc

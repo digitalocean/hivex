@@ -1,6 +1,6 @@
 ## DO NOT EDIT! GENERATED AUTOMATICALLY!
 ## Process this file with automake to produce Makefile.in.
-# Copyright (C) 2002-2010 Free Software Foundation, Inc.
+# Copyright (C) 2002-2011 Free Software Foundation, Inc.
 #
 # This file is free software, distributed under the terms of the GNU
 # General Public License.  As a special exception to the GNU General
@@ -12,7 +12,7 @@
 
 AUTOMAKE_OPTIONS = 1.5 foreign
 
-SUBDIRS =
+SUBDIRS = .
 TESTS =
 XFAIL_TESTS =
 TESTS_ENVIRONMENT =
@@ -31,6 +31,7 @@ DISTCLEANFILES =
 MAINTAINERCLEANFILES =
 
 AM_CPPFLAGS = \
+  -D@gltests_WITNESS@=1 \
   -I. -I$(srcdir) \
   -I../.. -I$(srcdir)/../.. \
   -I../../gnulib/lib -I$(srcdir)/../../gnulib/lib
@@ -93,6 +94,30 @@ EXTRA_DIST += test-binary-io.sh test-binary-io.c macros.h
 
 ## end   gnulib module binary-io-tests
 
+## begin gnulib module c++defs
+
+# The BUILT_SOURCES created by this Makefile snippet are not used via #include
+# statements but through direct file reference. Therefore this snippet must be
+# present in all Makefile.am that need it. This is ensured by the applicability
+# 'all' defined above.
+
+BUILT_SOURCES += c++defs.h
+# The c++defs.h that gets inserted into generated .h files is the same as
+# build-aux/c++defs.h, except that it has the copyright header cut off.
+c++defs.h: $(top_srcdir)/build-aux/c++defs.h
+	$(AM_V_GEN)rm -f $@-t $@ && \
+	sed -n -e '/_GL_CXXDEFS/,$$p' \
+	  < $(top_srcdir)/build-aux/c++defs.h \
+	  > $@-t && \
+	mv $@-t $@
+MOSTLYCLEANFILES += c++defs.h c++defs.h-t
+
+CXXDEFS_H=c++defs.h
+
+EXTRA_DIST += $(top_srcdir)/build-aux/c++defs.h
+
+## end   gnulib module c++defs
+
 ## begin gnulib module c-ctype-tests
 
 TESTS += test-c-ctype
@@ -101,6 +126,13 @@ check_PROGRAMS += test-c-ctype
 EXTRA_DIST += test-c-ctype.c macros.h
 
 ## end   gnulib module c-ctype-tests
+
+## begin gnulib module dosname
+
+
+EXTRA_DIST += dosname.h
+
+## end   gnulib module dosname
 
 ## begin gnulib module dup2
 
@@ -143,13 +175,15 @@ BUILT_SOURCES += fcntl.h
 
 # We need the following in order to create <fcntl.h> when the system
 # doesn't have one that works with the given compiler.
-fcntl.h: fcntl.in.h $(WARN_ON_USE_H) $(ARG_NONNULL_H)
+fcntl.h: fcntl.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H) $(WARN_ON_USE_H)
 	$(AM_V_GEN)rm -f $@-t $@ && \
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
 	  sed -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
 	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
+	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
 	      -e 's|@''NEXT_FCNTL_H''@|$(NEXT_FCNTL_H)|g' \
 	      -e 's|@''GNULIB_FCNTL''@|$(GNULIB_FCNTL)|g' \
+	      -e 's|@''GNULIB_NONBLOCKING''@|$(GNULIB_NONBLOCKING)|g' \
 	      -e 's|@''GNULIB_OPEN''@|$(GNULIB_OPEN)|g' \
 	      -e 's|@''GNULIB_OPENAT''@|$(GNULIB_OPENAT)|g' \
 	      -e 's|@''HAVE_FCNTL''@|$(HAVE_FCNTL)|g' \
@@ -157,6 +191,7 @@ fcntl.h: fcntl.in.h $(WARN_ON_USE_H) $(ARG_NONNULL_H)
 	      -e 's|@''REPLACE_FCNTL''@|$(REPLACE_FCNTL)|g' \
 	      -e 's|@''REPLACE_OPEN''@|$(REPLACE_OPEN)|g' \
 	      -e 's|@''REPLACE_OPENAT''@|$(REPLACE_OPENAT)|g' \
+	      -e '/definitions of _GL_FUNCDECL_RPL/r $(CXXDEFS_H)' \
 	      -e '/definition of _GL_ARG_NONNULL/r $(ARG_NONNULL_H)' \
 	      -e '/definition of _GL_WARN_ON_USE/r $(WARN_ON_USE_H)' \
 	      < $(srcdir)/fcntl.in.h; \
@@ -184,6 +219,23 @@ test_getopt_LDADD = $(LDADD) $(LIBINTL)
 EXTRA_DIST += macros.h signature.h test-getopt.c test-getopt.h test-getopt_long.h
 
 ## end   gnulib module getopt-posix-tests
+
+## begin gnulib module getpagesize
+
+
+EXTRA_DIST += getpagesize.c
+
+EXTRA_libtests_a_SOURCES += getpagesize.c
+
+## end   gnulib module getpagesize
+
+## begin gnulib module ignore-value-tests
+
+TESTS += test-ignore-value
+check_PROGRAMS += test-ignore-value
+EXTRA_DIST += test-ignore-value.c
+
+## end   gnulib module ignore-value-tests
 
 ## begin gnulib module inttypes-tests
 
@@ -354,7 +406,7 @@ EXTRA_DIST += test-stdio.c
 
 TESTS += test-stdlib
 check_PROGRAMS += test-stdlib
-EXTRA_DIST += test-stdlib.c
+EXTRA_DIST += test-stdlib.c test-sys_wait.h
 
 ## end   gnulib module stdlib-tests
 
@@ -373,6 +425,14 @@ check_PROGRAMS += test-string
 EXTRA_DIST += test-string.c
 
 ## end   gnulib module string-tests
+
+## begin gnulib module strnlen-tests
+
+TESTS += test-strnlen
+check_PROGRAMS += test-strnlen
+EXTRA_DIST += test-strnlen.c zerosize-ptr.h signature.h macros.h
+
+## end   gnulib module strnlen-tests
 
 ## begin gnulib module symlink
 
@@ -397,12 +457,13 @@ BUILT_SOURCES += sys/stat.h
 
 # We need the following in order to create <sys/stat.h> when the system
 # has one that is incomplete.
-sys/stat.h: sys_stat.in.h $(WARN_ON_USE_H) $(ARG_NONNULL_H)
+sys/stat.h: sys_stat.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H) $(WARN_ON_USE_H)
 	$(AM_V_at)$(MKDIR_P) sys
 	$(AM_V_GEN)rm -f $@-t $@ && \
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
 	  sed -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
 	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
+	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
 	      -e 's|@''NEXT_SYS_STAT_H''@|$(NEXT_SYS_STAT_H)|g' \
 	      -e 's|@''GNULIB_FCHMODAT''@|$(GNULIB_FCHMODAT)|g' \
 	      -e 's|@''GNULIB_FSTATAT''@|$(GNULIB_FSTATAT)|g' \
@@ -436,6 +497,7 @@ sys/stat.h: sys_stat.in.h $(WARN_ON_USE_H) $(ARG_NONNULL_H)
 	      -e 's|@''REPLACE_MKNOD''@|$(REPLACE_MKNOD)|g' \
 	      -e 's|@''REPLACE_STAT''@|$(REPLACE_STAT)|g' \
 	      -e 's|@''REPLACE_UTIMENSAT''@|$(REPLACE_UTIMENSAT)|g' \
+	      -e '/definitions of _GL_FUNCDECL_RPL/r $(CXXDEFS_H)' \
 	      -e '/definition of _GL_ARG_NONNULL/r $(ARG_NONNULL_H)' \
 	      -e '/definition of _GL_WARN_ON_USE/r $(WARN_ON_USE_H)' \
 	      < $(srcdir)/sys_stat.in.h; \
@@ -462,20 +524,32 @@ BUILT_SOURCES += time.h
 
 # We need the following in order to create <time.h> when the system
 # doesn't have one that works with the given compiler.
-time.h: time.in.h $(ARG_NONNULL_H)
+time.h: time.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H) $(WARN_ON_USE_H)
 	$(AM_V_GEN)rm -f $@-t $@ && \
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
 	  sed -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
 	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
-	      -e 's|@NEXT_TIME_H''@|$(NEXT_TIME_H)|g' \
-	      -e 's|@REPLACE_LOCALTIME_R''@|$(REPLACE_LOCALTIME_R)|g' \
-	      -e 's|@REPLACE_MKTIME''@|$(REPLACE_MKTIME)|g' \
-	      -e 's|@REPLACE_NANOSLEEP''@|$(REPLACE_NANOSLEEP)|g' \
-	      -e 's|@REPLACE_STRPTIME''@|$(REPLACE_STRPTIME)|g' \
-	      -e 's|@REPLACE_TIMEGM''@|$(REPLACE_TIMEGM)|g' \
-	      -e 's|@SYS_TIME_H_DEFINES_STRUCT_TIMESPEC''@|$(SYS_TIME_H_DEFINES_STRUCT_TIMESPEC)|g' \
-	      -e 's|@TIME_H_DEFINES_STRUCT_TIMESPEC''@|$(TIME_H_DEFINES_STRUCT_TIMESPEC)|g' \
+	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
+	      -e 's|@''NEXT_TIME_H''@|$(NEXT_TIME_H)|g' \
+	      -e 's|@''GNULIB_MKTIME''@|$(GNULIB_MKTIME)|g' \
+	      -e 's|@''GNULIB_NANOSLEEP''@|$(GNULIB_NANOSLEEP)|g' \
+	      -e 's|@''GNULIB_STRPTIME''@|$(GNULIB_STRPTIME)|g' \
+	      -e 's|@''GNULIB_TIMEGM''@|$(GNULIB_TIMEGM)|g' \
+	      -e 's|@''GNULIB_TIME_R''@|$(GNULIB_TIME_R)|g' \
+	      -e 's|@''HAVE_DECL_LOCALTIME_R''@|$(HAVE_DECL_LOCALTIME_R)|g' \
+	      -e 's|@''HAVE_NANOSLEEP''@|$(HAVE_NANOSLEEP)|g' \
+	      -e 's|@''HAVE_STRPTIME''@|$(HAVE_STRPTIME)|g' \
+	      -e 's|@''HAVE_TIMEGM''@|$(HAVE_TIMEGM)|g' \
+	      -e 's|@''REPLACE_LOCALTIME_R''@|$(REPLACE_LOCALTIME_R)|g' \
+	      -e 's|@''REPLACE_MKTIME''@|$(REPLACE_MKTIME)|g' \
+	      -e 's|@''REPLACE_NANOSLEEP''@|$(REPLACE_NANOSLEEP)|g' \
+	      -e 's|@''REPLACE_TIMEGM''@|$(REPLACE_TIMEGM)|g' \
+	      -e 's|@''PTHREAD_H_DEFINES_STRUCT_TIMESPEC''@|$(PTHREAD_H_DEFINES_STRUCT_TIMESPEC)|g' \
+	      -e 's|@''SYS_TIME_H_DEFINES_STRUCT_TIMESPEC''@|$(SYS_TIME_H_DEFINES_STRUCT_TIMESPEC)|g' \
+	      -e 's|@''TIME_H_DEFINES_STRUCT_TIMESPEC''@|$(TIME_H_DEFINES_STRUCT_TIMESPEC)|g' \
+	      -e '/definitions of _GL_FUNCDECL_RPL/r $(CXXDEFS_H)' \
 	      -e '/definition of _GL_ARG_NONNULL/r $(ARG_NONNULL_H)' \
+	      -e '/definition of _GL_WARN_ON_USE/r $(WARN_ON_USE_H)' \
 	      < $(srcdir)/time.in.h; \
 	} > $@-t && \
 	mv $@-t $@
@@ -540,16 +614,19 @@ EXTRA_DIST += test-vasprintf.c signature.h macros.h
 
 TESTS += test-vc-list-files-git.sh
 TESTS += test-vc-list-files-cvs.sh
-TESTS_ENVIRONMENT += PATH='$(abs_aux_dir)'$(PATH_SEPARATOR)"$$PATH"
-EXTRA_DIST += test-vc-list-files-git.sh test-vc-list-files-cvs.sh
+TESTS_ENVIRONMENT += abs_aux_dir='$(abs_aux_dir)'
+EXTRA_DIST += test-vc-list-files-git.sh test-vc-list-files-cvs.sh init.sh
 
 ## end   gnulib module vc-list-files-tests
 
-## begin gnulib module verify
+## begin gnulib module verify-tests
 
-libtests_a_SOURCES += verify.h
+TESTS_ENVIRONMENT += MAKE='$(MAKE)'
+TESTS += test-verify test-verify.sh
+check_PROGRAMS += test-verify
+EXTRA_DIST += test-verify.c test-verify.sh init.sh
 
-## end   gnulib module verify
+## end   gnulib module verify-tests
 
 ## begin gnulib module warn-on-use
 
@@ -584,7 +661,7 @@ TESTS += test-xstrtol.sh
 check_PROGRAMS += test-xstrtol test-xstrtoul
 test_xstrtol_LDADD = $(LDADD) @LIBINTL@
 test_xstrtoul_LDADD = $(LDADD) @LIBINTL@
-EXTRA_DIST += test-xstrtol.c test-xstrtoul.c test-xstrtol.sh
+EXTRA_DIST += init.sh test-xstrtol.c test-xstrtoul.c test-xstrtol.sh
 
 ## end   gnulib module xstrtol-tests
 

@@ -5,7 +5,7 @@
    generator/generator.ml
  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 
- Copyright (C) 2009-2010 Red Hat Inc.
+ Copyright (C) 2009-2011 Red Hat Inc.
  Derived from code by Petter Nordahl-Hagen under a compatible license:
    Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  Derived from code by Markus Stephany under a compatible license:
@@ -679,7 +679,7 @@ attached.
  "@"="Generic Stack"
 
 This is the "default key".  In reality (ie. inside the binary hive)
-the key string is the empty string.  In reg files this is written as
+the key string is the empty string.  In .REG files this is written as
 C<@> but this has no meaning either in the hives themselves or in this
 library.  The value is a string (type 1 - see C<enum hive_type>
 above).
@@ -688,8 +688,8 @@ above).
 
 This is a regular (key, value) pair, with the value being a type 1
 string.  Note that inside the binary file the string is likely to be
-UTF-16 encoded.  This library converts to and from UTF-8 strings
-transparently.
+UTF-16LE encoded.  This library converts to and from UTF-8 strings
+transparently in some cases.
 
  "TilePath"=str(2):"%systemroot%\\system32"
 
@@ -703,9 +703,9 @@ The value in this case is a dword (type 4).
 
  "FriendlyTypeName"=hex(2):40,00,....
 
-This value is an expanded string (type 2) represented in the reg file
+This value is an expanded string (type 2) represented in the .REG file
 as a series of hex bytes.  In this case the string appears to be a
-UTF-16 string.
+UTF-16LE string.
 
 =head1 NOTE ON THE USE OF ERRNO
 

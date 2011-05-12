@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2010 Red Hat Inc.
+ * Copyright (C) 2009-2011 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -290,7 +290,7 @@ py_hivex_node_name (PyObject *self, PyObject *args)
   PyObject *py_h;
   long node;
 
-  if (!PyArg_ParseTuple (args, (char *) "OL:hivex_node_name", &py_h, &node))
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_node_name", &py_h, &node))
     return NULL;
   h = get_handle (py_h);
   r = hivex_node_name (h, node);
@@ -313,7 +313,7 @@ py_hivex_node_children (PyObject *self, PyObject *args)
   PyObject *py_h;
   long node;
 
-  if (!PyArg_ParseTuple (args, (char *) "OL:hivex_node_children", &py_h, &node))
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_node_children", &py_h, &node))
     return NULL;
   h = get_handle (py_h);
   r = hivex_node_children (h, node);
@@ -339,7 +339,7 @@ py_hivex_node_get_child (PyObject *self, PyObject *args)
   long node;
   char *name;
 
-  if (!PyArg_ParseTuple (args, (char *) "OLs:hivex_node_get_child", &py_h, &node, &name))
+  if (!PyArg_ParseTuple (args, (char *) "Ols:hivex_node_get_child", &py_h, &node, &name))
     return NULL;
   h = get_handle (py_h);
   r = hivex_node_get_child (h, node, name);
@@ -367,7 +367,7 @@ py_hivex_node_parent (PyObject *self, PyObject *args)
   PyObject *py_h;
   long node;
 
-  if (!PyArg_ParseTuple (args, (char *) "OL:hivex_node_parent", &py_h, &node))
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_node_parent", &py_h, &node))
     return NULL;
   h = get_handle (py_h);
   r = hivex_node_parent (h, node);
@@ -390,7 +390,7 @@ py_hivex_node_values (PyObject *self, PyObject *args)
   PyObject *py_h;
   long node;
 
-  if (!PyArg_ParseTuple (args, (char *) "OL:hivex_node_values", &py_h, &node))
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_node_values", &py_h, &node))
     return NULL;
   h = get_handle (py_h);
   r = hivex_node_values (h, node);
@@ -415,7 +415,7 @@ py_hivex_node_get_value (PyObject *self, PyObject *args)
   long node;
   char *key;
 
-  if (!PyArg_ParseTuple (args, (char *) "OLs:hivex_node_get_value", &py_h, &node, &key))
+  if (!PyArg_ParseTuple (args, (char *) "Ols:hivex_node_get_value", &py_h, &node, &key))
     return NULL;
   h = get_handle (py_h);
   r = hivex_node_get_value (h, node, key);
@@ -438,7 +438,7 @@ py_hivex_value_key (PyObject *self, PyObject *args)
   PyObject *py_h;
   long val;
 
-  if (!PyArg_ParseTuple (args, (char *) "OL:hivex_value_key", &py_h, &val))
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_value_key", &py_h, &val))
     return NULL;
   h = get_handle (py_h);
   r = hivex_value_key (h, val);
@@ -463,7 +463,7 @@ py_hivex_value_type (PyObject *self, PyObject *args)
   PyObject *py_h;
   long val;
 
-  if (!PyArg_ParseTuple (args, (char *) "OL:hivex_value_type", &py_h, &val))
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_value_type", &py_h, &val))
     return NULL;
   h = get_handle (py_h);
   r = hivex_value_type (h, val, &t, &len);
@@ -488,7 +488,7 @@ py_hivex_value_value (PyObject *self, PyObject *args)
   PyObject *py_h;
   long val;
 
-  if (!PyArg_ParseTuple (args, (char *) "OL:hivex_value_value", &py_h, &val))
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_value_value", &py_h, &val))
     return NULL;
   h = get_handle (py_h);
   r = hivex_value_value (h, val, &t, &len);
@@ -512,7 +512,7 @@ py_hivex_value_string (PyObject *self, PyObject *args)
   PyObject *py_h;
   long val;
 
-  if (!PyArg_ParseTuple (args, (char *) "OL:hivex_value_string", &py_h, &val))
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_value_string", &py_h, &val))
     return NULL;
   h = get_handle (py_h);
   r = hivex_value_string (h, val);
@@ -535,7 +535,7 @@ py_hivex_value_multiple_strings (PyObject *self, PyObject *args)
   PyObject *py_h;
   long val;
 
-  if (!PyArg_ParseTuple (args, (char *) "OL:hivex_value_multiple_strings", &py_h, &val))
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_value_multiple_strings", &py_h, &val))
     return NULL;
   h = get_handle (py_h);
   r = hivex_value_multiple_strings (h, val);
@@ -560,7 +560,7 @@ py_hivex_value_dword (PyObject *self, PyObject *args)
   PyObject *py_h;
   long val;
 
-  if (!PyArg_ParseTuple (args, (char *) "OL:hivex_value_dword", &py_h, &val))
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_value_dword", &py_h, &val))
     return NULL;
   h = get_handle (py_h);
   r = hivex_value_dword (h, val);
@@ -584,7 +584,7 @@ py_hivex_value_qword (PyObject *self, PyObject *args)
   PyObject *py_h;
   long val;
 
-  if (!PyArg_ParseTuple (args, (char *) "OL:hivex_value_qword", &py_h, &val))
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_value_qword", &py_h, &val))
     return NULL;
   h = get_handle (py_h);
   r = hivex_value_qword (h, val);
@@ -632,7 +632,7 @@ py_hivex_node_add_child (PyObject *self, PyObject *args)
   long parent;
   char *name;
 
-  if (!PyArg_ParseTuple (args, (char *) "OLs:hivex_node_add_child", &py_h, &parent, &name))
+  if (!PyArg_ParseTuple (args, (char *) "Ols:hivex_node_add_child", &py_h, &parent, &name))
     return NULL;
   h = get_handle (py_h);
   r = hivex_node_add_child (h, parent, name);
@@ -655,7 +655,7 @@ py_hivex_node_delete_child (PyObject *self, PyObject *args)
   PyObject *py_h;
   long node;
 
-  if (!PyArg_ParseTuple (args, (char *) "OL:hivex_node_delete_child", &py_h, &node))
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_node_delete_child", &py_h, &node))
     return NULL;
   h = get_handle (py_h);
   r = hivex_node_delete_child (h, node);
@@ -681,7 +681,7 @@ py_hivex_node_set_values (PyObject *self, PyObject *args)
   py_set_values values;
   PyObject *py_values;
 
-  if (!PyArg_ParseTuple (args, (char *) "OLO:hivex_node_set_values", &py_h, &node, &py_values))
+  if (!PyArg_ParseTuple (args, (char *) "OlO:hivex_node_set_values", &py_h, &node, &py_values))
     return NULL;
   h = get_handle (py_h);
   if (get_values (py_values, &values) == -1)
@@ -710,7 +710,7 @@ py_hivex_node_set_value (PyObject *self, PyObject *args)
   hive_set_value val;
   PyObject *py_val;
 
-  if (!PyArg_ParseTuple (args, (char *) "OLO:hivex_node_set_value", &py_h, &node, &py_val))
+  if (!PyArg_ParseTuple (args, (char *) "OlO:hivex_node_set_value", &py_h, &node, &py_val))
     return NULL;
   h = get_handle (py_h);
   if (get_value (py_val, &val) == -1)
