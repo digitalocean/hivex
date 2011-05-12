@@ -1,3 +1,9 @@
+hivex (1.2.6-2) unstable; urgency=low
+
+  * Added missing build-dependency.
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 13 May 2011 00:41:41 +0200
+
 hivex (1.2.6-1) unstable; urgency=low
 
   * New upstream version
