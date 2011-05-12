@@ -3,7 +3,7 @@
 #   generator/generator.ml
 # ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 #
-# Copyright (C) 2009-2010 Red Hat Inc.
+# Copyright (C) 2009-2011 Red Hat Inc.
 # Derived from code by Petter Nordahl-Hagen under a compatible license:
 #   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
 # Derived from code by Markus Stephany under a compatible license:
@@ -104,8 +104,7 @@ sub open {
 
  $node = $h->root ()
 
-Return root node of the hive.  All valid registries must contain
-a root node.
+Return root node of the hive.  All valid hives must contain a root node.
 
 This returns a node handle.
 
@@ -298,9 +297,9 @@ values stored at C<node> by passing C<@values = []>.
 
  $h->node_set_value ($node, $val)
 
-This call can be used to replace a single (key, value) pair
-stored in C<node>. If the key does not already exist, then a
-new key is added. Key matching is case insensitive.
+This call can be used to replace a single C<(key, value)> pair
+stored in C<node>.  If the key does not already exist, then a
+new key is added.  Key matching is case insensitive.
 
 C<node> is the node to modify.
 
@@ -312,7 +311,7 @@ C<node> is the node to modify.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2009-2010 Red Hat Inc.
+Copyright (C) 2009-2011 Red Hat Inc.
 
 =head1 LICENSE
 

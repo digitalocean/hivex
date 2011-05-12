@@ -1,5 +1,5 @@
 # DO NOT EDIT! GENERATED AUTOMATICALLY!
-# Copyright (C) 2002-2010 Free Software Foundation, Inc.
+# Copyright (C) 2002-2011 Free Software Foundation, Inc.
 #
 # This file is free software, distributed under the terms of the GNU
 # General Public License.  As a special exception to the GNU General
@@ -12,7 +12,8 @@
 # This file represents the compiled summary of the specification in
 # gnulib-cache.m4. It lists the computed macro invocations that need
 # to be invoked from configure.ac.
-# In projects using CVS, this file can be treated like other built files.
+# In projects that use version control, this file can be treated like
+# other built files.
 
 
 # This macro should be invoked from ./configure.ac, in the section
@@ -33,6 +34,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module c++defs:
   # Code from module c-ctype:
   # Code from module c-ctype-tests:
+  # Code from module dosname:
   # Code from module dup2:
   # Code from module dup2-tests:
   # Code from module environ:
@@ -51,14 +53,17 @@ AC_DEFUN([gl_EARLY],
   # Code from module getopt-gnu:
   # Code from module getopt-posix:
   # Code from module getopt-posix-tests:
+  # Code from module getpagesize:
   # Code from module gettext-h:
   # Code from module gitlog-to-changelog:
   # Code from module gnu-make:
   # Code from module gnumakefile:
   # Code from module ignore-value:
+  # Code from module ignore-value-tests:
   # Code from module include_next:
   # Code from module intprops:
   # Code from module inttypes:
+  # Code from module inttypes-incomplete:
   # Code from module inttypes-tests:
   # Code from module lstat:
   # Code from module lstat-tests:
@@ -75,6 +80,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module pathmax:
   # Code from module progname:
   # Code from module putenv:
+  # Code from module read:
   # Code from module safe-read:
   # Code from module safe-write:
   # Code from module same-inode:
@@ -100,9 +106,8 @@ AC_DEFUN([gl_EARLY],
   # Code from module string-tests:
   # Code from module strndup:
   # Code from module strnlen:
-  # Code from module strtol:
+  # Code from module strnlen-tests:
   # Code from module strtoll:
-  # Code from module strtoul:
   # Code from module strtoull:
   # Code from module symlink:
   # Code from module symlink-tests:
@@ -149,134 +154,79 @@ AC_DEFUN([gl_INIT],
   m4_pushdef([gl_LIBSOURCES_DIR], [])
   gl_COMMON
   gl_source_base='gnulib/lib'
-  # Code from module alloca-opt:
-  gl_FUNC_ALLOCA
-  # Code from module arg-nonnull:
-  # Code from module c++defs:
-  # Code from module c-ctype:
-  # Code from module errno:
-  gl_HEADER_ERRNO_H
-  # Code from module error:
-  gl_ERROR
-  m4_ifdef([AM_XGETTEXT_OPTION],
-    [AM_][XGETTEXT_OPTION([--flag=error:3:c-format])
-     AM_][XGETTEXT_OPTION([--flag=error_at_line:5:c-format])])
-  # Code from module exitfail:
-  # Code from module extensions:
-  # Code from module float:
-  gl_FLOAT_H
-  # Code from module full-read:
-  # Code from module full-write:
-  # Code from module getopt-gnu:
-  gl_FUNC_GETOPT_GNU
-  gl_MODULE_INDICATOR_FOR_TESTS([getopt-gnu])
-  # Code from module getopt-posix:
-  gl_FUNC_GETOPT_POSIX
-  # Code from module gettext-h:
-  AC_SUBST([LIBINTL])
-  AC_SUBST([LTLIBINTL])
-  # Code from module gitlog-to-changelog:
-  # Code from module gnu-make:
-  gl_GNU_MAKE
-  # Code from module gnumakefile:
-  # Autoconf 2.61a.99 and earlier don't support linking a file only
-  # in VPATH builds.  But since GNUmakefile is for maintainer use
-  # only, it does not matter if we skip the link with older autoconf.
-  # Automake 1.10.1 and earlier try to remove GNUmakefile in non-VPATH
-  # builds, so use a shell variable to bypass this.
-  GNUmakefile=GNUmakefile
-  m4_if(m4_version_compare([2.61a.100],
-  	m4_defn([m4_PACKAGE_VERSION])), [1], [],
-        [AC_CONFIG_LINKS([$GNUmakefile:$GNUmakefile], [],
-  	[GNUmakefile=$GNUmakefile])])
-  # Code from module ignore-value:
-  AC_REQUIRE([AC_C_INLINE])
-  # Code from module include_next:
-  # Code from module intprops:
-  # Code from module inttypes:
-  gl_INTTYPES_H
-  # Code from module maintainer-makefile:
-  AC_CONFIG_COMMANDS_PRE([m4_ifdef([AH_HEADER],
-    [AC_SUBST([CONFIG_INCLUDE], m4_defn([AH_HEADER]))])])
-  # Code from module manywarnings:
-  # Code from module memchr:
-  gl_FUNC_MEMCHR
-  gl_STRING_MODULE_INDICATOR([memchr])
-  # Code from module multiarch:
-  gl_MULTIARCH
-  # Code from module progname:
-  AC_CHECK_DECLS([program_invocation_name], [], [], [#include <errno.h>])
-  AC_CHECK_DECLS([program_invocation_short_name], [], [], [#include <errno.h>])
-  # Code from module safe-read:
-  gl_SAFE_READ
-  # Code from module safe-write:
-  gl_SAFE_WRITE
-  # Code from module size_max:
-  gl_SIZE_MAX
-  # Code from module ssize_t:
-  gt_TYPE_SSIZE_T
-  # Code from module stdbool:
-  AM_STDBOOL_H
-  # Code from module stddef:
-  gl_STDDEF_H
-  # Code from module stdint:
-  gl_STDINT_H
-  # Code from module stdio:
-  gl_STDIO_H
-  # Code from module stdlib:
-  gl_STDLIB_H
-  # Code from module strerror:
-  gl_FUNC_STRERROR
-  gl_STRING_MODULE_INDICATOR([strerror])
-  # Code from module string:
-  gl_HEADER_STRING_H
-  # Code from module strndup:
-  gl_FUNC_STRNDUP
-  gl_STRING_MODULE_INDICATOR([strndup])
-  # Code from module strnlen:
-  gl_FUNC_STRNLEN
-  gl_STRING_MODULE_INDICATOR([strnlen])
-  # Code from module strtol:
-  gl_FUNC_STRTOL
-  # Code from module strtoll:
-  gl_FUNC_STRTOLL
-  gl_STDLIB_MODULE_INDICATOR([strtoll])
-  # Code from module strtoul:
-  gl_FUNC_STRTOUL
-  # Code from module strtoull:
-  gl_FUNC_STRTOULL
-  gl_STDLIB_MODULE_INDICATOR([strtoull])
-  # Code from module unistd:
-  gl_UNISTD_H
-  # Code from module useless-if-before-free:
-  # Code from module vasnprintf:
-  gl_FUNC_VASNPRINTF
-  # Code from module vasprintf:
-  gl_FUNC_VASPRINTF
-  gl_STDIO_MODULE_INDICATOR([vasprintf])
-  m4_ifdef([AM_XGETTEXT_OPTION],
-    [AM_][XGETTEXT_OPTION([--flag=asprintf:2:c-format])
-     AM_][XGETTEXT_OPTION([--flag=vasprintf:2:c-format])])
-  # Code from module vc-list-files:
-  # Code from module warn-on-use:
-  # Code from module warnings:
-  AC_SUBST([WARN_CFLAGS])
-  # Code from module wchar:
-  gl_WCHAR_H
-  # Code from module write:
-  gl_FUNC_WRITE
-  gl_UNISTD_MODULE_INDICATOR([write])
-  # Code from module xsize:
-  gl_XSIZE
-  # Code from module xstrtol:
-  gl_XSTRTOL
-  # Code from module xstrtoll:
-  AC_LIBOBJ([xstrtoll])
-  AC_LIBOBJ([xstrtoull])
-  AC_TYPE_LONG_LONG_INT
-  test $ac_cv_type_long_long_int = no \
-    && AC_MSG_ERROR(
-        [you lack long long support; required by gnulib's xstrtoll module])
+gl_FUNC_ALLOCA
+gl_HEADER_ERRNO_H
+gl_ERROR
+m4_ifdef([AM_XGETTEXT_OPTION],
+  [AM_][XGETTEXT_OPTION([--flag=error:3:c-format])
+   AM_][XGETTEXT_OPTION([--flag=error_at_line:5:c-format])])
+gl_FLOAT_H
+gl_FUNC_GETOPT_GNU
+gl_MODULE_INDICATOR_FOR_TESTS([getopt-gnu])
+gl_FUNC_GETOPT_POSIX
+AC_SUBST([LIBINTL])
+AC_SUBST([LTLIBINTL])
+gl_GNU_MAKE
+# Autoconf 2.61a.99 and earlier don't support linking a file only
+# in VPATH builds.  But since GNUmakefile is for maintainer use
+# only, it does not matter if we skip the link with older autoconf.
+# Automake 1.10.1 and earlier try to remove GNUmakefile in non-VPATH
+# builds, so use a shell variable to bypass this.
+GNUmakefile=GNUmakefile
+m4_if(m4_version_compare([2.61a.100],
+        m4_defn([m4_PACKAGE_VERSION])), [1], [],
+      [AC_CONFIG_LINKS([$GNUmakefile:$GNUmakefile], [],
+        [GNUmakefile=$GNUmakefile])])
+AC_REQUIRE([AC_C_INLINE])
+gl_INTTYPES_INCOMPLETE
+AC_CONFIG_COMMANDS_PRE([m4_ifdef([AH_HEADER],
+  [AC_SUBST([CONFIG_INCLUDE], m4_defn([AH_HEADER]))])])
+gl_FUNC_MEMCHR
+gl_STRING_MODULE_INDICATOR([memchr])
+gl_MULTIARCH
+AC_CHECK_DECLS([program_invocation_name], [], [], [#include <errno.h>])
+AC_CHECK_DECLS([program_invocation_short_name], [], [], [#include <errno.h>])
+gl_FUNC_READ
+gl_UNISTD_MODULE_INDICATOR([read])
+gl_SAFE_READ
+gl_SAFE_WRITE
+gl_SIZE_MAX
+gt_TYPE_SSIZE_T
+AM_STDBOOL_H
+gl_STDDEF_H
+gl_STDINT_H
+gl_STDIO_H
+gl_STDLIB_H
+gl_FUNC_STRERROR
+gl_STRING_MODULE_INDICATOR([strerror])
+gl_HEADER_STRING_H
+gl_FUNC_STRNDUP
+gl_STRING_MODULE_INDICATOR([strndup])
+gl_FUNC_STRNLEN
+gl_STRING_MODULE_INDICATOR([strnlen])
+gl_FUNC_STRTOLL
+gl_STDLIB_MODULE_INDICATOR([strtoll])
+gl_FUNC_STRTOULL
+gl_STDLIB_MODULE_INDICATOR([strtoull])
+gl_UNISTD_H
+gl_FUNC_VASNPRINTF
+gl_FUNC_VASPRINTF
+gl_STDIO_MODULE_INDICATOR([vasprintf])
+m4_ifdef([AM_XGETTEXT_OPTION],
+  [AM_][XGETTEXT_OPTION([--flag=asprintf:2:c-format])
+   AM_][XGETTEXT_OPTION([--flag=vasprintf:2:c-format])])
+AC_SUBST([WARN_CFLAGS])
+gl_WCHAR_H
+gl_FUNC_WRITE
+gl_UNISTD_MODULE_INDICATOR([write])
+gl_XSIZE
+gl_XSTRTOL
+AC_LIBOBJ([xstrtoll])
+AC_LIBOBJ([xstrtoull])
+AC_TYPE_LONG_LONG_INT
+test $ac_cv_type_long_long_int = no \
+  && AC_MSG_ERROR(
+      [you lack long long support; required by gnulib's xstrtoll module])
   # End of code from modules
   m4_ifval(gl_LIBSOURCES_LIST, [
     m4_syscmd([test ! -d ]m4_defn([gl_LIBSOURCES_DIR])[ ||
@@ -323,36 +273,47 @@ changequote([, ])dnl
   AC_SUBST([gltests_WITNESS])
   gl_module_indicator_condition=$gltests_WITNESS
   m4_pushdef([gl_MODULE_INDICATOR_CONDITION], [$gl_module_indicator_condition])
-  gl_FUNC_DUP2
-  gl_UNISTD_MODULE_INDICATOR([dup2])
-  gl_ENVIRON
-  gl_UNISTD_MODULE_INDICATOR([environ])
-  gl_FCNTL_H
-  gl_FUNC_LSTAT
-  gl_SYS_STAT_MODULE_INDICATOR([lstat])
-  gl_FUNC_MALLOC_POSIX
-  gl_STDLIB_MODULE_INDICATOR([malloc-posix])
-  gl_MALLOCA
-  gl_FUNC_OPEN
-  gl_FCNTL_MODULE_INDICATOR([open])
-  gl_PATHMAX
-  gl_FUNC_PUTENV
-  gl_STDLIB_MODULE_INDICATOR([putenv])
-  gl_FUNC_SETENV
-  gl_STDLIB_MODULE_INDICATOR([setenv])
-  gl_FUNC_STAT
-  gl_SYS_STAT_MODULE_INDICATOR([stat])
-  gt_TYPE_WCHAR_T
-  gt_TYPE_WINT_T
-  gl_FUNC_SYMLINK
-  gl_UNISTD_MODULE_INDICATOR([symlink])
-  gl_HEADER_SYS_STAT_H
-  AC_PROG_MKDIR_P
-  gl_HEADER_TIME_H
-  gl_FUNC_UNSETENV
-  gl_STDLIB_MODULE_INDICATOR([unsetenv])
-  abs_aux_dir=`cd "$ac_aux_dir"; pwd`
-  AC_SUBST([abs_aux_dir])
+gl_FUNC_DUP2
+gl_UNISTD_MODULE_INDICATOR([dup2])
+gl_ENVIRON
+gl_UNISTD_MODULE_INDICATOR([environ])
+gl_FCNTL_H
+gl_FUNC_GETPAGESIZE
+gl_UNISTD_MODULE_INDICATOR([getpagesize])
+gl_INTTYPES_H
+gl_FUNC_LSTAT
+gl_SYS_STAT_MODULE_INDICATOR([lstat])
+gl_FUNC_MALLOC_POSIX
+gl_STDLIB_MODULE_INDICATOR([malloc-posix])
+gl_MALLOCA
+dnl Check for prerequisites for memory fence checks.
+gl_FUNC_MMAP_ANON
+AC_CHECK_HEADERS_ONCE([sys/mman.h])
+AC_CHECK_FUNCS_ONCE([mprotect])
+gl_FUNC_OPEN
+gl_FCNTL_MODULE_INDICATOR([open])
+gl_PATHMAX
+gl_FUNC_PUTENV
+gl_STDLIB_MODULE_INDICATOR([putenv])
+gl_FUNC_SETENV
+gl_STDLIB_MODULE_INDICATOR([setenv])
+gl_FUNC_STAT
+gl_SYS_STAT_MODULE_INDICATOR([stat])
+gt_TYPE_WCHAR_T
+gt_TYPE_WINT_T
+dnl Check for prerequisites for memory fence checks.
+gl_FUNC_MMAP_ANON
+AC_CHECK_HEADERS_ONCE([sys/mman.h])
+AC_CHECK_FUNCS_ONCE([mprotect])
+gl_FUNC_SYMLINK
+gl_UNISTD_MODULE_INDICATOR([symlink])
+gl_HEADER_SYS_STAT_H
+AC_PROG_MKDIR_P
+gl_HEADER_TIME_H
+gl_FUNC_UNSETENV
+gl_STDLIB_MODULE_INDICATOR([unsetenv])
+abs_aux_dir=`cd "$ac_aux_dir"; pwd`
+AC_SUBST([abs_aux_dir])
   m4_popdef([gl_MODULE_INDICATOR_CONDITION])
   m4_ifval(gltests_LIBSOURCES_LIST, [
     m4_syscmd([test ! -d ]m4_defn([gltests_LIBSOURCES_DIR])[ ||
@@ -483,6 +444,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/printf-parse.h
   lib/progname.c
   lib/progname.h
+  lib/read.c
   lib/safe-read.c
   lib/safe-read.h
   lib/safe-write.c
@@ -491,7 +453,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/stdbool.in.h
   lib/stddef.in.h
   lib/stdint.in.h
-  lib/stdio-write.c
   lib/stdio.in.h
   lib/stdlib.in.h
   lib/strerror.c
@@ -506,6 +467,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/vasnprintf.c
   lib/vasnprintf.h
   lib/vasprintf.c
+  lib/verify.h
   lib/wchar.in.h
   lib/write.c
   lib/xsize.h
@@ -517,8 +479,6 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/xstrtoull.c
   m4/00gnulib.m4
   m4/alloca.m4
-  m4/asm-underscore.m4
-  m4/dos.m4
   m4/dup2.m4
   m4/eealloc.m4
   m4/environ.m4
@@ -529,6 +489,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/fcntl_h.m4
   m4/float_h.m4
   m4/getopt.m4
+  m4/getpagesize.m4
   m4/gnu-make.m4
   m4/gnulib-common.m4
   m4/include_next.m4
@@ -550,6 +511,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/pathmax.m4
   m4/printf.m4
   m4/putenv.m4
+  m4/read.m4
   m4/safe-read.m4
   m4/safe-write.m4
   m4/setenv.m4
@@ -566,9 +528,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/string_h.m4
   m4/strndup.m4
   m4/strnlen.m4
-  m4/strtol.m4
   m4/strtoll.m4
-  m4/strtoul.m4
   m4/strtoull.m4
   m4/symlink.m4
   m4/sys_stat_h.m4
@@ -598,6 +558,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-getopt.c
   tests/test-getopt.h
   tests/test-getopt_long.h
+  tests/test-ignore-value.c
   tests/test-inttypes.c
   tests/test-lstat.c
   tests/test-lstat.h
@@ -615,9 +576,11 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-stdlib.c
   tests/test-strerror.c
   tests/test-string.c
+  tests/test-strnlen.c
   tests/test-symlink.c
   tests/test-symlink.h
   tests/test-sys_stat.c
+  tests/test-sys_wait.h
   tests/test-time.c
   tests/test-unistd.c
   tests/test-unsetenv.c
@@ -636,8 +599,10 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-xstrtoull.c
   tests/zerosize-ptr.h
   tests=lib/binary-io.h
+  tests=lib/dosname.h
   tests=lib/dup2.c
   tests=lib/fcntl.in.h
+  tests=lib/getpagesize.c
   tests=lib/lstat.c
   tests=lib/malloc.c
   tests=lib/malloca.c
@@ -653,7 +618,6 @@ AC_DEFUN([gl_FILE_LIST], [
   tests=lib/sys_stat.in.h
   tests=lib/time.in.h
   tests=lib/unsetenv.c
-  tests=lib/verify.h
   top/GNUmakefile
   top/maint.mk
 ])

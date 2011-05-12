@@ -1,8 +1,218 @@
-2010-07-13  Hilko Bengen  <bengen@debian.org>
+2011-05-12  Richard W.M. Jones  <rjones@redhat.com>
 
-	There is no perl/Hivex.c.
+	Version 1.2.6.
 
-	Work with local gnulib
+	build: Workaround broken libtool.
+	Same as this error:
+	https://www.redhat.com/archives/libguestfs/2011-April/msg00042.html
+	https://www.redhat.com/archives/libguestfs/2011-May/msg00041.html
+
+	We don't know why latest libtool is so obviously broken, but this
+	works around the problem.
+
+	bootstrap: Force gnulib-tool --libtool option.
+	This forces the recent gnulib to generate a libgnu.la file.  Otherwise
+	it appears to default to --no-libtool which doesn't generate one.
+
+	configure: AC_PROG_LIBTOOL -> AM_PROG_LIBTOOL.
+	Unclear if this makes any difference.
+
+	Update gnulib.
+
+2011-05-12  Hilko Bengen  <bengen@hilluzination.de>
+
+	hivex: Fix for endianess bug.
+	* Richard W.M. Jones:
+	> > Both size_t and int are 32 bit values.  An endianess issue, maybe?
+	> I guess it might be.  We're supposed to be doing le32toh / be32toh
+	> everywhere as appropriate, but we might be missing one.  The code is
+	> mainly tested on little endian arches.
+
+	Found it.
+
+	Now "make check" completes successfully on Sparc and PowerPC.
+
+	hivex: check for presence of OCaml native compiler
+	Only compile bytecode otherwise, avoiding ocamlfind's helpful error
+	message "ocamlfind: Not supported in your configuration: ocamlopt"
+
+	(Successfully tested on Debian/unstable on alpha)
+
+	hivex: Use OCaml bytecode compiler for caml_raise_with_args check
+	On installations where no native OCaml compiler is available, the
+	test program can't be compiled and so we get this message:
+
+	,----
+	| checking for function caml_raise_with_args... not found
+	`----
+
+	This breaks building of the OCaml bindings.
+
+	,----
+	| gcc -std=gnu99 -I.. -I/usr/lib/ocaml -I../ocaml -I../lib   -g -O2 -fPIC -Wall -c hivex_c.c
+	| hivex_c.c:52: error: static declaration of 'caml_raise_with_args' follows non-static declaration
+	| /usr/lib/ocaml/caml/fail.h:30: note: previous declaration of 'caml_raise_with_args' was here
+	| make[2]: *** [hivex_c.o] Error 1
+	`----
+
+	(Successfully tested on Debian/unstable on alpha)
+
+2011-05-12  Richard W.M. Jones  <rjones@redhat.com>
+
+	configure: Use Python platform-dependent site-packages.
+	This updates commit b808c875a34e62fcdf360534f923d6030590ff44.
+
+2011-05-09  Hilko Bengen  <bengen@hilluzination.de>
+
+	Use Python's distutils to determine include and site-packages directories.
+	The code has been taken from specifically ac_python_devel.m4 published
+	at <http://ac-archive.sf.net/>, it has turned out to be less
+	error-prone on my Debian system.
+
+	Don't rely on OCaml native compiler for tests
+	This should make it possible to build useful OCaml bindings on
+	architectures other than i386 and amd64 (Debian bug #589809).
+
+2011-04-28  Richard W.M. Jones  <rjones@redhat.com>
+
+	Include generator in the tarball.
+
+2011-04-28  Hilko Bengen  <bengen@hilluzination.de>
+
+	hivex/python fix for i386 integer size issue
+	Hi,
+
+	While working on Debian packages of hivex 1.2.5, I came across a test
+	failure for the Python bindings with Python 2.7 on the i386
+	architecture. (The tests ran fine on amd64.)
+
+	,----
+	| $ make -C python check
+	| make[1]: Entering directory `/home/bengen/src/deb/hivex/hivex.git/python'
+	| 010-import.py
+	| 020-open.py
+	| 021-close.py
+	| 200-write.py
+	| python: hivex-py.c:52: get_handle: Assertion `obj' failed.
+	`----
+
+	I narrowed this down to hivex-py.c:py_hivex_node_add_child():
+
+	The call
+
+	,----
+	| PyArg_ParseTuple (args, (char *) "OLs:hivex_node_add_child",
+	|                         &py_h, &parent, &name)
+	`----
+
+	results in `py_h' set to NULL, though Python's documentation claims that
+	this cannot happen. I think this happens because `parent' is declared a
+	`long int', but "L" in the format string corresponds to a `long long'.
+	On amd64, they have the same size, but on i386 they don't, so the
+	PyObject pointer is written to the wrong address.
+
+	Please consider applying the patch below which just changes the format
+	string. After regenerating hivex-py.c, I have successfully tested the
+	1.2.5 code base on both architectures.
+
+	Cheers,
+	-Hilko
+
+2011-04-13  Jim Meyering  <meyering@redhat.com>
+
+	maint: Split long lines.
+	* lib/hivex.c: Split lines longer than 80 columns.
+
+2011-04-13  Richard W.M. Jones  <rjones@redhat.com>
+
+	Version 1.2.5.
+	Updated PO files.
+
+	Remove no longer used internal function utf16_string_len_in_bytes.
+
+	hivex_value_multiple_strings: Don't read uninitialized data.
+	If hivex_value_multiple_strings was given a value which had an odd
+	length or if the data in the value was unterminated,
+	hivex_value_multiple_strings could read uninitialized data.
+
+	Potentially (although very unlikely) this could cause a
+	non-exploitable segfault in the calling program.
+
+	Handle odd-length "UTF16" strings.
+	If the length of the buffer is not even, then this would read a byte
+	of uninitialized data.  Fix the length check to avoid this.
+
+	Return real length of buffer from hivex_value_value.
+	In real registries, often the length declared in the header does not
+	match the length of the block.  In this case hivex_value_value would
+	only allocate a value with a size which is the shorter of the two
+	length values, which is correct and safe.
+
+	However user code could do:
+
+	  buf = hivex_value_value (h, v, &t, &len);
+	  memcpy (somewhere, buf, len);
+
+	which would copy uninitialized data.
+
+	If hivex_value_value truncates a value like this, we also need to
+	return the shorter length to the user as well.
+
+	Really fix the case where a UTF-16 string contains junk after the string.
+	The previous commit b71b88f588f8660935a7d462e97b84aa2d669249 attempted
+	to fix this, but got the test the wrong way round so the length would
+	never be shorter.
+
+2011-04-12  Richard W.M. Jones  <rjones@redhat.com>
+
+	Fix use-after-free in hivex_close.
+	Found using valgrind.
+
+2011-04-02  Richard W.M. Jones  <rjones@redhat.com>
+
+	Pull translations from Transifex.
+
+2011-04-01  Richard W.M. Jones  <rjones@redhat.com>
+
+	debian: Fix python test script for bash.
+
+2011-03-07  Richard W.M. Jones  <rjones@redhat.com>
+
+	Import hivex into transifex.
+	http://www.transifex.net/projects/p/hivex/
+
+2010-12-23  Richard W.M. Jones  <rjones@redhat.com>
+
+	Refresh documentation.
+
+2010-12-16  Richard W.M. Jones  <rjones@redhat.com>
+
+	ocaml: Fix segfault in Hivex.value_value binding.
+
+2010-12-02  Richard W.M. Jones  <rjones@redhat.com>
+
+	Version 1.2.4.
+
+2010-11-28  Richard W.M. Jones  <rjones@redhat.com>
+
+	Python bindings.
+
+2010-08-27  Richard Jones  <rjones@redhat.com>
+
+	Version 1.2.3.
+
+	build: Don't warn about 'long long'.
+	We have to allow this, even though it's a GCC extension.
+
+	This is a port of libguestfs commit 0c0976496dafda4d172c5a7fc787d6a87d5bce8d.
+
+2010-08-27  Geert Warrink  <geert.warrink@onsnet.nu>
+
+	Add Dutch translations (RHBZ#624455).
+
+2010-08-13  Matthew Booth  <mbooth@redhat.com>
+
+	Add debug output to hivex_close.
 
 2010-07-12  Richard Jones  <rjones@redhat.com>
 
@@ -14,7 +224,7 @@
 
 	Call iconv_close along error path out of function.
 
-2010-07-12  Richard Jones  <rjones@redhat.com>
+2010-07-11  Richard Jones  <rjones@redhat.com>
 
 	perl: Fix generated XS code for value_dword binding.
 	Thanks to Hilko Bengen for spotting the problem.

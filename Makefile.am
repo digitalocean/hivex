@@ -1,5 +1,5 @@
 # hivex
-# Copyright (C) 2009-2010 Red Hat Inc.
+# Copyright (C) 2009-2011 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,10 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = gnulib/lib lib images gnulib/tests sh xml po
+# Work around broken libtool.
+export to_tool_file_cmd=func_convert_file_noop
+
+SUBDIRS = gnulib/lib generator lib images gnulib/tests sh xml po
 
 if HAVE_OCAML
 SUBDIRS += ocaml
@@ -27,10 +30,9 @@ if HAVE_PERL
 SUBDIRS += perl regedit
 endif
 
-# Not yet written.
-#if HAVE_PYTHON
-#SUBDIRS += python
-#endif
+if HAVE_PYTHON
+SUBDIRS += python
+endif
 
 EXTRA_DIST = hivex.pc hivex.pc.in README LICENSE
 

@@ -13,8 +13,8 @@
 
 m4_ifndef([AC_AUTOCONF_VERSION],
   [m4_copy([m4_PACKAGE_VERSION], [AC_AUTOCONF_VERSION])])dnl
-m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.65],,
-[m4_warning([this file was generated for autoconf 2.65.
+m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.68],,
+[m4_warning([this file was generated for autoconf 2.68.
 You have another version of autoconf.  It may work, but is not guaranteed to.
 If you have problems, you may need to regenerate the build system entirely.
 To do so, use the procedure documented by the package, typically `autoreconf'.])])
@@ -156,7 +156,7 @@ $$1_PKG_ERRORS
 Consider adjusting the PKG_CONFIG_PATH environment variable if you
 installed software in a non-standard prefix.
 
-_PKG_TEXT])dnl
+_PKG_TEXT])
         ])
 elif test $pkg_failed = untried; then
      	AC_MSG_RESULT([no])
@@ -167,7 +167,7 @@ path to pkg-config.
 
 _PKG_TEXT
 
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.])dnl
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.])
         ])
 else
 	$1[]_CFLAGS=$pkg_cv_[]$1[]_CFLAGS
@@ -1171,8 +1171,6 @@ AC_SUBST([am__untar])
 
 m4_include([m4/00gnulib.m4])
 m4_include([m4/alloca.m4])
-m4_include([m4/asm-underscore.m4])
-m4_include([m4/dos.m4])
 m4_include([m4/dup2.m4])
 m4_include([m4/eealloc.m4])
 m4_include([m4/environ.m4])
@@ -1183,6 +1181,7 @@ m4_include([m4/fcntl-o.m4])
 m4_include([m4/fcntl_h.m4])
 m4_include([m4/float_h.m4])
 m4_include([m4/getopt.m4])
+m4_include([m4/getpagesize.m4])
 m4_include([m4/gettext.m4])
 m4_include([m4/gnu-make.m4])
 m4_include([m4/gnulib-common.m4])
@@ -1220,6 +1219,7 @@ m4_include([m4/po.m4])
 m4_include([m4/printf.m4])
 m4_include([m4/progtest.m4])
 m4_include([m4/putenv.m4])
+m4_include([m4/read.m4])
 m4_include([m4/safe-read.m4])
 m4_include([m4/safe-write.m4])
 m4_include([m4/setenv.m4])
@@ -1236,9 +1236,7 @@ m4_include([m4/strerror.m4])
 m4_include([m4/string_h.m4])
 m4_include([m4/strndup.m4])
 m4_include([m4/strnlen.m4])
-m4_include([m4/strtol.m4])
 m4_include([m4/strtoll.m4])
-m4_include([m4/strtoul.m4])
 m4_include([m4/strtoull.m4])
 m4_include([m4/symlink.m4])
 m4_include([m4/sys_stat_h.m4])

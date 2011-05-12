@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2010 Red Hat Inc.
+ * Copyright (C) 2009-2011 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -813,7 +813,7 @@ copy_type_value (const char *r, size_t len, hive_type t)
   Store_field (rv, 0, v);
   v = caml_alloc_string (len);
   memcpy (String_val (v), r, len);
-  caml_modify (&Field (rv, 1), len);
+  caml_modify (&Field (rv, 1), v);
   CAMLreturn (rv);
 }
 
