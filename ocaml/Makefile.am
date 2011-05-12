@@ -91,17 +91,10 @@ SUFFIXES = .cmo .cmi .cmx .ml .mli .mll .mly
 install-data-hook:
 	mkdir -p $(DESTDIR)$(OCAMLLIB)
 	mkdir -p $(DESTDIR)$(OCAMLLIB)/stublibs
-if HAVE_OCAMLOPT
 	$(OCAMLFIND) install \
 	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
 	  hivex \
-	  META *.so *.a *.cma *.cmx *.cmxa *.cmi *.mli
-else
-	$(OCAMLFIND) install \
-	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
-	  hivex \
-	  META *.so *.a *.cma *.cmi *.mli
-endif
+	  META *.so *.a *.cma *.cmi *.mli -optional *.cmx *.cmxa
 
 CLEANFILES += $(noinst_DATA)
 
