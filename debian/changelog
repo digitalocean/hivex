@@ -1,3 +1,11 @@
+hivex (1.2.6-3) unstable; urgency=low
+
+  * Replaced ENOKEY constant so hivex should compile on the kfreebsd
+    architectures.
+  * Fixed install target for systems without native OCaml compiler.
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 13 May 2011 01:29:14 +0200
+
 hivex (1.2.6-2) unstable; urgency=low
 
   * Added missing build-dependency.
