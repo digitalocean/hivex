@@ -16,6 +16,7 @@ Package: libhivex0
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libguestfs0 (<= 1.0.84-4)
 Description: library for reading and writing Windows Registry hives
  libhivex is a self-contained library for reading and writing Windows
  Registry "hive" binary files.
