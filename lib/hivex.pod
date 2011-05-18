@@ -719,7 +719,7 @@ exhaustive):
 
 Corrupt or unsupported Registry file format.
 
-=item ENOKEY
+=item HIVEX_NO_KEY
 
 Missing root key.
 

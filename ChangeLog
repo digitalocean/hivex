@@ -1,4 +1,45 @@
+2011-05-17  Richard W.M. Jones  <rjones@redhat.com>
+
+	Version 1.2.7.
+
+	Update gnulib to latest version.
+
+	hivexregedit: Add --unsafe-printable-strings option.
+
+2011-05-13  Richard W.M. Jones  <rjones@redhat.com>
+
+	hivex_root: Return errno == HIVEX_NO_KEY when root key is missing.
+	Previously we returned errno == ENOKEY.  However this was an
+	unfortunate choice of error code since it is not defined in POSIX.  As
+	a result it is missing on several platforms.
+
+	HIVEX_NO_KEY is defined as ENOKEY on platforms where this symbol
+	exists (thus maintaining backwards ABI compatibility), and defined as
+	another POSIX error code otherwise.
+
+2011-05-13  Hilko Bengen  <bengen@hilluzination.de>
+
+	hivex: Fix install target for systems without native OCaml compiler
+	,----
+	| ocamlfind install \
+	|           -ldconf ignore -destdir /build/buildd-hivex_1.2.6-1-ia64-iqcb38/hivex-1.2.6/debian/tmp/usr/lib/ocaml \
+	|           hivex \
+	|           META *.so *.a *.cma *.cmx *.cmxa *.cmi *.mli
+	| Installed /build/buildd-hivex_1.2.6-1-ia64-iqcb38/hivex-1.2.6/debian/tmp/usr/lib/ocaml/hivex/hivex.mli
+	| Installed /build/buildd-hivex_1.2.6-1-ia64-iqcb38/hivex-1.2.6/debian/tmp/usr/lib/ocaml/hivex/hivex.cmi
+	| ocamlfind: *.cmxa: No such file or directory
+	| make[4]: *** [install-data-hook] Error 2
+	`----
+
+	hivex: Remove python bytecode on "make clean"
+
 2011-05-12  Richard W.M. Jones  <rjones@redhat.com>
+
+	ocaml: Use libtool to get correct library to build OCaml tests.
+	See this thread:
+	https://www.redhat.com/archives/libguestfs/2011-May/thread.html#00015
+
+	Thanks to Hilko Bengen and Török Edwin for coming up with this fix.
 
 	Version 1.2.6.
 

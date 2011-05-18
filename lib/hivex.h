@@ -42,6 +42,13 @@ typedef struct hive_h hive_h;
 typedef size_t hive_node_h;
 typedef size_t hive_value_h;
 
+#include <errno.h>
+#ifdef ENOKEY
+# define HIVEX_NO_KEY ENOKEY
+#else
+# define HIVEX_NO_KEY ENOENT
+#endif
+
 /* Pre-defined types. */
 enum hive_type {
   /* Just a key without a value */
