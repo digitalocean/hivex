@@ -49,34 +49,35 @@ host_triplet = @host@
 TESTS = test-alloca-opt$(EXEEXT) test-binary-io.sh \
 	test-c-ctype$(EXEEXT) test-dup2$(EXEEXT) test-environ$(EXEEXT) \
 	test-errno$(EXEEXT) test-fcntl-h$(EXEEXT) test-getopt$(EXEEXT) \
-	test-ignore-value$(EXEEXT) test-inttypes$(EXEEXT) \
-	test-lstat$(EXEEXT) test-malloca$(EXEEXT) test-memchr$(EXEEXT) \
-	test-open$(EXEEXT) test-setenv$(EXEEXT) test-stat$(EXEEXT) \
-	test-stdbool$(EXEEXT) test-stddef$(EXEEXT) \
-	test-stdint$(EXEEXT) test-stdio$(EXEEXT) test-stdlib$(EXEEXT) \
-	test-strerror$(EXEEXT) test-string$(EXEEXT) \
-	test-strnlen$(EXEEXT) test-symlink$(EXEEXT) \
-	test-sys_stat$(EXEEXT) test-time$(EXEEXT) test-unistd$(EXEEXT) \
-	test-unsetenv$(EXEEXT) test-vasnprintf$(EXEEXT) \
-	test-vasprintf$(EXEEXT) test-vc-list-files-git.sh \
-	test-vc-list-files-cvs.sh test-verify$(EXEEXT) test-verify.sh \
-	test-wchar$(EXEEXT) test-xstrtol.sh test-xstrtoll.sh
+	test-ignore-value$(EXEEXT) test-intprops$(EXEEXT) \
+	test-inttypes$(EXEEXT) test-lstat$(EXEEXT) \
+	test-malloca$(EXEEXT) test-memchr$(EXEEXT) test-open$(EXEEXT) \
+	test-setenv$(EXEEXT) test-stat$(EXEEXT) test-stdbool$(EXEEXT) \
+	test-stddef$(EXEEXT) test-stdint$(EXEEXT) test-stdio$(EXEEXT) \
+	test-stdlib$(EXEEXT) test-strerror$(EXEEXT) \
+	test-string$(EXEEXT) test-strnlen$(EXEEXT) \
+	test-symlink$(EXEEXT) test-sys_stat$(EXEEXT) \
+	test-time$(EXEEXT) test-unistd$(EXEEXT) test-unsetenv$(EXEEXT) \
+	test-vasnprintf$(EXEEXT) test-vasprintf$(EXEEXT) \
+	test-vc-list-files-git.sh test-vc-list-files-cvs.sh \
+	test-verify$(EXEEXT) test-verify.sh test-wchar$(EXEEXT) \
+	test-xstrtol.sh test-xstrtoll.sh
 XFAIL_TESTS =
 noinst_PROGRAMS =
 check_PROGRAMS = test-alloca-opt$(EXEEXT) test-binary-io$(EXEEXT) \
 	test-c-ctype$(EXEEXT) test-dup2$(EXEEXT) test-environ$(EXEEXT) \
 	test-errno$(EXEEXT) test-fcntl-h$(EXEEXT) test-getopt$(EXEEXT) \
-	test-ignore-value$(EXEEXT) test-inttypes$(EXEEXT) \
-	test-lstat$(EXEEXT) test-malloca$(EXEEXT) test-memchr$(EXEEXT) \
-	test-open$(EXEEXT) test-setenv$(EXEEXT) test-stat$(EXEEXT) \
-	test-stdbool$(EXEEXT) test-stddef$(EXEEXT) \
-	test-stdint$(EXEEXT) test-stdio$(EXEEXT) test-stdlib$(EXEEXT) \
-	test-strerror$(EXEEXT) test-string$(EXEEXT) \
-	test-strnlen$(EXEEXT) test-symlink$(EXEEXT) \
-	test-sys_stat$(EXEEXT) test-time$(EXEEXT) test-unistd$(EXEEXT) \
-	test-unsetenv$(EXEEXT) test-vasnprintf$(EXEEXT) \
-	test-vasprintf$(EXEEXT) test-verify$(EXEEXT) \
-	test-wchar$(EXEEXT) test-xstrtol$(EXEEXT) \
+	test-ignore-value$(EXEEXT) test-intprops$(EXEEXT) \
+	test-inttypes$(EXEEXT) test-lstat$(EXEEXT) \
+	test-malloca$(EXEEXT) test-memchr$(EXEEXT) test-open$(EXEEXT) \
+	test-setenv$(EXEEXT) test-stat$(EXEEXT) test-stdbool$(EXEEXT) \
+	test-stddef$(EXEEXT) test-stdint$(EXEEXT) test-stdio$(EXEEXT) \
+	test-stdlib$(EXEEXT) test-strerror$(EXEEXT) \
+	test-string$(EXEEXT) test-strnlen$(EXEEXT) \
+	test-symlink$(EXEEXT) test-sys_stat$(EXEEXT) \
+	test-time$(EXEEXT) test-unistd$(EXEEXT) test-unsetenv$(EXEEXT) \
+	test-vasnprintf$(EXEEXT) test-vasprintf$(EXEEXT) \
+	test-verify$(EXEEXT) test-wchar$(EXEEXT) test-xstrtol$(EXEEXT) \
 	test-xstrtoul$(EXEEXT) test-xstrtoll$(EXEEXT) \
 	test-xstrtoull$(EXEEXT)
 subdir = gnulib/tests
@@ -193,6 +194,11 @@ test_ignore_value_SOURCES = test-ignore-value.c
 test_ignore_value_OBJECTS = test-ignore-value.$(OBJEXT)
 test_ignore_value_LDADD = $(LDADD)
 test_ignore_value_DEPENDENCIES = libtests.a ../../gnulib/lib/libgnu.la \
+	libtests.a $(am__DEPENDENCIES_1)
+test_intprops_SOURCES = test-intprops.c
+test_intprops_OBJECTS = test-intprops.$(OBJEXT)
+test_intprops_LDADD = $(LDADD)
+test_intprops_DEPENDENCIES = libtests.a ../../gnulib/lib/libgnu.la \
 	libtests.a $(am__DEPENDENCIES_1)
 test_inttypes_SOURCES = test-inttypes.c
 test_inttypes_OBJECTS = test-inttypes.$(OBJEXT)
@@ -354,23 +360,23 @@ am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(libtests_a_SOURCES) $(EXTRA_libtests_a_SOURCES) \
 	test-alloca-opt.c test-binary-io.c test-c-ctype.c test-dup2.c \
 	test-environ.c test-errno.c test-fcntl-h.c test-getopt.c \
-	test-ignore-value.c test-inttypes.c test-lstat.c \
-	test-malloca.c test-memchr.c test-open.c test-setenv.c \
-	test-stat.c test-stdbool.c test-stddef.c test-stdint.c \
-	test-stdio.c test-stdlib.c test-strerror.c test-string.c \
-	test-strnlen.c test-symlink.c test-sys_stat.c test-time.c \
-	test-unistd.c test-unsetenv.c test-vasnprintf.c \
+	test-ignore-value.c test-intprops.c test-inttypes.c \
+	test-lstat.c test-malloca.c test-memchr.c test-open.c \
+	test-setenv.c test-stat.c test-stdbool.c test-stddef.c \
+	test-stdint.c test-stdio.c test-stdlib.c test-strerror.c \
+	test-string.c test-strnlen.c test-symlink.c test-sys_stat.c \
+	test-time.c test-unistd.c test-unsetenv.c test-vasnprintf.c \
 	test-vasprintf.c test-verify.c test-wchar.c test-xstrtol.c \
 	test-xstrtoll.c test-xstrtoul.c test-xstrtoull.c
 DIST_SOURCES = $(libtests_a_SOURCES) $(EXTRA_libtests_a_SOURCES) \
 	test-alloca-opt.c test-binary-io.c test-c-ctype.c test-dup2.c \
 	test-environ.c test-errno.c test-fcntl-h.c test-getopt.c \
-	test-ignore-value.c test-inttypes.c test-lstat.c \
-	test-malloca.c test-memchr.c test-open.c test-setenv.c \
-	test-stat.c test-stdbool.c test-stddef.c test-stdint.c \
-	test-stdio.c test-stdlib.c test-strerror.c test-string.c \
-	test-strnlen.c test-symlink.c test-sys_stat.c test-time.c \
-	test-unistd.c test-unsetenv.c test-vasnprintf.c \
+	test-ignore-value.c test-intprops.c test-inttypes.c \
+	test-lstat.c test-malloca.c test-memchr.c test-open.c \
+	test-setenv.c test-stat.c test-stdbool.c test-stddef.c \
+	test-stdint.c test-stdio.c test-stdlib.c test-strerror.c \
+	test-string.c test-strnlen.c test-symlink.c test-sys_stat.c \
+	test-time.c test-unistd.c test-unsetenv.c test-vasnprintf.c \
 	test-vasprintf.c test-verify.c test-wchar.c test-xstrtol.c \
 	test-xstrtoll.c test-xstrtoul.c test-xstrtoull.c
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
@@ -1174,13 +1180,13 @@ EXTRA_DIST = test-alloca-opt.c $(top_srcdir)/build-aux/arg-nonnull.h \
 	dosname.h dup2.c test-dup2.c signature.h macros.h \
 	test-environ.c test-errno.c fcntl.in.h test-fcntl-h.c macros.h \
 	signature.h test-getopt.c test-getopt.h test-getopt_long.h \
-	getpagesize.c test-ignore-value.c test-inttypes.c lstat.c \
-	test-lstat.h test-lstat.c signature.h macros.h malloc.c \
-	malloca.h malloca.valgrind test-malloca.c test-memchr.c \
-	zerosize-ptr.h signature.h macros.h open.c test-open.h \
-	test-open.c signature.h macros.h pathmax.h putenv.c \
-	same-inode.h setenv.c test-setenv.c signature.h macros.h \
-	stat.c test-stat.h test-stat.c signature.h macros.h \
+	getpagesize.c test-ignore-value.c test-intprops.c \
+	test-inttypes.c lstat.c test-lstat.h test-lstat.c signature.h \
+	macros.h malloc.c malloca.h malloca.valgrind test-malloca.c \
+	test-memchr.c zerosize-ptr.h signature.h macros.h open.c \
+	test-open.h test-open.c signature.h macros.h pathmax.h \
+	putenv.c same-inode.h setenv.c test-setenv.c signature.h \
+	macros.h stat.c test-stat.h test-stat.c signature.h macros.h \
 	test-stdbool.c test-stddef.c test-stdint.c test-stdio.c \
 	test-stdlib.c test-sys_wait.h test-strerror.c signature.h \
 	macros.h test-string.c test-strnlen.c zerosize-ptr.h \
@@ -1326,6 +1332,9 @@ test-getopt$(EXEEXT): $(test_getopt_OBJECTS) $(test_getopt_DEPENDENCIES)
 test-ignore-value$(EXEEXT): $(test_ignore_value_OBJECTS) $(test_ignore_value_DEPENDENCIES) 
 	@rm -f test-ignore-value$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_ignore_value_OBJECTS) $(test_ignore_value_LDADD) $(LIBS)
+test-intprops$(EXEEXT): $(test_intprops_OBJECTS) $(test_intprops_DEPENDENCIES) 
+	@rm -f test-intprops$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(test_intprops_OBJECTS) $(test_intprops_LDADD) $(LIBS)
 test-inttypes$(EXEEXT): $(test_inttypes_OBJECTS) $(test_inttypes_DEPENDENCIES) 
 	@rm -f test-inttypes$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_inttypes_OBJECTS) $(test_inttypes_LDADD) $(LIBS)
@@ -1436,6 +1445,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-fcntl-h.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-getopt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-ignore-value.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-intprops.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-inttypes.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-lstat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-malloca.Po@am__quote@

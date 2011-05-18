@@ -62,6 +62,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module ignore-value-tests:
   # Code from module include_next:
   # Code from module intprops:
+  # Code from module intprops-tests:
   # Code from module inttypes:
   # Code from module inttypes-incomplete:
   # Code from module inttypes-tests:
@@ -559,6 +560,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-getopt.h
   tests/test-getopt_long.h
   tests/test-ignore-value.c
+  tests/test-intprops.c
   tests/test-inttypes.c
   tests/test-lstat.c
   tests/test-lstat.h

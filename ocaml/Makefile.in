@@ -1218,7 +1218,10 @@ uninstall-am:
 @HAVE_OCAML_TRUE@	$(OCAMLFIND) install \
 @HAVE_OCAML_TRUE@	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
 @HAVE_OCAML_TRUE@	  hivex \
-@HAVE_OCAML_TRUE@	  META *.so *.a *.cma *.cmi *.mli -optional *.cmx *.cmxa
+@HAVE_OCAML_TRUE@	  META *.so *.a *.cma *.cmi *.mli
+@HAVE_OCAMLOPT_TRUE@@HAVE_OCAML_TRUE@	$(OCAMLFIND) install \
+@HAVE_OCAMLOPT_TRUE@@HAVE_OCAML_TRUE@	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
+@HAVE_OCAMLOPT_TRUE@@HAVE_OCAML_TRUE@	  *.cmx *.cmxa
 
 # Tell version 3.79 and up of GNU make to not build goals in this
 # directory in parallel.  (See RHBZ#502309).

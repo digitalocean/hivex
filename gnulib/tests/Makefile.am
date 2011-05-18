@@ -237,6 +237,14 @@ EXTRA_DIST += test-ignore-value.c
 
 ## end   gnulib module ignore-value-tests
 
+## begin gnulib module intprops-tests
+
+TESTS += test-intprops
+check_PROGRAMS += test-intprops
+EXTRA_DIST += test-intprops.c
+
+## end   gnulib module intprops-tests
+
 ## begin gnulib module inttypes-tests
 
 TESTS += test-inttypes
