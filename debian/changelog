@@ -1,3 +1,11 @@
+hivex (1.2.7-1) unstable; urgency=low
+
+  * New upstream version
+  * A different approach was chosen for fixing the FTBFS issue on FreeBSD
+    and other systems.
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 21 May 2011 21:10:13 +0200
+
 hivex (1.2.6-3) unstable; urgency=low
 
   * Replaced ENOKEY constant so hivex should compile on the kfreebsd
