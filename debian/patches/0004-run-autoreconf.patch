@@ -1,0 +1,175 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Sat, 6 Aug 2011 16:25:56 +0200
+Subject: run autoreconf
+
+---
+ aclocal.m4        |   14 ++++++++------
+ configure         |    9 +++++----
+ ocaml/Makefile.in |   17 +++++++++--------
+ 3 files changed, 22 insertions(+), 18 deletions(-)
+
+diff --git a/aclocal.m4 b/aclocal.m4
+index 0fdd213..7a9a350 100644
+--- a/aclocal.m4
++++ b/aclocal.m4
+@@ -47,7 +47,8 @@ To do so, use the procedure documented by the package, typically `autoreconf'.])
+ # ----------------------------------
+ AC_DEFUN([PKG_PROG_PKG_CONFIG],
+ [m4_pattern_forbid([^_?PKG_[A-Z_]+$])
+-m4_pattern_allow([^PKG_CONFIG(_PATH)?$])
++m4_pattern_allow([^PKG_CONFIG(_(PATH|LIBDIR|SYSROOT_DIR|ALLOW_SYSTEM_(CFLAGS|LIBS)))?$])
++m4_pattern_allow([^PKG_CONFIG_(DISABLE_UNINSTALLED|TOP_BUILD_DIR|DEBUG_SPEW)$])
+ AC_ARG_VAR([PKG_CONFIG], [path to pkg-config utility])
+ AC_ARG_VAR([PKG_CONFIG_PATH], [directories to add to pkg-config's search path])
+ AC_ARG_VAR([PKG_CONFIG_LIBDIR], [path overriding pkg-config's built-in search path])
+@@ -93,7 +94,8 @@ m4_define([_PKG_CONFIG],
+     pkg_cv_[]$1="$$1"
+  elif test -n "$PKG_CONFIG"; then
+     PKG_CHECK_EXISTS([$3],
+-                     [pkg_cv_[]$1=`$PKG_CONFIG --[]$2 "$3" 2>/dev/null`],
++                     [pkg_cv_[]$1=`$PKG_CONFIG --[]$2 "$3" 2>/dev/null`
++		      test "x$?" != "x0" && pkg_failed=yes ],
+ 		     [pkg_failed=yes])
+  else
+     pkg_failed=untried
+@@ -141,9 +143,9 @@ if test $pkg_failed = yes; then
+    	AC_MSG_RESULT([no])
+         _PKG_SHORT_ERRORS_SUPPORTED
+         if test $_pkg_short_errors_supported = yes; then
+-	        $1[]_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "$2" 2>&1`
++	        $1[]_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "$2" 2>&1`
+         else 
+-	        $1[]_PKG_ERRORS=`$PKG_CONFIG --print-errors "$2" 2>&1`
++	        $1[]_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "$2" 2>&1`
+         fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$$1[]_PKG_ERRORS" >&AS_MESSAGE_LOG_FD
+@@ -156,7 +158,7 @@ $$1_PKG_ERRORS
+ Consider adjusting the PKG_CONFIG_PATH environment variable if you
+ installed software in a non-standard prefix.
+ 
+-_PKG_TEXT])
++_PKG_TEXT])[]dnl
+         ])
+ elif test $pkg_failed = untried; then
+      	AC_MSG_RESULT([no])
+@@ -167,7 +169,7 @@ path to pkg-config.
+ 
+ _PKG_TEXT
+ 
+-To get pkg-config, see <http://pkg-config.freedesktop.org/>.])
++To get pkg-config, see <http://pkg-config.freedesktop.org/>.])[]dnl
+         ])
+ else
+ 	$1[]_CFLAGS=$pkg_cv_[]$1[]_CFLAGS
+diff --git a/configure b/configure
+index 8d4ce21..45f6b23 100755
+--- a/configure
++++ b/configure
+@@ -23344,6 +23344,7 @@ $as_echo "#define HAVE_DCGETTEXT 1" >>confdefs.h
+ 
+ 
+ 
++
+ if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
+ 	if test -n "$ac_tool_prefix"; then
+   # Extract the first word of "${ac_tool_prefix}pkg-config", so it can be a program name with args.
+@@ -23472,6 +23473,7 @@ if test -n "$LIBXML2_CFLAGS"; then
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_LIBXML2_CFLAGS=`$PKG_CONFIG --cflags "libxml-2.0" 2>/dev/null`
++		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+ fi
+@@ -23488,6 +23490,7 @@ if test -n "$LIBXML2_LIBS"; then
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_LIBXML2_LIBS=`$PKG_CONFIG --libs "libxml-2.0" 2>/dev/null`
++		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+ fi
+@@ -23507,9 +23510,9 @@ else
+         _pkg_short_errors_supported=no
+ fi
+         if test $_pkg_short_errors_supported = yes; then
+-	        LIBXML2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "libxml-2.0" 2>&1`
++	        LIBXML2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libxml-2.0" 2>&1`
+         else
+-	        LIBXML2_PKG_ERRORS=`$PKG_CONFIG --print-errors "libxml-2.0" 2>&1`
++	        LIBXML2_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libxml-2.0" 2>&1`
+         fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$LIBXML2_PKG_ERRORS" >&5
+@@ -23524,7 +23527,6 @@ installed software in a non-standard prefix.
+ Alternatively, you may set the environment variables LIBXML2_CFLAGS
+ and LIBXML2_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details." "$LINENO" 5
+-
+ elif test $pkg_failed = untried; then
+      	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+ $as_echo "no" >&6; }
+@@ -23540,7 +23542,6 @@ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+ See \`config.log' for more details" "$LINENO" 5; }
+-
+ else
+ 	LIBXML2_CFLAGS=$pkg_cv_LIBXML2_CFLAGS
+ 	LIBXML2_LIBS=$pkg_cv_LIBXML2_LIBS
+diff --git a/ocaml/Makefile.in b/ocaml/Makefile.in
+index fd1c49d..3188ad2 100644
+--- a/ocaml/Makefile.in
++++ b/ocaml/Makefile.in
+@@ -54,7 +54,8 @@ host_triplet = @host@
+ @HAVE_OCAMLOPT_TRUE@@HAVE_OCAML_TRUE@am__append_1 = mlhivex.cmxa
+ DIST_COMMON = $(srcdir)/.depend $(srcdir)/META.in \
+ 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in
+-@HAVE_OCAML_TRUE@am__append_2 = $(noinst_DATA)
++@HAVE_OCAMLOPT_TRUE@@HAVE_OCAML_TRUE@am__append_2 = *.cmx *.cmxa
++@HAVE_OCAML_TRUE@am__append_3 = $(noinst_DATA)
+ subdir = ocaml
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ am__aclocal_m4_deps = $(top_srcdir)/m4/00gnulib.m4 \
+@@ -870,7 +871,7 @@ EXTRA_DIST = \
+ 	t/*.ml
+ 
+ CLEANFILES = *.cmi *.cmo *.cmx *.cma *.cmxa *.o *.a *.so t/*.cmi \
+-	t/*.cmo t/*.cmx t/*.o t/*.a t/*.so $(am__append_2)
++	t/*.cmo t/*.cmx t/*.o t/*.a t/*.so $(am__append_3)
+ AM_CPPFLAGS = \
+   -I$(top_builddir) -I$(OCAMLLIB) -I$(top_srcdir)/ocaml \
+   -I$(top_srcdir)/lib \
+@@ -894,6 +895,10 @@ AM_CPPFLAGS = \
+ @HAVE_OCAML_TRUE@	t/hivex_300_fold
+ 
+ @HAVE_OCAML_TRUE@SUFFIXES = .cmo .cmi .cmx .ml .mli .mll .mly
++
++# Do the installation by hand, because we want to run ocamlfind.
++@HAVE_OCAML_TRUE@install_files = META *.so *.a *.cma *.cmi *.mli \
++@HAVE_OCAML_TRUE@	$(am__append_2)
+ all: all-am
+ 
+ .SUFFIXES:
+@@ -1211,17 +1216,13 @@ uninstall-am:
+ @HAVE_OCAML_TRUE@hivex.cmo: hivex.cmi
+ @HAVE_OCAML_TRUE@hivex.cmx: hivex.cmi
+ 
+-# Do the installation by hand, because we want to run ocamlfind.
+ @HAVE_OCAML_TRUE@install-data-hook:
+ @HAVE_OCAML_TRUE@	mkdir -p $(DESTDIR)$(OCAMLLIB)
+ @HAVE_OCAML_TRUE@	mkdir -p $(DESTDIR)$(OCAMLLIB)/stublibs
+ @HAVE_OCAML_TRUE@	$(OCAMLFIND) install \
+ @HAVE_OCAML_TRUE@	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
+-@HAVE_OCAML_TRUE@	  hivex \
+-@HAVE_OCAML_TRUE@	  META *.so *.a *.cma *.cmi *.mli
+-@HAVE_OCAMLOPT_TRUE@@HAVE_OCAML_TRUE@	$(OCAMLFIND) install \
+-@HAVE_OCAMLOPT_TRUE@@HAVE_OCAML_TRUE@	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
+-@HAVE_OCAMLOPT_TRUE@@HAVE_OCAML_TRUE@	  *.cmx *.cmxa
++@HAVE_OCAML_TRUE@	  $(PACKAGE_NAME) \
++@HAVE_OCAML_TRUE@	  $(install_files)
+ 
+ # Tell version 3.79 and up of GNU make to not build goals in this
+ # directory in parallel.  (See RHBZ#502309).
+-- 

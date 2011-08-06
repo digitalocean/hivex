@@ -1,1 +1,4 @@
 0001-perl-Fix-CCFLAGS-on-Perl-5.14.patch
+0002-ocaml-Set-package-name-when-installing-native-bindin.patch
+0003-ocaml-Really-fix-make-install-rule.patch
+0004-run-autoreconf.patch
