@@ -1,0 +1,49 @@
+From: "Richard W.M. Jones" <rjones@redhat.com>
+Date: Fri, 22 Jul 2011 10:39:37 +0100
+Subject: perl: Fix CCFLAGS on Perl 5.14.
+
+A change to ExtUtils::CBuilder in Perl 5.14 causes CCFLAGS to
+completely replace, rather than appending, the C flags.
+
+The unfortunate consequence of this is that vital flags such as
+-D_FILE_OFFSET_BITS=64 are missing.  For 32 bit code, this means you
+get binary-incompatible code that completely fails to load.
+
+For further analysis see:
+
+http://www.nntp.perl.org/group/perl.perl5.porters/2011/04/msg171535.html
+
+This commit changes CCFLAGS so that it appends to the existing
+$Config{ccflags} instead of replacing it.  On earlier versions of Perl
+this means we get two copies of the flags, which is unfortunate but
+should be safe.
+
+Also, ignore MYMETA.yml file produced by Perl 5.14.
+
+Conflicts:
+
+	.gitignore
+---
+ perl/Makefile.PL.in |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
+
+diff --git a/perl/Makefile.PL.in b/perl/Makefile.PL.in
+index e6e3d72..77b4a0e 100644
+--- a/perl/Makefile.PL.in
++++ b/perl/Makefile.PL.in
+@@ -15,6 +15,7 @@
+ # along with this program; if not, write to the Free Software
+ # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ 
++use Config;
+ use ExtUtils::MakeMaker;
+ 
+ WriteMakefile (
+@@ -26,5 +27,5 @@ WriteMakefile (
+     LIBS => '-L@top_builddir@/lib/.libs -lhivex',
+     INC => '-I@top_builddir@/lib -I@top_srcdir@/lib',
+     TYPEMAPS => [ '@srcdir@/typemap' ],
+-    CCFLAGS => '@CFLAGS@',
++    CCFLAGS => $Config{ccflags} . ' @CFLAGS@',
+     );
+-- 
