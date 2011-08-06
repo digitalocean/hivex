@@ -3,10 +3,11 @@ Date: Sat, 6 Aug 2011 16:25:56 +0200
 Subject: run autoreconf
 
 ---
- aclocal.m4        |   14 ++++++++------
- configure         |    9 +++++----
- ocaml/Makefile.in |   17 +++++++++--------
- 3 files changed, 22 insertions(+), 18 deletions(-)
+ aclocal.m4         |   14 ++++++++------
+ configure          |    9 +++++----
+ ocaml/Makefile.in  |   17 +++++++++--------
+ python/Makefile.in |    5 +++--
+ 4 files changed, 25 insertions(+), 20 deletions(-)
 
 diff --git a/aclocal.m4 b/aclocal.m4
 index 0fdd213..7a9a350 100644
@@ -172,4 +173,27 @@ index fd1c49d..3188ad2 100644
  
  # Tell version 3.79 and up of GNU make to not build goals in this
  # directory in parallel.  (See RHBZ#502309).
+diff --git a/python/Makefile.in b/python/Makefile.in
+index 09694a2..84d824c 100644
+--- a/python/Makefile.in
++++ b/python/Makefile.in
+@@ -139,8 +139,8 @@ am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
+ am__v_lt_0 = --silent
+ libhivexmod_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+ 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+-	$(libhivexmod_la_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o \
+-	$@
++	$(libhivexmod_la_CFLAGS) $(CFLAGS) $(libhivexmod_la_LDFLAGS) \
++	$(LDFLAGS) -o $@
+ @HAVE_PYTHON_TRUE@am_libhivexmod_la_rpath = -rpath $(pythondir)
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+ depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
+@@ -934,6 +934,7 @@ EXTRA_DIST = \
+ @HAVE_PYTHON_TRUE@		        -I$(top_srcdir)/lib -I$(top_builddir)/lib
+ 
+ @HAVE_PYTHON_TRUE@libhivexmod_la_LIBADD = $(top_builddir)/lib/libhivex.la
++@HAVE_PYTHON_TRUE@libhivexmod_la_LDFLAGS = -avoid-version -shared
+ @HAVE_PYTHON_TRUE@TESTS_ENVIRONMENT = \
+ @HAVE_PYTHON_TRUE@	PYTHONPATH=$(builddir):$(builddir)/.libs
+ 
 -- 
