@@ -1,3 +1,14 @@
+hivex (1.2.7-2) unstable; urgency=low
+
+  * [2416ed8] Switched to 3.0 (quilt) format
+  * [04d56f3] Fixed FTBFS with Perl 5.14, using patch from upstream git.
+    Closes: #636650
+  * [c867a2f] Useed OCaml build fixes from upstream git
+  * [2b83743] Python: don't build static library, .so.0.0, symlinks
+  * [2980f63] Switched handling of Python bindings to dh_python2
+
+ -- Hilko Bengen <bengen@debian.org>  Sat, 06 Aug 2011 18:01:07 +0200
+
 hivex (1.2.7-1) unstable; urgency=low
 
   * New upstream version
