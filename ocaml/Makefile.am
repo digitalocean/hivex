@@ -72,6 +72,7 @@ t/%: t/%.cmo mlhivex.cma
 .mli.cmi:
 	$(OCAMLFIND) ocamlc -package unix -c $< -o $@
 .ml.cmo:
+	mkdir -p `dirname $@`
 	$(OCAMLFIND) ocamlc -package unix -c $< -o $@
 .ml.cmx:
 	$(OCAMLFIND) ocamlopt -package unix -c $< -o $@
@@ -88,18 +89,19 @@ include .depend
 SUFFIXES = .cmo .cmi .cmx .ml .mli .mll .mly
 
 # Do the installation by hand, because we want to run ocamlfind.
+install_files = META *.so *.a *.cma *.cmi $(srcdir)/*.mli
+
+if HAVE_OCAMLOPT
+install_files += *.cmx *.cmxa
+endif
+
 install-data-hook:
 	mkdir -p $(DESTDIR)$(OCAMLLIB)
 	mkdir -p $(DESTDIR)$(OCAMLLIB)/stublibs
 	$(OCAMLFIND) install \
 	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
-	  hivex \
-	  META *.so *.a *.cma *.cmi *.mli
-if HAVE_OCAMLOPT
-	$(OCAMLFIND) install \
-	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
-	  *.cmx *.cmxa
-endif
+	  $(PACKAGE_NAME) \
+	  $(install_files)
 
 CLEANFILES += $(noinst_DATA)
 

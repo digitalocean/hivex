@@ -542,7 +542,7 @@ ocaml_hivex_value_qword (value hv, value valv)
   if (r == -1 && errno != 0)
     raise_error ("value_qword");
 
-  rv = caml_copy_int32 (r);
+  rv = caml_copy_int64 (r);
   CAMLreturn (rv);
 }
 

@@ -30,10 +30,7 @@
 
 #include <string.h>
 #include <hivex.h>
-
-#ifndef PRId64
-#define PRId64 "lld"
-#endif
+#include <inttypes.h>
 
 static SV *
 my_newSVll(long long val) {
@@ -46,10 +43,6 @@ my_newSVll(long long val) {
   return newSVpv(buf, len);
 #endif
 }
-
-#ifndef PRIu64
-#define PRIu64 "llu"
-#endif
 
 #if 0
 static SV *

@@ -1,6 +1,6 @@
 #!/usr/bin/env ocaml
 (* hivex
- * Copyright (C) 2009-2010 Red Hat Inc.
+ * Copyright (C) 2009-2011 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,16 +19,16 @@
 
 (* This script generates language bindings and some documentation for
  * hivex.
- * 
+ *
  * After editing this file, run it (./generator/generator.ml) to
  * regenerate all the output files.  'make' will rerun this
  * automatically when necessary.  Note that if you are using a separate
  * build directory you must run generator.ml from the _source_
  * directory.
- * 
+ *
  * IMPORTANT: This script should NOT print any warnings.  If it prints
  * warnings, you should treat them as errors.
- * 
+ *
  * OCaml tips: (1) In emacs, install tuareg-mode to display and format
  * OCaml code correctly.  'vim' comes with a good OCaml editing mode by
  * default.  (2) Read the resources at http://ocaml-tutorial.org/
@@ -73,7 +73,7 @@ and argt =                              (* Note, cannot be NULL/0 unless it
 
 (* Hive types, from:
  * https://secure.wikimedia.org/wikipedia/en/wiki/Windows_Registry#Keys_and_values
- * 
+ *
  * It's unfortunate that in our original C binding we strayed away from
  * the names that Windows uses (eg. REG_SZ for strings).  We include
  * both our names and the Windows names.
@@ -841,7 +841,7 @@ hivex - Windows Registry \"hive\" extraction library
 =head1 SYNOPSIS
 
  #include <hivex.h>
- 
+
 ";
   List.iter (
     fun (shortname, style, _, _) ->
@@ -1771,7 +1771,7 @@ static void raise_closed (const char *) Noreturn;
            pr "  rv = copy_type_value (r, len, t);\n";
            pr "  free (r);\n"
        | RInt32 -> pr "  rv = caml_copy_int32 (r);\n"
-       | RInt64 -> pr "  rv = caml_copy_int32 (r);\n"
+       | RInt64 -> pr "  rv = caml_copy_int64 (r);\n"
       );
 
       pr "  CAMLreturn (rv);\n";
@@ -2188,10 +2188,7 @@ and generate_perl_xs () =
 
 #include <string.h>
 #include <hivex.h>
-
-#ifndef PRId64
-#define PRId64 \"lld\"
-#endif
+#include <inttypes.h>
 
 static SV *
 my_newSVll(long long val) {
@@ -2204,10 +2201,6 @@ my_newSVll(long long val) {
   return newSVpv(buf, len);
 #endif
 }
-
-#ifndef PRIu64
-#define PRIu64 \"llu\"
-#endif
 
 #if 0
 static SV *
@@ -3027,7 +3020,7 @@ initlibhivexmod (void)
   initialized = 1;
 }
 "
-  
+
 and generate_python_py () =
   generate_header HashStyle LGPLv2plus;
 

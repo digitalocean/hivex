@@ -38,10 +38,6 @@
 #include "full-read.h"
 #include "full-write.h"
 
-#ifndef O_CLOEXEC
-#define O_CLOEXEC 0
-#endif
-
 #define STREQ(a,b) (strcmp((a),(b)) == 0)
 #define STRCASEEQ(a,b) (strcasecmp((a),(b)) == 0)
 //#define STRNEQ(a,b) (strcmp((a),(b)) != 0)
@@ -321,6 +317,13 @@ hivex_open (const char *filename, int flags)
 
     if (full_read (h->fd, h->addr, h->size) < h->size)
       goto error;
+
+    /* We don't need the file descriptor along this path, since we
+     * have read all the data.
+     */
+    if (close (h->fd) == -1)
+      goto error;
+    h->fd = -1;
   }
 
   /* Check header. */
@@ -543,7 +546,10 @@ hivex_close (hive_h *h)
     munmap (h->addr, h->size);
   else
     free (h->addr);
-  r = close (h->fd);
+  if (h->fd >= 0)
+    r = close (h->fd);
+  else
+    r = 0;
   free (h->filename);
   free (h);
 
@@ -2748,8 +2754,7 @@ hivex_node_set_value (hive_h *h, hive_node_h node,
 
  leave_partial:
   for (int i = 0; i < alloc_ct; i += 2) {
-    if (values[i / 2].value != NULL)
-      free (values[i / 2].value);
+    free (values[i / 2].value);
     if (i + 1 < alloc_ct && values[i / 2].key != NULL)
       free (values[i / 2].key);
   }
