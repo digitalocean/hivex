@@ -47,37 +47,42 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 TESTS = test-alloca-opt$(EXEEXT) test-binary-io.sh \
-	test-c-ctype$(EXEEXT) test-dup2$(EXEEXT) test-environ$(EXEEXT) \
-	test-errno$(EXEEXT) test-fcntl-h$(EXEEXT) test-getopt$(EXEEXT) \
-	test-ignore-value$(EXEEXT) test-intprops$(EXEEXT) \
-	test-inttypes$(EXEEXT) test-lstat$(EXEEXT) \
-	test-malloca$(EXEEXT) test-memchr$(EXEEXT) test-open$(EXEEXT) \
-	test-setenv$(EXEEXT) test-stat$(EXEEXT) test-stdbool$(EXEEXT) \
-	test-stddef$(EXEEXT) test-stdint$(EXEEXT) test-stdio$(EXEEXT) \
-	test-stdlib$(EXEEXT) test-strerror$(EXEEXT) \
-	test-string$(EXEEXT) test-strnlen$(EXEEXT) \
-	test-symlink$(EXEEXT) test-sys_stat$(EXEEXT) \
-	test-time$(EXEEXT) test-unistd$(EXEEXT) test-unsetenv$(EXEEXT) \
-	test-vasnprintf$(EXEEXT) test-vasprintf$(EXEEXT) \
-	test-vc-list-files-git.sh test-vc-list-files-cvs.sh \
-	test-verify$(EXEEXT) test-verify.sh test-wchar$(EXEEXT) \
-	test-xstrtol.sh test-xstrtoll.sh
+	test-byteswap$(EXEEXT) test-c-ctype$(EXEEXT) \
+	test-dup2$(EXEEXT) test-environ$(EXEEXT) test-errno$(EXEEXT) \
+	test-fcntl-h$(EXEEXT) test-fcntl$(EXEEXT) test-float$(EXEEXT) \
+	test-getcwd-lgpl$(EXEEXT) test-getdtablesize$(EXEEXT) \
+	test-getopt$(EXEEXT) test-ignore-value$(EXEEXT) \
+	test-intprops$(EXEEXT) test-inttypes$(EXEEXT) \
+	test-lstat$(EXEEXT) test-malloca$(EXEEXT) test-memchr$(EXEEXT) \
+	test-open$(EXEEXT) test-setenv$(EXEEXT) test-stat$(EXEEXT) \
+	test-stdbool$(EXEEXT) test-stddef$(EXEEXT) \
+	test-stdint$(EXEEXT) test-stdio$(EXEEXT) test-stdlib$(EXEEXT) \
+	test-strerror$(EXEEXT) test-string$(EXEEXT) \
+	test-strnlen$(EXEEXT) test-symlink$(EXEEXT) \
+	test-sys_stat$(EXEEXT) test-time$(EXEEXT) test-unistd$(EXEEXT) \
+	test-unsetenv$(EXEEXT) test-vasnprintf$(EXEEXT) \
+	test-vasprintf$(EXEEXT) test-vc-list-files-git.sh \
+	test-vc-list-files-cvs.sh test-verify$(EXEEXT) test-verify.sh \
+	test-wchar$(EXEEXT) test-xstrtol.sh test-xstrtoll.sh
 XFAIL_TESTS =
 noinst_PROGRAMS =
 check_PROGRAMS = test-alloca-opt$(EXEEXT) test-binary-io$(EXEEXT) \
-	test-c-ctype$(EXEEXT) test-dup2$(EXEEXT) test-environ$(EXEEXT) \
-	test-errno$(EXEEXT) test-fcntl-h$(EXEEXT) test-getopt$(EXEEXT) \
-	test-ignore-value$(EXEEXT) test-intprops$(EXEEXT) \
-	test-inttypes$(EXEEXT) test-lstat$(EXEEXT) \
-	test-malloca$(EXEEXT) test-memchr$(EXEEXT) test-open$(EXEEXT) \
-	test-setenv$(EXEEXT) test-stat$(EXEEXT) test-stdbool$(EXEEXT) \
-	test-stddef$(EXEEXT) test-stdint$(EXEEXT) test-stdio$(EXEEXT) \
-	test-stdlib$(EXEEXT) test-strerror$(EXEEXT) \
-	test-string$(EXEEXT) test-strnlen$(EXEEXT) \
-	test-symlink$(EXEEXT) test-sys_stat$(EXEEXT) \
-	test-time$(EXEEXT) test-unistd$(EXEEXT) test-unsetenv$(EXEEXT) \
-	test-vasnprintf$(EXEEXT) test-vasprintf$(EXEEXT) \
-	test-verify$(EXEEXT) test-wchar$(EXEEXT) test-xstrtol$(EXEEXT) \
+	test-byteswap$(EXEEXT) test-c-ctype$(EXEEXT) \
+	test-dup2$(EXEEXT) test-environ$(EXEEXT) test-errno$(EXEEXT) \
+	test-fcntl-h$(EXEEXT) test-fcntl$(EXEEXT) test-float$(EXEEXT) \
+	test-getcwd-lgpl$(EXEEXT) test-getdtablesize$(EXEEXT) \
+	test-getopt$(EXEEXT) test-ignore-value$(EXEEXT) \
+	test-intprops$(EXEEXT) test-inttypes$(EXEEXT) \
+	test-lstat$(EXEEXT) test-malloca$(EXEEXT) test-memchr$(EXEEXT) \
+	test-open$(EXEEXT) test-setenv$(EXEEXT) test-stat$(EXEEXT) \
+	test-stdbool$(EXEEXT) test-stddef$(EXEEXT) \
+	test-stdint$(EXEEXT) test-stdio$(EXEEXT) test-stdlib$(EXEEXT) \
+	test-strerror$(EXEEXT) test-string$(EXEEXT) \
+	test-strnlen$(EXEEXT) test-symlink$(EXEEXT) \
+	test-sys_stat$(EXEEXT) test-time$(EXEEXT) test-unistd$(EXEEXT) \
+	test-unsetenv$(EXEEXT) test-vasnprintf$(EXEEXT) \
+	test-vasprintf$(EXEEXT) test-verify$(EXEEXT) \
+	test-wchar$(EXEEXT) test-xstrtol$(EXEEXT) \
 	test-xstrtoul$(EXEEXT) test-xstrtoll$(EXEEXT) \
 	test-xstrtoull$(EXEEXT)
 subdir = gnulib/tests
@@ -85,14 +90,16 @@ DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/00gnulib.m4 \
-	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/dup2.m4 \
-	$(top_srcdir)/m4/eealloc.m4 $(top_srcdir)/m4/environ.m4 \
-	$(top_srcdir)/m4/errno_h.m4 $(top_srcdir)/m4/error.m4 \
-	$(top_srcdir)/m4/extensions.m4 $(top_srcdir)/m4/fcntl-o.m4 \
+	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/byteswap.m4 \
+	$(top_srcdir)/m4/dup2.m4 $(top_srcdir)/m4/eealloc.m4 \
+	$(top_srcdir)/m4/environ.m4 $(top_srcdir)/m4/errno_h.m4 \
+	$(top_srcdir)/m4/error.m4 $(top_srcdir)/m4/extensions.m4 \
+	$(top_srcdir)/m4/fcntl-o.m4 $(top_srcdir)/m4/fcntl.m4 \
 	$(top_srcdir)/m4/fcntl_h.m4 $(top_srcdir)/m4/float_h.m4 \
-	$(top_srcdir)/m4/getopt.m4 $(top_srcdir)/m4/getpagesize.m4 \
-	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/gnu-make.m4 \
-	$(top_srcdir)/m4/gnulib-common.m4 \
+	$(top_srcdir)/m4/fpieee.m4 $(top_srcdir)/m4/getcwd.m4 \
+	$(top_srcdir)/m4/getdtablesize.m4 $(top_srcdir)/m4/getopt.m4 \
+	$(top_srcdir)/m4/getpagesize.m4 $(top_srcdir)/m4/gettext.m4 \
+	$(top_srcdir)/m4/gnu-make.m4 $(top_srcdir)/m4/gnulib-common.m4 \
 	$(top_srcdir)/m4/gnulib-comp.m4 $(top_srcdir)/m4/iconv.m4 \
 	$(top_srcdir)/m4/include_next.m4 \
 	$(top_srcdir)/m4/intlmacosx.m4 $(top_srcdir)/m4/intmax_t.m4 \
@@ -108,26 +115,26 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/00gnulib.m4 \
 	$(top_srcdir)/m4/mode_t.m4 $(top_srcdir)/m4/multiarch.m4 \
 	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/ocaml.m4 \
 	$(top_srcdir)/m4/onceonly.m4 $(top_srcdir)/m4/open.m4 \
-	$(top_srcdir)/m4/pathmax.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/printf.m4 $(top_srcdir)/m4/progtest.m4 \
-	$(top_srcdir)/m4/putenv.m4 $(top_srcdir)/m4/read.m4 \
-	$(top_srcdir)/m4/safe-read.m4 $(top_srcdir)/m4/safe-write.m4 \
-	$(top_srcdir)/m4/setenv.m4 $(top_srcdir)/m4/size_max.m4 \
-	$(top_srcdir)/m4/ssize_t.m4 $(top_srcdir)/m4/stat.m4 \
-	$(top_srcdir)/m4/stdbool.m4 $(top_srcdir)/m4/stddef_h.m4 \
-	$(top_srcdir)/m4/stdint.m4 $(top_srcdir)/m4/stdint_h.m4 \
-	$(top_srcdir)/m4/stdio_h.m4 $(top_srcdir)/m4/stdlib_h.m4 \
-	$(top_srcdir)/m4/strerror.m4 $(top_srcdir)/m4/string_h.m4 \
-	$(top_srcdir)/m4/strndup.m4 $(top_srcdir)/m4/strnlen.m4 \
-	$(top_srcdir)/m4/strtoll.m4 $(top_srcdir)/m4/strtoull.m4 \
-	$(top_srcdir)/m4/symlink.m4 $(top_srcdir)/m4/sys_stat_h.m4 \
-	$(top_srcdir)/m4/time_h.m4 $(top_srcdir)/m4/unistd_h.m4 \
-	$(top_srcdir)/m4/vasnprintf.m4 $(top_srcdir)/m4/vasprintf.m4 \
-	$(top_srcdir)/m4/warn-on-use.m4 $(top_srcdir)/m4/warnings.m4 \
-	$(top_srcdir)/m4/wchar_h.m4 $(top_srcdir)/m4/wchar_t.m4 \
-	$(top_srcdir)/m4/wint_t.m4 $(top_srcdir)/m4/write.m4 \
-	$(top_srcdir)/m4/xsize.m4 $(top_srcdir)/m4/xstrtol.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/printf.m4 \
+	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/m4/putenv.m4 \
+	$(top_srcdir)/m4/read.m4 $(top_srcdir)/m4/safe-read.m4 \
+	$(top_srcdir)/m4/safe-write.m4 $(top_srcdir)/m4/setenv.m4 \
+	$(top_srcdir)/m4/size_max.m4 $(top_srcdir)/m4/ssize_t.m4 \
+	$(top_srcdir)/m4/stat.m4 $(top_srcdir)/m4/stdbool.m4 \
+	$(top_srcdir)/m4/stddef_h.m4 $(top_srcdir)/m4/stdint.m4 \
+	$(top_srcdir)/m4/stdint_h.m4 $(top_srcdir)/m4/stdio_h.m4 \
+	$(top_srcdir)/m4/stdlib_h.m4 $(top_srcdir)/m4/strerror.m4 \
+	$(top_srcdir)/m4/string_h.m4 $(top_srcdir)/m4/strndup.m4 \
+	$(top_srcdir)/m4/strnlen.m4 $(top_srcdir)/m4/strtoll.m4 \
+	$(top_srcdir)/m4/strtoull.m4 $(top_srcdir)/m4/symlink.m4 \
+	$(top_srcdir)/m4/sys_socket_h.m4 \
+	$(top_srcdir)/m4/sys_stat_h.m4 $(top_srcdir)/m4/time_h.m4 \
+	$(top_srcdir)/m4/unistd_h.m4 $(top_srcdir)/m4/vasnprintf.m4 \
+	$(top_srcdir)/m4/vasprintf.m4 $(top_srcdir)/m4/warn-on-use.m4 \
+	$(top_srcdir)/m4/warnings.m4 $(top_srcdir)/m4/wchar_h.m4 \
+	$(top_srcdir)/m4/wchar_t.m4 $(top_srcdir)/m4/wint_t.m4 \
+	$(top_srcdir)/m4/write.m4 $(top_srcdir)/m4/xsize.m4 \
+	$(top_srcdir)/m4/xstrtol.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -160,6 +167,11 @@ test_binary_io_OBJECTS = test-binary-io.$(OBJEXT)
 test_binary_io_LDADD = $(LDADD)
 test_binary_io_DEPENDENCIES = libtests.a ../../gnulib/lib/libgnu.la \
 	libtests.a $(am__DEPENDENCIES_1)
+test_byteswap_SOURCES = test-byteswap.c
+test_byteswap_OBJECTS = test-byteswap.$(OBJEXT)
+test_byteswap_LDADD = $(LDADD)
+test_byteswap_DEPENDENCIES = libtests.a ../../gnulib/lib/libgnu.la \
+	libtests.a $(am__DEPENDENCIES_1)
 test_c_ctype_SOURCES = test-c-ctype.c
 test_c_ctype_OBJECTS = test-c-ctype.$(OBJEXT)
 test_c_ctype_LDADD = $(LDADD)
@@ -180,11 +192,31 @@ test_errno_OBJECTS = test-errno.$(OBJEXT)
 test_errno_LDADD = $(LDADD)
 test_errno_DEPENDENCIES = libtests.a ../../gnulib/lib/libgnu.la \
 	libtests.a $(am__DEPENDENCIES_1)
+test_fcntl_SOURCES = test-fcntl.c
+test_fcntl_OBJECTS = test-fcntl.$(OBJEXT)
+test_fcntl_LDADD = $(LDADD)
+test_fcntl_DEPENDENCIES = libtests.a ../../gnulib/lib/libgnu.la \
+	libtests.a $(am__DEPENDENCIES_1)
 test_fcntl_h_SOURCES = test-fcntl-h.c
 test_fcntl_h_OBJECTS = test-fcntl-h.$(OBJEXT)
 test_fcntl_h_LDADD = $(LDADD)
 test_fcntl_h_DEPENDENCIES = libtests.a ../../gnulib/lib/libgnu.la \
 	libtests.a $(am__DEPENDENCIES_1)
+test_float_SOURCES = test-float.c
+test_float_OBJECTS = test-float.$(OBJEXT)
+test_float_LDADD = $(LDADD)
+test_float_DEPENDENCIES = libtests.a ../../gnulib/lib/libgnu.la \
+	libtests.a $(am__DEPENDENCIES_1)
+test_getcwd_lgpl_SOURCES = test-getcwd-lgpl.c
+test_getcwd_lgpl_OBJECTS = test-getcwd-lgpl.$(OBJEXT)
+test_getcwd_lgpl_LDADD = $(LDADD)
+test_getcwd_lgpl_DEPENDENCIES = libtests.a ../../gnulib/lib/libgnu.la \
+	libtests.a $(am__DEPENDENCIES_1)
+test_getdtablesize_SOURCES = test-getdtablesize.c
+test_getdtablesize_OBJECTS = test-getdtablesize.$(OBJEXT)
+test_getdtablesize_LDADD = $(LDADD)
+test_getdtablesize_DEPENDENCIES = libtests.a \
+	../../gnulib/lib/libgnu.la libtests.a $(am__DEPENDENCIES_1)
 test_getopt_SOURCES = test-getopt.c
 test_getopt_OBJECTS = test-getopt.$(OBJEXT)
 am__DEPENDENCIES_2 = libtests.a ../../gnulib/lib/libgnu.la libtests.a \
@@ -358,27 +390,31 @@ AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(libtests_a_SOURCES) $(EXTRA_libtests_a_SOURCES) \
-	test-alloca-opt.c test-binary-io.c test-c-ctype.c test-dup2.c \
-	test-environ.c test-errno.c test-fcntl-h.c test-getopt.c \
-	test-ignore-value.c test-intprops.c test-inttypes.c \
-	test-lstat.c test-malloca.c test-memchr.c test-open.c \
-	test-setenv.c test-stat.c test-stdbool.c test-stddef.c \
-	test-stdint.c test-stdio.c test-stdlib.c test-strerror.c \
-	test-string.c test-strnlen.c test-symlink.c test-sys_stat.c \
-	test-time.c test-unistd.c test-unsetenv.c test-vasnprintf.c \
-	test-vasprintf.c test-verify.c test-wchar.c test-xstrtol.c \
-	test-xstrtoll.c test-xstrtoul.c test-xstrtoull.c
+	test-alloca-opt.c test-binary-io.c test-byteswap.c \
+	test-c-ctype.c test-dup2.c test-environ.c test-errno.c \
+	test-fcntl.c test-fcntl-h.c test-float.c test-getcwd-lgpl.c \
+	test-getdtablesize.c test-getopt.c test-ignore-value.c \
+	test-intprops.c test-inttypes.c test-lstat.c test-malloca.c \
+	test-memchr.c test-open.c test-setenv.c test-stat.c \
+	test-stdbool.c test-stddef.c test-stdint.c test-stdio.c \
+	test-stdlib.c test-strerror.c test-string.c test-strnlen.c \
+	test-symlink.c test-sys_stat.c test-time.c test-unistd.c \
+	test-unsetenv.c test-vasnprintf.c test-vasprintf.c \
+	test-verify.c test-wchar.c test-xstrtol.c test-xstrtoll.c \
+	test-xstrtoul.c test-xstrtoull.c
 DIST_SOURCES = $(libtests_a_SOURCES) $(EXTRA_libtests_a_SOURCES) \
-	test-alloca-opt.c test-binary-io.c test-c-ctype.c test-dup2.c \
-	test-environ.c test-errno.c test-fcntl-h.c test-getopt.c \
-	test-ignore-value.c test-intprops.c test-inttypes.c \
-	test-lstat.c test-malloca.c test-memchr.c test-open.c \
-	test-setenv.c test-stat.c test-stdbool.c test-stddef.c \
-	test-stdint.c test-stdio.c test-stdlib.c test-strerror.c \
-	test-string.c test-strnlen.c test-symlink.c test-sys_stat.c \
-	test-time.c test-unistd.c test-unsetenv.c test-vasnprintf.c \
-	test-vasprintf.c test-verify.c test-wchar.c test-xstrtol.c \
-	test-xstrtoll.c test-xstrtoul.c test-xstrtoull.c
+	test-alloca-opt.c test-binary-io.c test-byteswap.c \
+	test-c-ctype.c test-dup2.c test-environ.c test-errno.c \
+	test-fcntl.c test-fcntl-h.c test-float.c test-getcwd-lgpl.c \
+	test-getdtablesize.c test-getopt.c test-ignore-value.c \
+	test-intprops.c test-inttypes.c test-lstat.c test-malloca.c \
+	test-memchr.c test-open.c test-setenv.c test-stat.c \
+	test-stdbool.c test-stddef.c test-stdint.c test-stdio.c \
+	test-stdlib.c test-strerror.c test-string.c test-strnlen.c \
+	test-symlink.c test-sys_stat.c test-time.c test-unistd.c \
+	test-unsetenv.c test-vasnprintf.c test-vasprintf.c \
+	test-verify.c test-wchar.c test-xstrtol.c test-xstrtoll.c \
+	test-xstrtoul.c test-xstrtoull.c
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-dvi-recursive install-exec-recursive \
@@ -439,6 +475,7 @@ BITSIZEOF_SIG_ATOMIC_T = @BITSIZEOF_SIG_ATOMIC_T@
 BITSIZEOF_SIZE_T = @BITSIZEOF_SIZE_T@
 BITSIZEOF_WCHAR_T = @BITSIZEOF_WCHAR_T@
 BITSIZEOF_WINT_T = @BITSIZEOF_WINT_T@
+BYTESWAP_H = @BYTESWAP_H@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
@@ -857,6 +894,7 @@ HAVE_WCSSTR = @HAVE_WCSSTR@
 HAVE_WCSTOK = @HAVE_WCSTOK@
 HAVE_WCSWIDTH = @HAVE_WCSWIDTH@
 HAVE_WCSXFRM = @HAVE_WCSXFRM@
+HAVE_WINSOCK2_H = @HAVE_WINSOCK2_H@
 HAVE_WINT_T = @HAVE_WINT_T@
 HAVE_WMEMCHR = @HAVE_WMEMCHR@
 HAVE_WMEMCMP = @HAVE_WMEMCMP@
@@ -1175,18 +1213,21 @@ noinst_HEADERS =
 noinst_LIBRARIES = 
 check_LIBRARIES = libtests.a
 EXTRA_DIST = test-alloca-opt.c $(top_srcdir)/build-aux/arg-nonnull.h \
-	test-binary-io.sh test-binary-io.c macros.h \
-	$(top_srcdir)/build-aux/c++defs.h test-c-ctype.c macros.h \
-	dosname.h dup2.c test-dup2.c signature.h macros.h \
-	test-environ.c test-errno.c fcntl.in.h test-fcntl-h.c macros.h \
-	signature.h test-getopt.c test-getopt.h test-getopt_long.h \
-	getpagesize.c test-ignore-value.c test-intprops.c \
-	test-inttypes.c lstat.c test-lstat.h test-lstat.c signature.h \
-	macros.h malloc.c malloca.h malloca.valgrind test-malloca.c \
+	test-binary-io.sh test-binary-io.c macros.h test-byteswap.c \
+	macros.h $(top_srcdir)/build-aux/c++defs.h test-c-ctype.c \
+	macros.h dosname.h test-dup2.c signature.h macros.h \
+	test-environ.c test-errno.c test-fcntl-h.c test-fcntl.c \
+	signature.h macros.h test-float.c macros.h fpucw.h \
+	getcwd-lgpl.c test-getcwd-lgpl.c signature.h macros.h \
+	test-getdtablesize.c signature.h macros.h macros.h signature.h \
+	test-getopt.c test-getopt.h test-getopt_long.h getpagesize.c \
+	test-ignore-value.c test-intprops.c macros.h test-inttypes.c \
+	lstat.c test-lstat.h test-lstat.c signature.h macros.h \
+	malloc.c malloca.h malloca.valgrind test-malloca.c \
 	test-memchr.c zerosize-ptr.h signature.h macros.h open.c \
-	test-open.h test-open.c signature.h macros.h pathmax.h \
-	putenv.c same-inode.h setenv.c test-setenv.c signature.h \
-	macros.h stat.c test-stat.h test-stat.c signature.h macros.h \
+	test-open.h test-open.c signature.h macros.h putenv.c \
+	same-inode.h setenv.c test-setenv.c signature.h macros.h \
+	stat.c test-stat.h test-stat.c signature.h macros.h \
 	test-stdbool.c test-stddef.c test-stdint.c test-stdio.c \
 	test-stdlib.c test-sys_wait.h test-strerror.c signature.h \
 	macros.h test-string.c test-strnlen.c zerosize-ptr.h \
@@ -1211,12 +1252,12 @@ EXTRA_DIST = test-alloca-opt.c $(top_srcdir)/build-aux/arg-nonnull.h \
 # statements but through direct file reference. Therefore this snippet must be
 # present in all Makefile.am that need it. This is ensured by the applicability
 # 'all' defined above.
-BUILT_SOURCES = arg-nonnull.h c++defs.h fcntl.h sys/stat.h time.h \
+BUILT_SOURCES = arg-nonnull.h c++defs.h sys/stat.h time.h \
 	warn-on-use.h
 SUFFIXES = 
 MOSTLYCLEANFILES = core *.stackdump arg-nonnull.h arg-nonnull.h-t \
-	c++defs.h c++defs.h-t fcntl.h fcntl.h-t sys/stat.h \
-	sys/stat.h-t time.h time.h-t warn-on-use.h warn-on-use.h-t
+	c++defs.h c++defs.h-t sys/stat.h sys/stat.h-t time.h time.h-t \
+	warn-on-use.h warn-on-use.h-t
 MOSTLYCLEANDIRS = sys
 CLEANFILES = 
 DISTCLEANFILES = 
@@ -1231,8 +1272,8 @@ LDADD = libtests.a ../../gnulib/lib/libgnu.la libtests.a $(LIBTESTS_LIBDEPS)
 libtests_a_SOURCES = binary-io.h malloca.c
 libtests_a_LIBADD = $(gltests_LIBOBJS)
 libtests_a_DEPENDENCIES = $(gltests_LIBOBJS)
-EXTRA_libtests_a_SOURCES = dup2.c getpagesize.c lstat.c malloc.c \
-	open.c putenv.c setenv.c stat.c symlink.c unsetenv.c
+EXTRA_libtests_a_SOURCES = getcwd-lgpl.c getpagesize.c lstat.c \
+	malloc.c open.c putenv.c setenv.c stat.c symlink.c unsetenv.c
 AM_LIBTOOLFLAGS = --preserve-dup-deps
 ARG_NONNULL_H = arg-nonnull.h
 CXXDEFS_H = c++defs.h
@@ -1311,6 +1352,9 @@ test-alloca-opt$(EXEEXT): $(test_alloca_opt_OBJECTS) $(test_alloca_opt_DEPENDENC
 test-binary-io$(EXEEXT): $(test_binary_io_OBJECTS) $(test_binary_io_DEPENDENCIES) 
 	@rm -f test-binary-io$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_binary_io_OBJECTS) $(test_binary_io_LDADD) $(LIBS)
+test-byteswap$(EXEEXT): $(test_byteswap_OBJECTS) $(test_byteswap_DEPENDENCIES) 
+	@rm -f test-byteswap$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(test_byteswap_OBJECTS) $(test_byteswap_LDADD) $(LIBS)
 test-c-ctype$(EXEEXT): $(test_c_ctype_OBJECTS) $(test_c_ctype_DEPENDENCIES) 
 	@rm -f test-c-ctype$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_c_ctype_OBJECTS) $(test_c_ctype_LDADD) $(LIBS)
@@ -1323,9 +1367,21 @@ test-environ$(EXEEXT): $(test_environ_OBJECTS) $(test_environ_DEPENDENCIES)
 test-errno$(EXEEXT): $(test_errno_OBJECTS) $(test_errno_DEPENDENCIES) 
 	@rm -f test-errno$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_errno_OBJECTS) $(test_errno_LDADD) $(LIBS)
+test-fcntl$(EXEEXT): $(test_fcntl_OBJECTS) $(test_fcntl_DEPENDENCIES) 
+	@rm -f test-fcntl$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(test_fcntl_OBJECTS) $(test_fcntl_LDADD) $(LIBS)
 test-fcntl-h$(EXEEXT): $(test_fcntl_h_OBJECTS) $(test_fcntl_h_DEPENDENCIES) 
 	@rm -f test-fcntl-h$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_fcntl_h_OBJECTS) $(test_fcntl_h_LDADD) $(LIBS)
+test-float$(EXEEXT): $(test_float_OBJECTS) $(test_float_DEPENDENCIES) 
+	@rm -f test-float$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(test_float_OBJECTS) $(test_float_LDADD) $(LIBS)
+test-getcwd-lgpl$(EXEEXT): $(test_getcwd_lgpl_OBJECTS) $(test_getcwd_lgpl_DEPENDENCIES) 
+	@rm -f test-getcwd-lgpl$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(test_getcwd_lgpl_OBJECTS) $(test_getcwd_lgpl_LDADD) $(LIBS)
+test-getdtablesize$(EXEEXT): $(test_getdtablesize_OBJECTS) $(test_getdtablesize_DEPENDENCIES) 
+	@rm -f test-getdtablesize$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(test_getdtablesize_OBJECTS) $(test_getdtablesize_LDADD) $(LIBS)
 test-getopt$(EXEEXT): $(test_getopt_OBJECTS) $(test_getopt_DEPENDENCIES) 
 	@rm -f test-getopt$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_getopt_OBJECTS) $(test_getopt_LDADD) $(LIBS)
@@ -1426,7 +1482,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dup2.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getcwd-lgpl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getpagesize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lstat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/malloc.Po@am__quote@
@@ -1438,11 +1494,16 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/symlink.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-alloca-opt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-binary-io.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-byteswap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-c-ctype.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-dup2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-environ.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-errno.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-fcntl-h.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-fcntl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-float.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-getcwd-lgpl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-getdtablesize.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-getopt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-ignore-value.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-intprops.Po@am__quote@
@@ -1940,53 +2001,29 @@ c++defs.h: $(top_srcdir)/build-aux/c++defs.h
 	  > $@-t && \
 	mv $@-t $@
 
-# We need the following in order to create <fcntl.h> when the system
-# doesn't have one that works with the given compiler.
-fcntl.h: fcntl.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H) $(WARN_ON_USE_H)
-	$(AM_V_GEN)rm -f $@-t $@ && \
-	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
-	  sed -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
-	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
-	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
-	      -e 's|@''NEXT_FCNTL_H''@|$(NEXT_FCNTL_H)|g' \
-	      -e 's|@''GNULIB_FCNTL''@|$(GNULIB_FCNTL)|g' \
-	      -e 's|@''GNULIB_NONBLOCKING''@|$(GNULIB_NONBLOCKING)|g' \
-	      -e 's|@''GNULIB_OPEN''@|$(GNULIB_OPEN)|g' \
-	      -e 's|@''GNULIB_OPENAT''@|$(GNULIB_OPENAT)|g' \
-	      -e 's|@''HAVE_FCNTL''@|$(HAVE_FCNTL)|g' \
-	      -e 's|@''HAVE_OPENAT''@|$(HAVE_OPENAT)|g' \
-	      -e 's|@''REPLACE_FCNTL''@|$(REPLACE_FCNTL)|g' \
-	      -e 's|@''REPLACE_OPEN''@|$(REPLACE_OPEN)|g' \
-	      -e 's|@''REPLACE_OPENAT''@|$(REPLACE_OPENAT)|g' \
-	      -e '/definitions of _GL_FUNCDECL_RPL/r $(CXXDEFS_H)' \
-	      -e '/definition of _GL_ARG_NONNULL/r $(ARG_NONNULL_H)' \
-	      -e '/definition of _GL_WARN_ON_USE/r $(WARN_ON_USE_H)' \
-	      < $(srcdir)/fcntl.in.h; \
-	} > $@-t && \
-	mv $@-t $@
-
 # We need the following in order to create <sys/stat.h> when the system
 # has one that is incomplete.
 sys/stat.h: sys_stat.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H) $(WARN_ON_USE_H)
 	$(AM_V_at)$(MKDIR_P) sys
 	$(AM_V_GEN)rm -f $@-t $@ && \
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */'; \
-	  sed -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
+	  sed -e 's|@''GUARD_PREFIX''@|GL|g' \
+	      -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
 	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
 	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
 	      -e 's|@''NEXT_SYS_STAT_H''@|$(NEXT_SYS_STAT_H)|g' \
-	      -e 's|@''GNULIB_FCHMODAT''@|$(GNULIB_FCHMODAT)|g' \
-	      -e 's|@''GNULIB_FSTATAT''@|$(GNULIB_FSTATAT)|g' \
-	      -e 's|@''GNULIB_FUTIMENS''@|$(GNULIB_FUTIMENS)|g' \
-	      -e 's|@''GNULIB_LCHMOD''@|$(GNULIB_LCHMOD)|g' \
-	      -e 's|@''GNULIB_LSTAT''@|$(GNULIB_LSTAT)|g' \
-	      -e 's|@''GNULIB_MKDIRAT''@|$(GNULIB_MKDIRAT)|g' \
-	      -e 's|@''GNULIB_MKFIFO''@|$(GNULIB_MKFIFO)|g' \
-	      -e 's|@''GNULIB_MKFIFOAT''@|$(GNULIB_MKFIFOAT)|g' \
-	      -e 's|@''GNULIB_MKNOD''@|$(GNULIB_MKNOD)|g' \
-	      -e 's|@''GNULIB_MKNODAT''@|$(GNULIB_MKNODAT)|g' \
-	      -e 's|@''GNULIB_STAT''@|$(GNULIB_STAT)|g' \
-	      -e 's|@''GNULIB_UTIMENSAT''@|$(GNULIB_UTIMENSAT)|g' \
+	      -e 's/@''GNULIB_FCHMODAT''@/$(GNULIB_FCHMODAT)/g' \
+	      -e 's/@''GNULIB_FSTATAT''@/$(GNULIB_FSTATAT)/g' \
+	      -e 's/@''GNULIB_FUTIMENS''@/$(GNULIB_FUTIMENS)/g' \
+	      -e 's/@''GNULIB_LCHMOD''@/$(GNULIB_LCHMOD)/g' \
+	      -e 's/@''GNULIB_LSTAT''@/$(GNULIB_LSTAT)/g' \
+	      -e 's/@''GNULIB_MKDIRAT''@/$(GNULIB_MKDIRAT)/g' \
+	      -e 's/@''GNULIB_MKFIFO''@/$(GNULIB_MKFIFO)/g' \
+	      -e 's/@''GNULIB_MKFIFOAT''@/$(GNULIB_MKFIFOAT)/g' \
+	      -e 's/@''GNULIB_MKNOD''@/$(GNULIB_MKNOD)/g' \
+	      -e 's/@''GNULIB_MKNODAT''@/$(GNULIB_MKNODAT)/g' \
+	      -e 's/@''GNULIB_STAT''@/$(GNULIB_STAT)/g' \
+	      -e 's/@''GNULIB_UTIMENSAT''@/$(GNULIB_UTIMENSAT)/g' \
 	      -e 's|@''HAVE_FCHMODAT''@|$(HAVE_FCHMODAT)|g' \
 	      -e 's|@''HAVE_FSTATAT''@|$(HAVE_FSTATAT)|g' \
 	      -e 's|@''HAVE_FUTIMENS''@|$(HAVE_FUTIMENS)|g' \
@@ -2019,15 +2056,16 @@ sys/stat.h: sys_stat.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNU
 time.h: time.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNULL_H) $(WARN_ON_USE_H)
 	$(AM_V_GEN)rm -f $@-t $@ && \
 	{ echo '/* DO NOT EDIT! GENERATED AUTOMATICALLY! */' && \
-	  sed -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
+	  sed -e 's|@''GUARD_PREFIX''@|GL|g' \
+	      -e 's|@''INCLUDE_NEXT''@|$(INCLUDE_NEXT)|g' \
 	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
 	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
 	      -e 's|@''NEXT_TIME_H''@|$(NEXT_TIME_H)|g' \
-	      -e 's|@''GNULIB_MKTIME''@|$(GNULIB_MKTIME)|g' \
-	      -e 's|@''GNULIB_NANOSLEEP''@|$(GNULIB_NANOSLEEP)|g' \
-	      -e 's|@''GNULIB_STRPTIME''@|$(GNULIB_STRPTIME)|g' \
-	      -e 's|@''GNULIB_TIMEGM''@|$(GNULIB_TIMEGM)|g' \
-	      -e 's|@''GNULIB_TIME_R''@|$(GNULIB_TIME_R)|g' \
+	      -e 's/@''GNULIB_MKTIME''@/$(GNULIB_MKTIME)/g' \
+	      -e 's/@''GNULIB_NANOSLEEP''@/$(GNULIB_NANOSLEEP)/g' \
+	      -e 's/@''GNULIB_STRPTIME''@/$(GNULIB_STRPTIME)/g' \
+	      -e 's/@''GNULIB_TIMEGM''@/$(GNULIB_TIMEGM)/g' \
+	      -e 's/@''GNULIB_TIME_R''@/$(GNULIB_TIME_R)/g' \
 	      -e 's|@''HAVE_DECL_LOCALTIME_R''@|$(HAVE_DECL_LOCALTIME_R)|g' \
 	      -e 's|@''HAVE_NANOSLEEP''@|$(HAVE_NANOSLEEP)|g' \
 	      -e 's|@''HAVE_STRPTIME''@|$(HAVE_STRPTIME)|g' \

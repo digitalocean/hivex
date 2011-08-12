@@ -35,7 +35,7 @@ hivex - Windows Registry "hive" extraction library
 =head1 SYNOPSIS
 
  #include <hivex.h>
- 
+
  hive_h *hivex_open (const char *filename, int flags);
  int hivex_close (hive_h *h);
  hive_node_h hivex_root (hive_h *h);

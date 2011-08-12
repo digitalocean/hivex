@@ -1,4 +1,131 @@
+2011-08-12  Hilko Bengen  <bengen@hilluzination.de>
+
+	More changes needed separate builddir
+	This patch hopefully fixes building and installing the OCaml bindings
+	both in-tree and out-of-tree.
+
+	-Hilko
+
+	More changes needed separate builddir
+	Here's the fix for perl. Both in-tree and out-of-tree build and install
+	worked.
+
+	-Hilko
+
+2011-08-11  Hilko Bengen  <bengen@hilluzination.de>
+
+	hivex: A few tweaks to enable building in a separate directory
+	A couple of fixes by RWMJ so it still works in the same directory case.
+
+2011-08-11  Alex Nelson  <ajnelson@cs.ucsc.edu>
+
+	Correct 32-bit to 64-bit call
+
+2011-07-22  Richard W.M. Jones  <rjones@redhat.com>
+
+	perl: Fix CCFLAGS on Perl 5.14.
+	A change to ExtUtils::CBuilder in Perl 5.14 causes CCFLAGS to
+	completely replace, rather than appending, the C flags.
+
+	The unfortunate consequence of this is that vital flags such as
+	-D_FILE_OFFSET_BITS=64 are missing.  For 32 bit code, this means you
+	get binary-incompatible code that completely fails to load.
+
+	For further analysis see:
+
+	http://www.nntp.perl.org/group/perl.perl5.porters/2011/04/msg171535.html
+
+	This commit changes CCFLAGS so that it appends to the existing
+	$Config{ccflags} instead of replacing it.  On earlier versions of Perl
+	this means we get two copies of the flags, which is unfortunate but
+	should be safe.
+
+	Also, ignore MYMETA.yml file produced by Perl 5.14.
+
+2011-07-11  Michael Huang  <Michael.Huang@visionsolutions.com>
+
+	Close the file descriptor along the writable path.
+	Since the file has been completely read into memory, there is no
+	reason to keep the file descriptor open.
+
+2011-06-29  Richard W.M. Jones  <rjones@redhat.com>
+
+	Sort m4/.gitignore file.
+
+2011-06-29  Jim Meyering  <jim@meyering.net>
+
+	maint: add cfg.mk to prepare for syntax-check tests
+	* cfg.mk: New file, to tell maint.mk which syntax-checks to skip
+	for now, where .gnulib/ is, to exempt images/minimal from
+	one of the tests and to exempt sh/hivexsh\.pod from another.
+	Also exempt lib/gettext.h from sc_useless_cpp_parens.
+
+2011-06-28  Jim Meyering  <meyering@redhat.com>
+
+	maint: remove rule that generated po/POTFILES.in
+	* Makefile.am (all-local): Remove rule.  It would put many
+	files in po/POTFILES.in that contain no translatable diagnostic.
+
+	build: update gnulib submodule to latest
+
+	maint: remove spaces before TAB
+	* perl/typemap: Remove spaces-before-TAB.
+
+	maint: avoid using test's -a and -o operators; they are not portable
+	* configure.ac: use "test C1 && test C2", not "test C1 -a C2";
+	* autogen.sh: Likewise.
+	* sh/hivexget: Use "test C1 || test C2", not "test C1 -o C2"
+
+	maint: use "test x = x", not "test x == x"
+	* autogen.sh: Using "test x = x" is more portable.
+
+	maint: remove trailing blanks
+
+	maint: remove now-unnecessary #ifdef HAVE_BYTESWAP_H guard
+	* lib/byte_conversions.h: Remove #ifdef HAVE_BYTESWAP_H guard.
+	With gnulib, we're guaranteed to have that header file.
+	* bootstrap (modules): Use the byteswap module.
+
+	maint: remove definition of O_CLOEXEC, ...
+	now that we're using gnulib's fcntl module, which ensures
+	that we use a conforming <fcntl.h>.
+	* lib/hivex.c (O_CLOEXEC): Remove definition.
+	* bootstrap (modules): Add fcntl for its guaranteed definition
+	of O_CLOEXEC.
+
+	maint: normalize to exactly one newline at EOF
+	* .tx/config: Remove trailing empty line.
+	* images/Makefile.am: Likewise.
+	* sh/example1: Add newline at EOF.
+	* sh/example2: Likewise.
+	* sh/example3: Likewise.
+	* sh/example4: Likewise.
+	* sh/example5: Likewise.
+
+	maint: update po/POTFILES.in
+	* po/POTFILES.in: Reduce list of files with translatable messages
+	to match reality.
+
+	maint: remove definitions of PRId64 and PRIu64, ...
+	now that we're using gnulib's inttypes module, which ensures
+	that we use a conforming <inttypes.h>.
+	* bootstrap (modules): Add inttypes.
+	* generator/generator.ml (generate_perl_xs) [PRId64, PRIu64]:
+	Don't define these symbols.  Instead, ...
+	Include <inttypes.h>.
+
+	maint: remove unnecessary test-before-free
+	* lib/hivex.c (hivex_node_set_value): Remove unnecessary
+	test-before-free.
+
 2011-05-17  Richard W.M. Jones  <rjones@redhat.com>
+
+	ocaml: Really fix 'make install' rule.
+	This fixes commit b8ad15031cacf910634b4f4f4632232949c4acd2
+	and commit f408b757b1d75429fae5fa7630a4fc5451844de7.
+
+	ocaml: Set package name when installing native bindings.
+	This fixes commit b8ad15031cacf910634b4f4f4632232949c4acd2.
 
 	Version 1.2.7.
 
