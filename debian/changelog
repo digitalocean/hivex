@@ -1,3 +1,13 @@
+hivex (1.2.8-1) unstable; urgency=low
+
+  * New upstream version
+  * [abf06f8] Modified debian/rules targets to use separate build
+    directories, enabled building Python bindings for multiple versions
+  * [5d4f8b3] Discarded patches integrated by upstream, added fix for
+    python3
+
+ -- Hilko Bengen <bengen@debian.org>  Fri, 12 Aug 2011 18:33:21 +0200
+
 hivex (1.2.7-2) unstable; urgency=low
 
   * [2416ed8] Switched to 3.0 (quilt) format
