@@ -1,5 +1,3 @@
-0001-perl-Fix-CCFLAGS-on-Perl-5.14.patch
-0002-ocaml-Set-package-name-when-installing-native-bindin.patch
-0003-ocaml-Really-fix-make-install-rule.patch
-0004-python-don-t-build-static-library-don-t-build-.so.0..patch
-0005-run-autoreconf.patch
+0001-python-don-t-build-static-library-don-t-build-.so.0..patch
+0002-configure-Apparently-python3-s-print-requires-parens.patch
+0003-run-autoconf-automake.patch

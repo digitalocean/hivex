@@ -1,6 +1,7 @@
 From: Hilko Bengen <bengen@debian.org>
 Date: Sat, 6 Aug 2011 16:34:09 +0200
 Subject: python: don't build static library, don't build .so.0.0, symlinks
+To: libguestfs@redhat.com
 
 ---
  python/Makefile.am |    1 +
