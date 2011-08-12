@@ -13,3 +13,5 @@
 /*.debhelper
 /*.substvars
 *~
+
+/build-*

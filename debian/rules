@@ -9,24 +9,51 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+PYTHONS        := $(shell pyversions --installed; py3versions --installed)
+PYTHON_DEFAULT := $(shell pyversions --default)
+
 %:
-	dh --without python-support --with autotools-dev,ocaml,python2 $@
+	dh \
+		--without python-support \
+		--with autotools-dev,ocaml,python2,python3 $@
+
+override_dh_auto_configure:
+	set -e; for p in $(PYTHONS); do \
+	    if [ $$p = $(PYTHON_DEFAULT) ]; then \
+		dh_auto_configure --builddir=$(CURDIR)/debian/build-$$p ; \
+	    else \
+	        dh_auto_configure --builddir=$(CURDIR)/debian/build-$$p \
+	            -- PYTHON=$$p OCAMLC=no PERL=no ; \
+	    fi ; \
+	done
+
+override_dh_auto_build:
+	set -e; for p in $(PYTHONS); do \
+	    dh_auto_build --builddir=$(CURDIR)/debian/build-$$p \
+	        -- INSTALLDIRS=vendor LD_RUN_PATH=""; \
+	done
+
+override_dh_auto_test:
+	dh_auto_test --builddir=$(CURDIR)/debian/build-$(PYTHON_DEFAULT) \
+	set -e; for p in $(PYTHONS); do \
+	    dh_auto_test --builddir=$(CURDIR)/debian/build-$$p/python ; \
+	done
+
+override_dh_auto_install:
+	dh_auto_install --builddir=$(CURDIR)/debian/build-$(PYTHON_DEFAULT)
+	set -e; for p in $(PYTHONS); do \
+	    $(MAKE) -C $(CURDIR)/debian/build-$$p/python install \
+	        DESTDIR=$(CURDIR)/debian/tmp ; \
+	done
+
+override_dh_auto_clean:
+	set -e; for p in $(PYTHONS); do \
+	    dh_auto_clean --builddir=$(CURDIR)/debian/build-$$p ; \
+	done
 
 override_dh_strip:
 	dh_strip --dbg-package=libhivex0-dbg
 
-override_dh_python2:
-	dh_python2 --no-guessing-versions
-
-override_dh_makeshlibs:
-	dh_makeshlibs -Xlibhivexmod.so
-
-override_dh_auto_build:
-	$(MAKE) INSTALLDIRS=vendor LD_RUN_PATH=""
-
-override_dh_auto_clean:
-	[ ! -f Makefile ] || $(MAKE) distclean
-
 override_dh_install:
-	rm debian/tmp/usr/lib/python2.6/dist-packages/libhivexmod.la
+	rm debian/tmp/usr/lib/python*/dist-packages/libhivexmod.la
 	dh_install
