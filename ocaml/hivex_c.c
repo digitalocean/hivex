@@ -163,6 +163,34 @@ ocaml_hivex_root (value hv)
 }
 
 /* Automatically generated wrapper for function
+ * val last_modified : t -> int64
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+CAMLprim value ocaml_hivex_last_modified (value hv);
+
+CAMLprim value
+ocaml_hivex_last_modified (value hv)
+{
+  CAMLparam1 (hv);
+  CAMLlocal1 (rv);
+
+  hive_h *h = Hiveh_val (hv);
+  if (h == NULL)
+    raise_closed ("last_modified");
+
+  errno = 0;
+  int64_t r;
+  r = hivex_last_modified (h);
+
+  if (r == -1 && errno != 0)
+    raise_error ("last_modified");
+
+  rv = caml_copy_int64 (r);
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
  * val node_name : t -> node -> string
  */
 
@@ -188,6 +216,35 @@ ocaml_hivex_node_name (value hv, value nodev)
 
   rv = caml_copy_string (r);
   free (r);
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
+ * val node_timestamp : t -> node -> int64
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+CAMLprim value ocaml_hivex_node_timestamp (value hv, value nodev);
+
+CAMLprim value
+ocaml_hivex_node_timestamp (value hv, value nodev)
+{
+  CAMLparam2 (hv, nodev);
+  CAMLlocal1 (rv);
+
+  hive_h *h = Hiveh_val (hv);
+  if (h == NULL)
+    raise_closed ("node_timestamp");
+  hive_node_h node = Int_val (nodev);
+
+  errno = 0;
+  int64_t r;
+  r = hivex_node_timestamp (h, node);
+
+  if (r == -1 && errno != 0)
+    raise_error ("node_timestamp");
+
+  rv = caml_copy_int64 (r);
   CAMLreturn (rv);
 }
 

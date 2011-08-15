@@ -27,6 +27,7 @@
 #ifndef HIVEX_H_
 #define HIVEX_H_
 
+#include <stdlib.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -124,7 +125,9 @@ typedef struct hive_set_value hive_set_value;
 extern hive_h *hivex_open (const char *filename, int flags);
 extern int hivex_close (hive_h *h);
 extern hive_node_h hivex_root (hive_h *h);
+extern int64_t hivex_last_modified (hive_h *h);
 extern char *hivex_node_name (hive_h *h, hive_node_h node);
+extern int64_t hivex_node_timestamp (hive_h *h, hive_node_h node);
 extern hive_node_h *hivex_node_children (hive_h *h, hive_node_h node);
 extern hive_node_h hivex_node_get_child (hive_h *h, hive_node_h node, const char *name);
 extern hive_node_h hivex_node_parent (hive_h *h, hive_node_h node);

@@ -210,6 +210,20 @@ PREINIT:
       RETVAL
 
 SV *
+last_modified (h)
+      hive_h *h;
+PREINIT:
+      int64_t r;
+   CODE:
+      errno = 0;
+      r = hivex_last_modified (h);
+      if (r == -1 && errno != 0)
+        croak ("%s: %s", "last_modified", strerror (errno));
+      RETVAL = my_newSVll (r);
+ OUTPUT:
+      RETVAL
+
+SV *
 node_name (h, node)
       hive_h *h;
       int node;
@@ -221,6 +235,21 @@ PREINIT:
         croak ("%s: %s", "node_name", strerror (errno));
       RETVAL = newSVpv (r, 0);
       free (r);
+ OUTPUT:
+      RETVAL
+
+SV *
+node_timestamp (h, node)
+      hive_h *h;
+      int node;
+PREINIT:
+      int64_t r;
+   CODE:
+      errno = 0;
+      r = hivex_node_timestamp (h, node);
+      if (r == -1 && errno != 0)
+        croak ("%s: %s", "node_timestamp", strerror (errno));
+      RETVAL = my_newSVll (r);
  OUTPUT:
       RETVAL
 

@@ -282,6 +282,29 @@ py_hivex_root (PyObject *self, PyObject *args)
 }
 
 static PyObject *
+py_hivex_last_modified (PyObject *self, PyObject *args)
+{
+  PyObject *py_r;
+  errno = 0;
+  int64_t r;
+  hive_h *h;
+  PyObject *py_h;
+
+  if (!PyArg_ParseTuple (args, (char *) "O:hivex_last_modified", &py_h))
+    return NULL;
+  h = get_handle (py_h);
+  r = hivex_last_modified (h);
+  if (r == -1 && errno != 0) {
+    PyErr_SetString (PyExc_RuntimeError,
+                     strerror (errno));
+    return NULL;
+  }
+
+  py_r = PyLong_FromLongLong (r);
+  return py_r;
+}
+
+static PyObject *
 py_hivex_node_name (PyObject *self, PyObject *args)
 {
   PyObject *py_r;
@@ -302,6 +325,30 @@ py_hivex_node_name (PyObject *self, PyObject *args)
 
   py_r = PyString_FromString (r);
   free (r);  return py_r;
+}
+
+static PyObject *
+py_hivex_node_timestamp (PyObject *self, PyObject *args)
+{
+  PyObject *py_r;
+  errno = 0;
+  int64_t r;
+  hive_h *h;
+  PyObject *py_h;
+  long node;
+
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_node_timestamp", &py_h, &node))
+    return NULL;
+  h = get_handle (py_h);
+  r = hivex_node_timestamp (h, node);
+  if (r == -1 && errno != 0) {
+    PyErr_SetString (PyExc_RuntimeError,
+                     strerror (errno));
+    return NULL;
+  }
+
+  py_r = PyLong_FromLongLong (r);
+  return py_r;
 }
 
 static PyObject *
@@ -731,7 +778,9 @@ static PyMethodDef methods[] = {
   { (char *) "open", py_hivex_open, METH_VARARGS, NULL },
   { (char *) "close", py_hivex_close, METH_VARARGS, NULL },
   { (char *) "root", py_hivex_root, METH_VARARGS, NULL },
+  { (char *) "last_modified", py_hivex_last_modified, METH_VARARGS, NULL },
   { (char *) "node_name", py_hivex_node_name, METH_VARARGS, NULL },
+  { (char *) "node_timestamp", py_hivex_node_timestamp, METH_VARARGS, NULL },
   { (char *) "node_children", py_hivex_node_children, METH_VARARGS, NULL },
   { (char *) "node_get_child", py_hivex_node_get_child, METH_VARARGS, NULL },
   { (char *) "node_parent", py_hivex_node_parent, METH_VARARGS, NULL },

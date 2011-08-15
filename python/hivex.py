@@ -57,9 +57,17 @@ class Hivex:
         u"""return the root node of the hive"""
         return libhivexmod.root (self._o)
 
+    def last_modified (self):
+        u"""return the modification time from the header of the hive"""
+        return libhivexmod.last_modified (self._o)
+
     def node_name (self, node):
         u"""return the name of the node"""
         return libhivexmod.node_name (self._o, node)
+
+    def node_timestamp (self, node):
+        u"""return the modification time of the node"""
+        return libhivexmod.node_timestamp (self._o, node)
 
     def node_children (self, node):
         u"""return children of node"""

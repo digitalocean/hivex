@@ -108,6 +108,16 @@ Return root node of the hive.  All valid hives must contain a root node.
 
 This returns a node handle.
 
+=item last_modified
+
+ $int64 = $h->last_modified ()
+
+Return the modification time from the header of the hive.
+
+The returned value is a Windows filetime.
+To convert this to a Unix C<time_t> see:
+L<http://stackoverflow.com/questions/6161776/convert-windows-filetime-to-second-in-unix-linux/6161842#6161842>
+
 =item node_name
 
  $string = $h->node_name ($node)
@@ -120,6 +130,16 @@ tool or program that created the hive in the first place).  You can
 only know the "real" name of the root node by knowing which registry
 file this hive originally comes from, which is knowledge that is
 outside the scope of this library.
+
+=item node_timestamp
+
+ $int64 = $h->node_timestamp ($node)
+
+Return the modification time of the node.
+
+The returned value is a Windows filetime.
+To convert this to a Unix C<time_t> see:
+L<http://stackoverflow.com/questions/6161776/convert-windows-filetime-to-second-in-unix-linux/6161842#6161842>
 
 =item node_children
 

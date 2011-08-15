@@ -1,3 +1,41 @@
+2011-08-15  Richard W.M. Jones  <rjones@redhat.com>
+
+	Add Ruby bindings.
+
+	header: Fix including just <hivex.h>.
+	Also this adds a regression test so we don't break it in future.
+
+2011-08-13  Alex Nelson  <ajnelson@cs.ucsc.edu>
+
+	Report last-modified time of hive root and nodes
+	The infrastructure for modified-time reporting has been essentially
+	unused.  These changes report the registry time by treating the
+	time fields as Windows filetime fields stored in little-Endian
+	(which means they can be treated as a single 64-bit little-Endian
+	integer).
+
+	This patch adds to the hivex ABI:
+
+	 * int64_t hivex_last_modified (hive_h *)
+	 * int64_t hivex_node_timestamp (hive_h *, hive_node_h)
+
+	These two functions return the hive's last-modified time and
+	a particular node's last-modified time, respectively.  Credit
+	to Richard Jones for the ABI suggestion, and for the tip on
+	Microsoft's filetime time span.
+
+	hivexml employs these two functions to produce mtime elements
+	for a hive and all of its nodes, producing ISO-8601 formatted
+	time.
+
+
+	A lot of code cleanup by RWMJ.
+
+2011-08-12  Richard W.M. Jones  <rjones@redhat.com>
+
+	Version 1.2.8.
+	Pushed and pulled translations from Transifex.
+
 2011-08-12  Hilko Bengen  <bengen@hilluzination.de>
 
 	More changes needed separate builddir

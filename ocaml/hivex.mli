@@ -81,8 +81,14 @@ val close : t -> unit
 val root : t -> node
 (** return the root node of the hive *)
 
+val last_modified : t -> int64
+(** return the modification time from the header of the hive *)
+
 val node_name : t -> node -> string
 (** return the name of the node *)
+
+val node_timestamp : t -> node -> int64
+(** return the modification time of the node *)
 
 val node_children : t -> node -> node array
 (** return children of node *)
