@@ -39,7 +39,9 @@ hivex - Windows Registry "hive" extraction library
  hive_h *hivex_open (const char *filename, int flags);
  int hivex_close (hive_h *h);
  hive_node_h hivex_root (hive_h *h);
+ int64_t hivex_last_modified (hive_h *h);
  char *hivex_node_name (hive_h *h, hive_node_h node);
+ int64_t hivex_node_timestamp (hive_h *h, hive_node_h node);
  hive_node_h *hivex_node_children (hive_h *h, hive_node_h node);
  hive_node_h hivex_node_get_child (hive_h *h, hive_node_h node, const char *name);
  hive_node_h hivex_node_parent (hive_h *h, hive_node_h node);
@@ -81,7 +83,7 @@ If you just want to export or modify the Registry of a Windows
 virtual machine, you should look at L<virt-win-reg(1)>.
 
 Hivex is also comes with language bindings for
-OCaml, Perl and Python.
+OCaml, Perl, Python and Ruby.
 
 =head1 TYPES
 
@@ -222,6 +224,16 @@ Return root node of the hive.  All valid hives must contain a root node.
 Returns a node handle.
 On error this returns 0 and sets errno.
 
+=head2 hivex_last_modified
+
+ int64_t hivex_last_modified (hive_h *h);
+
+Return the modification time from the header of the hive.
+
+The returned value is a Windows filetime.
+To convert this to a Unix C<time_t> see:
+L<http://stackoverflow.com/questions/6161776/convert-windows-filetime-to-second-in-unix-linux/6161842#6161842>
+
 =head2 hivex_node_name
 
  char *hivex_node_name (hive_h *h, hive_node_h node);
@@ -238,6 +250,16 @@ outside the scope of this library.
 Returns a string.
 The string must be freed by the caller when it is no longer needed.
 On error this returns NULL and sets errno.
+
+=head2 hivex_node_timestamp
+
+ int64_t hivex_node_timestamp (hive_h *h, hive_node_h node);
+
+Return the modification time of the node.
+
+The returned value is a Windows filetime.
+To convert this to a Unix C<time_t> see:
+L<http://stackoverflow.com/questions/6161776/convert-windows-filetime-to-second-in-unix-linux/6161842#6161842>
 
 =head2 hivex_node_children
 

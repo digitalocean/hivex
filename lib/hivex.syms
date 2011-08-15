@@ -27,6 +27,7 @@
     global:
         hivex_close;
         hivex_commit;
+        hivex_last_modified;
         hivex_node_add_child;
         hivex_node_children;
         hivex_node_delete_child;
@@ -36,6 +37,7 @@
         hivex_node_parent;
         hivex_node_set_value;
         hivex_node_set_values;
+        hivex_node_timestamp;
         hivex_node_values;
         hivex_open;
         hivex_root;

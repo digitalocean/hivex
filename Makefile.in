@@ -54,6 +54,7 @@ host_triplet = @host@
 @HAVE_OCAML_TRUE@am__append_1 = ocaml
 @HAVE_PERL_TRUE@am__append_2 = perl regedit
 @HAVE_PYTHON_TRUE@am__append_3 = python
+@HAVE_RUBY_TRUE@am__append_4 = ruby
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
@@ -162,7 +163,7 @@ AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
 ETAGS = etags
 CTAGS = ctags
 DIST_SUBDIRS = gnulib/lib generator lib images gnulib/tests sh xml po \
-	ocaml perl regedit python
+	ocaml perl regedit python ruby
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -748,6 +749,7 @@ PYTHON_INCLUDEDIR = @PYTHON_INCLUDEDIR@
 PYTHON_PREFIX = @PYTHON_PREFIX@
 PYTHON_SITE_PACKAGES = @PYTHON_SITE_PACKAGES@
 PYTHON_VERSION = @PYTHON_VERSION@
+RAKE = @RAKE@
 RANLIB = @RANLIB@
 REPLACE_BTOWC = @REPLACE_BTOWC@
 REPLACE_CALLOC = @REPLACE_CALLOC@
@@ -947,7 +949,8 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = gnulib/lib generator lib images gnulib/tests sh xml po \
-	$(am__append_1) $(am__append_2) $(am__append_3)
+	$(am__append_1) $(am__append_2) $(am__append_3) \
+	$(am__append_4)
 EXTRA_DIST = hivex.pc hivex.pc.in README LICENSE
 
 # Pkgconfig.
