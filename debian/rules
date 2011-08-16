@@ -20,10 +20,11 @@ PYTHON_DEFAULT := $(shell pyversions --default)
 override_dh_auto_configure:
 	set -e; for p in $(PYTHONS); do \
 	    if [ $$p = $(PYTHON_DEFAULT) ]; then \
-		dh_auto_configure --builddir=$(CURDIR)/debian/build-$$p ; \
+		dh_auto_configure --builddir=$(CURDIR)/debian/build-$$p \
+                    -- RAKE=no ; \
 	    else \
 	        dh_auto_configure --builddir=$(CURDIR)/debian/build-$$p \
-	            -- PYTHON=$$p OCAMLC=no PERL=no ; \
+	            -- PYTHON=$$p OCAMLC=no PERL=no RAKE=no ; \
 	    fi ; \
 	done
 
