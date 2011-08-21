@@ -1,0 +1,30 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Sun, 21 Aug 2011 23:08:24 +0200
+Subject: Fix building on platforms that do not have O_CLOEXEC
+
+---
+ lib/hivex.c |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
+
+diff --git a/lib/hivex.c b/lib/hivex.c
+index dceea73..341f5e9 100644
+--- a/lib/hivex.c
++++ b/lib/hivex.c
+@@ -294,9 +294,16 @@ hivex_open (const char *filename, int flags)
+   if (h->filename == NULL)
+     goto error;
+ 
++#ifdef O_CLOEXEC
+   h->fd = open (filename, O_RDONLY | O_CLOEXEC);
++#else
++  h->fd = open (filename, O_RDONLY);
++#endif
+   if (h->fd == -1)
+     goto error;
++#ifndef O_CLOEXEC
++  fcntl (b->fd, F_SETFD, FD_CLOEXEC);
++#endif
+ 
+   struct stat statbuf;
+   if (fstat (h->fd, &statbuf) == -1)
+-- 

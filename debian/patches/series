@@ -1,3 +1,4 @@
 0001-python-don-t-build-static-library-don-t-build-.so.0..patch
 0002-configure-Apparently-python3-s-print-requires-parens.patch
 0003-run-autoconf-automake.patch
+0004-Fix-building-on-platforms-that-do-not-have-O_CLOEXEC.patch
