@@ -7,7 +7,7 @@ Subject: Fix building on platforms that do not have O_CLOEXEC
  1 files changed, 7 insertions(+), 0 deletions(-)
 
 diff --git a/lib/hivex.c b/lib/hivex.c
-index dceea73..341f5e9 100644
+index dceea73..dc7a868 100644
 --- a/lib/hivex.c
 +++ b/lib/hivex.c
 @@ -294,9 +294,16 @@ hivex_open (const char *filename, int flags)
@@ -22,7 +22,7 @@ index dceea73..341f5e9 100644
    if (h->fd == -1)
      goto error;
 +#ifndef O_CLOEXEC
-+  fcntl (b->fd, F_SETFD, FD_CLOEXEC);
++  fcntl (h->fd, F_SETFD, FD_CLOEXEC);
 +#endif
  
    struct stat statbuf;
