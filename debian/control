@@ -13,6 +13,8 @@ Build-Depends: debhelper (>= 7.0.50~),
  python-all-dev, python3-all-dev
 Standards-Version: 3.9.2
 Homepage: http://libguestfs.org/
+Vcs-Git: git://git.debian.org/git/pkg-libvirt/hivex.git
+Vcs-Browser: http://git.debian.org/?p=pkg-libvirt/hivex.git
 
 Package: libhivex0
 Section: libs
