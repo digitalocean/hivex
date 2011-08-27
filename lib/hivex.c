@@ -294,9 +294,16 @@ hivex_open (const char *filename, int flags)
   if (h->filename == NULL)
     goto error;
 
+#ifdef O_CLOEXEC
   h->fd = open (filename, O_RDONLY | O_CLOEXEC);
+#else
+  h->fd = open (filename, O_RDONLY);
+#endif
   if (h->fd == -1)
     goto error;
+#ifndef O_CLOEXEC
+  fcntl (h->fd, F_SETFD, FD_CLOEXEC);
+#endif
 
   struct stat statbuf;
   if (fstat (h->fd, &statbuf) == -1)
@@ -621,7 +628,8 @@ timestamp_check (hive_h *h, hive_node_h node, int64_t timestamp)
   if (timestamp < 0) {
     if (h->msglvl >= 2)
       fprintf (stderr, "hivex: timestamp_check: "
-               "negative time reported at %z: %" PRIi64 "\n", node, timestamp);
+               "negative time reported at %zu: %" PRIi64 "\n",
+               node, timestamp);
     errno = EINVAL;
     return -1;
   }
