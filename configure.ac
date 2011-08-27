@@ -18,7 +18,7 @@
 # major/minor/release must be numbers
 m4_define([hivex_major],   [1])
 m4_define([hivex_minor],   [3])
-m4_define([hivex_release], [0])
+m4_define([hivex_release], [1])
 # extra can be any string
 m4_define([hivex_extra],   [])
 
@@ -237,8 +237,8 @@ PYTHON_PREFIX=
 PYTHON_VERSION=
 
 if test "x$PYTHON" != "xno"; then
-    PYTHON_PREFIX=`$PYTHON -c "import sys; print sys.prefix"`
-    PYTHON_VERSION=`$PYTHON -c "import sys; print sys.version[[0:3]]"`
+    PYTHON_PREFIX=`$PYTHON -c "import sys; print(sys.prefix)"`
+    PYTHON_VERSION=`$PYTHON -c "import sys; print(sys.version[[0:3]])"`
 
     AC_MSG_CHECKING([for Python include path])
     if test -z "$PYTHON_INCLUDEDIR"; then

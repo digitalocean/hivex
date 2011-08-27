@@ -1,4 +1,28 @@
+2011-08-24  Hilko Bengen  <bengen@hilluzination.de>
+
+	hivex: Newer Python versions want parentheses around arguments of "print"
+
+	hivex: Fix building on platforms without O_CLOEXEC such as FreeBSD
+
+	hivex: Don't build static library, .so.* symlinks for Python bindings
+
+2011-08-16  Alex Nelson  <ajnelson@cs.ucsc.edu>
+
+	hivexml: Add root attribute to the root node
+	New feature:  If the root node of the XML root is the hive root node,
+	denote with attribute/value root="1".
+
 2011-08-15  Richard W.M. Jones  <rjones@redhat.com>
+
+	ruby: Test against locally built library.
+
+	Prevent warning about unused variable in test.
+
+	Fix incorrect printf format specifier in error string.
+
+	hivex(3): Fix link to CSS.
+
+	Version 1.3.0.
 
 	Add Ruby bindings.
 
