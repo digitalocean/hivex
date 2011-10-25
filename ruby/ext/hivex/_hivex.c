@@ -523,6 +523,44 @@ ruby_hivex_node_get_value (VALUE hv, VALUE nodev, VALUE keyv)
 
 /*
  * call-seq:
+ *   h.value_key_len(val) -> integer
+ *
+ * return the length of a value's key
+ *
+ * Return the length of the key (name) of a (key, value)
+ * pair. The length can legitimately be 0, so errno is the
+ * necesary mechanism to check for errors.
+ * 
+ * In the context of Windows Registries, a zero-length name
+ * means that this value is the default key for this node
+ * in the tree. This is usually written as "@".
+ *
+ *
+ * (For the C API documentation for this function, see
+ * +hivex_value_key_len+[http://libguestfs.org/hivex.3.html#hivex_value_key_len]).
+ */
+static VALUE
+ruby_hivex_value_key_len (VALUE hv, VALUE valv)
+{
+  hive_h *h;
+  Data_Get_Struct (hv, hive_h, h);
+  if (!h)
+    rb_raise (rb_eArgError, "%s: used handle after closing it",
+              "value_key_len");
+  hive_value_h val = NUM2ULL (valv);
+
+  size_t r;
+
+  r = hivex_value_key_len (h, val);
+
+  if (r == 0)
+    rb_raise (e_Error, "%s", strerror (errno));
+
+  return ULL2NUM (r);
+}
+
+/*
+ * call-seq:
  *   h.value_key(val) -> string
  *
  * return the key of a (key, value) pair
@@ -604,6 +642,72 @@ ruby_hivex_value_type (VALUE hv, VALUE valv)
   rb_hash_aset (rv, ID2SYM (rb_intern ("len")), INT2NUM (len));
   rb_hash_aset (rv, ID2SYM (rb_intern ("type")), INT2NUM (t));
   return rv;
+}
+
+/*
+ * call-seq:
+ *   h.node_struct_length(node) -> integer
+ *
+ * return the length of a node
+ *
+ * Return the length of the node data structure. Returns 0
+ * and sets errno on error.
+ *
+ *
+ * (For the C API documentation for this function, see
+ * +hivex_node_struct_length+[http://libguestfs.org/hivex.3.html#hivex_node_struct_length]).
+ */
+static VALUE
+ruby_hivex_node_struct_length (VALUE hv, VALUE nodev)
+{
+  hive_h *h;
+  Data_Get_Struct (hv, hive_h, h);
+  if (!h)
+    rb_raise (rb_eArgError, "%s: used handle after closing it",
+              "node_struct_length");
+  hive_node_h node = NUM2ULL (nodev);
+
+  size_t r;
+
+  r = hivex_node_struct_length (h, node);
+
+  if (r == 0)
+    rb_raise (e_Error, "%s", strerror (errno));
+
+  return ULL2NUM (r);
+}
+
+/*
+ * call-seq:
+ *   h.value_struct_length(val) -> integer
+ *
+ * return the length of a value data structure
+ *
+ * Return the length of the value data structure. Returns 0
+ * and sets errno on error.
+ *
+ *
+ * (For the C API documentation for this function, see
+ * +hivex_value_struct_length+[http://libguestfs.org/hivex.3.html#hivex_value_struct_length]).
+ */
+static VALUE
+ruby_hivex_value_struct_length (VALUE hv, VALUE valv)
+{
+  hive_h *h;
+  Data_Get_Struct (hv, hive_h, h);
+  if (!h)
+    rb_raise (rb_eArgError, "%s: used handle after closing it",
+              "value_struct_length");
+  hive_value_h val = NUM2ULL (valv);
+
+  size_t r;
+
+  r = hivex_value_struct_length (h, val);
+
+  if (r == 0)
+    rb_raise (e_Error, "%s", strerror (errno));
+
+  return ULL2NUM (r);
 }
 
 /*
@@ -1030,10 +1134,16 @@ void Init__hivex ()
                     ruby_hivex_node_values, 1);
   rb_define_method (c_hivex, "node_get_value",
                     ruby_hivex_node_get_value, 2);
+  rb_define_method (c_hivex, "value_key_len",
+                    ruby_hivex_value_key_len, 1);
   rb_define_method (c_hivex, "value_key",
                     ruby_hivex_value_key, 1);
   rb_define_method (c_hivex, "value_type",
                     ruby_hivex_value_type, 1);
+  rb_define_method (c_hivex, "node_struct_length",
+                    ruby_hivex_node_struct_length, 1);
+  rb_define_method (c_hivex, "value_struct_length",
+                    ruby_hivex_value_struct_length, 1);
   rb_define_method (c_hivex, "value_value",
                     ruby_hivex_value_value, 1);
   rb_define_method (c_hivex, "value_string",

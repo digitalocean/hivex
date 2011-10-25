@@ -397,6 +397,34 @@ ocaml_hivex_node_get_value (value hv, value nodev, value keyv)
 }
 
 /* Automatically generated wrapper for function
+ * val value_key_len : t -> value -> int64
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+CAMLprim value ocaml_hivex_value_key_len (value hv, value valv);
+
+CAMLprim value
+ocaml_hivex_value_key_len (value hv, value valv)
+{
+  CAMLparam2 (hv, valv);
+  CAMLlocal1 (rv);
+
+  hive_h *h = Hiveh_val (hv);
+  if (h == NULL)
+    raise_closed ("value_key_len");
+  hive_value_h val = Int_val (valv);
+
+  size_t r;
+  r = hivex_value_key_len (h, val);
+
+  if (r == 0)
+    raise_error ("value_key_len");
+
+  rv = caml_copy_int64 (r);
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
  * val value_key : t -> value -> string
  */
 
@@ -452,6 +480,62 @@ ocaml_hivex_value_type (value hv, value valv)
     raise_error ("value_type");
 
   rv = copy_type_len (len, t);
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
+ * val node_struct_length : t -> node -> int64
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+CAMLprim value ocaml_hivex_node_struct_length (value hv, value nodev);
+
+CAMLprim value
+ocaml_hivex_node_struct_length (value hv, value nodev)
+{
+  CAMLparam2 (hv, nodev);
+  CAMLlocal1 (rv);
+
+  hive_h *h = Hiveh_val (hv);
+  if (h == NULL)
+    raise_closed ("node_struct_length");
+  hive_node_h node = Int_val (nodev);
+
+  size_t r;
+  r = hivex_node_struct_length (h, node);
+
+  if (r == 0)
+    raise_error ("node_struct_length");
+
+  rv = caml_copy_int64 (r);
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
+ * val value_struct_length : t -> value -> int64
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+CAMLprim value ocaml_hivex_value_struct_length (value hv, value valv);
+
+CAMLprim value
+ocaml_hivex_value_struct_length (value hv, value valv)
+{
+  CAMLparam2 (hv, valv);
+  CAMLlocal1 (rv);
+
+  hive_h *h = Hiveh_val (hv);
+  if (h == NULL)
+    raise_closed ("value_struct_length");
+  hive_value_h val = Int_val (valv);
+
+  size_t r;
+  r = hivex_value_struct_length (h, val);
+
+  if (r == 0)
+    raise_error ("value_struct_length");
+
+  rv = caml_copy_int64 (r);
   CAMLreturn (rv);
 }
 
@@ -855,7 +939,7 @@ copy_type_len (size_t len, hive_type t)
   v = Val_hive_type (t);
   Store_field (rv, 0, v);
   v = Val_int (len);
-  Store_field (rv, 1, len);
+  Store_field (rv, 1, v);
   CAMLreturn (rv);
 }
 

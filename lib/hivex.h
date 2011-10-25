@@ -133,8 +133,11 @@ extern hive_node_h hivex_node_get_child (hive_h *h, hive_node_h node, const char
 extern hive_node_h hivex_node_parent (hive_h *h, hive_node_h node);
 extern hive_value_h *hivex_node_values (hive_h *h, hive_node_h node);
 extern hive_value_h hivex_node_get_value (hive_h *h, hive_node_h node, const char *key);
+extern size_t hivex_value_key_len (hive_h *h, hive_value_h val);
 extern char *hivex_value_key (hive_h *h, hive_value_h val);
 extern int hivex_value_type (hive_h *h, hive_value_h val, hive_type *t, size_t *len);
+extern size_t hivex_node_struct_length (hive_h *h, hive_node_h node);
+extern size_t hivex_value_struct_length (hive_h *h, hive_value_h val);
 extern char *hivex_value_value (hive_h *h, hive_value_h val, hive_type *t, size_t *len);
 extern char *hivex_value_string (hive_h *h, hive_value_h val);
 extern char **hivex_value_multiple_strings (hive_h *h, hive_value_h val);

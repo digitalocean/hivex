@@ -30,25 +30,22 @@
 #include <unistd.h>
 #include <errno.h>
 #include <iconv.h>
-#include <sys/mman.h>
 #include <sys/stat.h>
 #include <assert.h>
+
+#ifdef HAVE_MMAP
+#include <sys/mman.h>
+#else
+/* On systems without mmap (and munmap), use a replacement function. */
+#include "mmap.h"
+#endif
 
 #include "c-ctype.h"
 #include "full-read.h"
 #include "full-write.h"
 
-#define STREQ(a,b) (strcmp((a),(b)) == 0)
-#define STRCASEEQ(a,b) (strcasecmp((a),(b)) == 0)
-//#define STRNEQ(a,b) (strcmp((a),(b)) != 0)
-//#define STRCASENEQ(a,b) (strcasecmp((a),(b)) != 0)
-#define STREQLEN(a,b,n) (strncmp((a),(b),(n)) == 0)
-//#define STRCASEEQLEN(a,b,n) (strncasecmp((a),(b),(n)) == 0)
-//#define STRNEQLEN(a,b,n) (strncmp((a),(b),(n)) != 0)
-//#define STRCASENEQLEN(a,b,n) (strncasecmp((a),(b),(n)) != 0)
-#define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
-
 #include "hivex.h"
+#include "hivex-internal.h"
 #include "byte_conversions.h"
 
 /* These limits are in place to stop really stupid stuff and/or exploits. */
@@ -59,46 +56,6 @@
 
 static char *windows_utf16_to_utf8 (/* const */ char *input, size_t len);
 static size_t utf16_string_len_in_bytes_max (const char *str, size_t len);
-
-struct hive_h {
-  char *filename;
-  int fd;
-  size_t size;
-  int msglvl;
-  int writable;
-
-  /* Registry file, memory mapped if read-only, or malloc'd if writing. */
-  union {
-    char *addr;
-    struct ntreg_header *hdr;
-  };
-
-  /* Use a bitmap to store which file offsets are valid (point to a
-   * used block).  We only need to store 1 bit per 32 bits of the file
-   * (because blocks are 4-byte aligned).  We found that the average
-   * block size in a registry file is ~50 bytes.  So roughly 1 in 12
-   * bits in the bitmap will be set, making it likely a more efficient
-   * structure than a hash table.
-   */
-  char *bitmap;
-#define BITMAP_SET(bitmap,off) (bitmap[(off)>>5] |= 1 << (((off)>>2)&7))
-#define BITMAP_CLR(bitmap,off) (bitmap[(off)>>5] &= ~ (1 << (((off)>>2)&7)))
-#define BITMAP_TST(bitmap,off) (bitmap[(off)>>5] & (1 << (((off)>>2)&7)))
-#define IS_VALID_BLOCK(h,off)               \
-  (((off) & 3) == 0 &&                      \
-   (off) >= 0x1000 &&                       \
-   (off) < (h)->size &&                     \
-   BITMAP_TST((h)->bitmap,(off)))
-
-  /* Fields from the header, extracted from little-endianness hell. */
-  size_t rootoffs;              /* Root key offset (always an nk-block). */
-  size_t endpages;              /* Offset of end of pages. */
-  int64_t last_modified;        /* mtime of base block. */
-
-  /* For writing. */
-  size_t endblocks;             /* Offset to next block allocation (0
-                                   if not allocated anything yet). */
-};
 
 /* NB. All fields are little endian. */
 struct ntreg_header {
@@ -580,6 +537,30 @@ hivex_root (hive_h *h)
   hive_node_h ret = h->rootoffs;
   if (!IS_VALID_BLOCK (h, ret)) {
     errno = HIVEX_NO_KEY;
+    return 0;
+  }
+  return ret;
+}
+
+size_t
+hivex_node_struct_length (hive_h *h, hive_node_h node)
+{
+  if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
+    errno = EINVAL;
+    return 0;
+  }
+
+  struct ntreg_nk_record *nk = (struct ntreg_nk_record *) (h->addr + node);
+  size_t name_len = le16toh (nk->name_len);
+  /* -1 to avoid double-counting the first name character */
+  size_t ret = name_len + sizeof (struct ntreg_nk_record) - 1;
+  int used;
+  size_t seg_len = block_len (h, node, &used);
+  if (ret > seg_len) {
+    if (h->msglvl >= 2)
+      fprintf (stderr, "hivex_node_struct_length: returning EFAULT because"
+               " node name is too long (%zu, %zu)\n", name_len, seg_len);
+    errno = EFAULT;
     return 0;
   }
   return ret;
@@ -1189,6 +1170,46 @@ hivex_node_get_value (hive_h *h, hive_node_h node, const char *key)
   return ret;
 }
 
+size_t
+hivex_value_struct_length (hive_h *h, hive_value_h value)
+{
+  size_t key_len;
+
+  errno = 0;
+  key_len = hivex_value_key_len (h, value);
+  if (key_len == 0 && errno != 0)
+    return 0;
+
+  /* -1 to avoid double-counting the first name character */
+  return key_len + sizeof (struct ntreg_vk_record) - 1;
+}
+
+size_t
+hivex_value_key_len (hive_h *h, hive_value_h value)
+{
+  if (!IS_VALID_BLOCK (h, value) || !BLOCK_ID_EQ (h, value, "vk")) {
+    errno = EINVAL;
+    return 0;
+  }
+
+  struct ntreg_vk_record *vk = (struct ntreg_vk_record *) (h->addr + value);
+
+  /* vk->name_len is unsigned, 16 bit, so this is safe ...  However
+   * we have to make sure the length doesn't exceed the block length.
+   */
+  size_t ret = le16toh (vk->name_len);
+  size_t seg_len = block_len (h, value, NULL);
+  if (sizeof (struct ntreg_vk_record) + ret - 1 > seg_len) {
+    if (h->msglvl >= 2)
+      fprintf (stderr, "hivex_value_key_len: returning EFAULT"
+               " because key length is too long (%zu, %zu)\n",
+               ret, seg_len);
+    errno = EFAULT;
+    return 0;
+  }
+  return ret;
+}
+
 char *
 hivex_value_key (hive_h *h, hive_value_h value)
 {
@@ -1202,20 +1223,10 @@ hivex_value_key (hive_h *h, hive_value_h value)
   /* AFAIK the key is always plain ASCII, so no conversion to UTF-8 is
    * necessary.  However we do need to nul-terminate the string.
    */
-
-  /* vk->name_len is unsigned, 16 bit, so this is safe ...  However
-   * we have to make sure the length doesn't exceed the block length.
-   */
-  size_t len = le16toh (vk->name_len);
-  size_t seg_len = block_len (h, value, NULL);
-  if (sizeof (struct ntreg_vk_record) + len - 1 > seg_len) {
-    if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_value_key: returning EFAULT"
-               " because key length is too long (%zu, %zu)\n",
-               len, seg_len);
-    errno = EFAULT;
+  errno = 0;
+  size_t len = hivex_value_key_len (h, value);
+  if (len == 0 && errno != 0)
     return NULL;
-  }
 
   char *ret = malloc (len + 1);
   if (ret == NULL)
