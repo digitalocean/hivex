@@ -477,6 +477,29 @@ py_hivex_node_get_value (PyObject *self, PyObject *args)
 }
 
 static PyObject *
+py_hivex_value_key_len (PyObject *self, PyObject *args)
+{
+  PyObject *py_r;
+  size_t r;
+  hive_h *h;
+  PyObject *py_h;
+  long val;
+
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_value_key_len", &py_h, &val))
+    return NULL;
+  h = get_handle (py_h);
+  r = hivex_value_key_len (h, val);
+  if (r == 0) {
+    PyErr_SetString (PyExc_RuntimeError,
+                     strerror (errno));
+    return NULL;
+  }
+
+  py_r = PyLong_FromLongLong (r);
+  return py_r;
+}
+
+static PyObject *
 py_hivex_value_key (PyObject *self, PyObject *args)
 {
   PyObject *py_r;
@@ -521,6 +544,52 @@ py_hivex_value_type (PyObject *self, PyObject *args)
   }
 
   py_r = put_len_type (len, t);
+  return py_r;
+}
+
+static PyObject *
+py_hivex_node_struct_length (PyObject *self, PyObject *args)
+{
+  PyObject *py_r;
+  size_t r;
+  hive_h *h;
+  PyObject *py_h;
+  long node;
+
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_node_struct_length", &py_h, &node))
+    return NULL;
+  h = get_handle (py_h);
+  r = hivex_node_struct_length (h, node);
+  if (r == 0) {
+    PyErr_SetString (PyExc_RuntimeError,
+                     strerror (errno));
+    return NULL;
+  }
+
+  py_r = PyLong_FromLongLong (r);
+  return py_r;
+}
+
+static PyObject *
+py_hivex_value_struct_length (PyObject *self, PyObject *args)
+{
+  PyObject *py_r;
+  size_t r;
+  hive_h *h;
+  PyObject *py_h;
+  long val;
+
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_value_struct_length", &py_h, &val))
+    return NULL;
+  h = get_handle (py_h);
+  r = hivex_value_struct_length (h, val);
+  if (r == 0) {
+    PyErr_SetString (PyExc_RuntimeError,
+                     strerror (errno));
+    return NULL;
+  }
+
+  py_r = PyLong_FromLongLong (r);
   return py_r;
 }
 
@@ -786,8 +855,11 @@ static PyMethodDef methods[] = {
   { (char *) "node_parent", py_hivex_node_parent, METH_VARARGS, NULL },
   { (char *) "node_values", py_hivex_node_values, METH_VARARGS, NULL },
   { (char *) "node_get_value", py_hivex_node_get_value, METH_VARARGS, NULL },
+  { (char *) "value_key_len", py_hivex_value_key_len, METH_VARARGS, NULL },
   { (char *) "value_key", py_hivex_value_key, METH_VARARGS, NULL },
   { (char *) "value_type", py_hivex_value_type, METH_VARARGS, NULL },
+  { (char *) "node_struct_length", py_hivex_node_struct_length, METH_VARARGS, NULL },
+  { (char *) "value_struct_length", py_hivex_value_struct_length, METH_VARARGS, NULL },
   { (char *) "value_value", py_hivex_value_value, METH_VARARGS, NULL },
   { (char *) "value_string", py_hivex_value_string, METH_VARARGS, NULL },
   { (char *) "value_multiple_strings", py_hivex_value_multiple_strings, METH_VARARGS, NULL },

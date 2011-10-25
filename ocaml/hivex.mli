@@ -105,11 +105,20 @@ val node_values : t -> node -> value array
 val node_get_value : t -> node -> string -> value
 (** return named key at node *)
 
+val value_key_len : t -> value -> int64
+(** return the length of a value's key *)
+
 val value_key : t -> value -> string
 (** return the key of a (key, value) pair *)
 
 val value_type : t -> value -> hive_type * int
 (** return data length and data type of a value *)
+
+val node_struct_length : t -> node -> int64
+(** return the length of a node *)
+
+val value_struct_length : t -> value -> int64
+(** return the length of a value data structure *)
 
 val value_value : t -> value -> hive_type * string
 (** return data length, data type and data of a value *)

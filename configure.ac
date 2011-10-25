@@ -18,7 +18,7 @@
 # major/minor/release must be numbers
 m4_define([hivex_major],   [1])
 m4_define([hivex_minor],   [3])
-m4_define([hivex_release], [1])
+m4_define([hivex_release], [2])
 # extra can be any string
 m4_define([hivex_extra],   [])
 
@@ -131,7 +131,13 @@ dnl Check sizeof long.
 AC_CHECK_SIZEOF([long])
 
 dnl Headers.
-AC_CHECK_HEADERS([endian.h byteswap.h])
+AC_CHECK_HEADERS([byteswap.h endian.h libintl.h])
+
+dnl Check for mmap
+AC_REPLACE_FUNCS([mmap])
+
+dnl Functions.
+AC_CHECK_FUNCS([bindtextdomain open_memstream])
 
 dnl Check for pod2man and pod2text.
 AC_CHECK_PROG([POD2MAN],[pod2man],[pod2man],[no])
@@ -169,6 +175,9 @@ dnl libxml2.
 PKG_CHECK_MODULES([LIBXML2], [libxml-2.0])
 AC_SUBST([LIBXML2_CFLAGS])
 AC_SUBST([LIBXML2_LIBS])
+
+dnl hivexsh depends on open_memstream, which is absent on OS X.
+AM_CONDITIONAL([HAVE_HIVEXSH],[test "x$HAVE_OPEN_MEMSTREAM" = "xyes"])
 
 dnl Check for OCaml (optional, for OCaml bindings).
 AC_PROG_OCAML

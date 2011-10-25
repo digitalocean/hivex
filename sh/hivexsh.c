@@ -27,6 +27,11 @@
 #include <unistd.h>
 #include <assert.h>
 #include <errno.h>
+#include <locale.h>
+
+#ifdef HAVE_LIBINTL_H
+#include <libintl.h>
+#endif
 
 #ifdef HAVE_LIBREADLINE
 #include <readline/readline.h>
@@ -100,8 +105,10 @@ int
 main (int argc, char *argv[])
 {
   setlocale (LC_ALL, "");
+#ifdef HAVE_BINDTEXTDOMAIN
   bindtextdomain (PACKAGE, LOCALEBASEDIR);
   textdomain (PACKAGE);
+#endif
 
   int c;
   const char *filename = NULL;

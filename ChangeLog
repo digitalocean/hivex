@@ -1,3 +1,107 @@
+2011-10-24  Richard W.M. Jones  <rjones@redhat.com>
+
+	Version 1.3.2.
+
+2011-10-22  Richard W.M. Jones  <rjones@redhat.com>
+
+	regedit: Fix syntax for deleting registry keys (RHBZ#737944).
+	Previously we parsed -[...] to delete a registry key, but this is not
+	correct.  It should be [-...].  Reference:
+
+	http://support.microsoft.com/kb/310516
+	https://secure.wikimedia.org/wikipedia/en/wiki/Windows_Registry#.REG_files
+
+2011-09-22  Alex Nelson  <ajnelson@cs.ucsc.edu>
+
+	hivexml: Do not print null input times
+	Dealing with "1601-01-01T00:00:00Z" is unnecessarily awkward, especially
+	since the value only represents a 0 found in the data.
+
+2011-09-07  Alex Nelson  <ajnelson@cs.ucsc.edu>
+
+	hivexsh: Conditionally build for Mac OS X
+	OS X lacks open_memstream, causing hivexsh to fail to build.  This patch
+	defines HAVE_HIVEXSH, setting the only condition to open_memstream
+	existence.
+
+2011-09-07  Gillen Daniel  <gillen.daniel@gmail.com>
+
+	Replacement mmap function for Win32.
+	(Updates by RWMJ)
+
+2011-09-07  Richard W.M. Jones  <rjones@redhat.com>
+
+	Add an internal hivex header file.
+
+	hivexml: Add correct casts to xmlTextWriter* function call params.
+	This fixes commit 7ab64739391d60a52755250e76b0f4a03878a7e8.
+
+2011-09-06  Richard W.M. Jones  <rjones@redhat.com>
+
+	Don't include "Returns ..." in function description.
+	The description of what it returns is already produced by the
+	generator.
+
+	This fixes commit e85b1eaa268caea316f6aa8e02738b3d94297250.
+
+2011-09-06  Alex Nelson  <ajnelson@cs.ucsc.edu>
+
+	hivexml: Report attributes in values instead of text.
+	Reporting value data in attributes has two advantages:
+	* The output of hivexml breaks Python expat processing if binary data
+	makes it out.  This was observed in Software hives.
+	* Not having child text makes room for child elements.
+
+	hivex: Add metadata length functions for nodes and values
+	This patch adds hivex_node_struct_length and hivex_value_struct_length
+	to the hivex ABI, to report the amount of hive space used for each
+	stored structure.
+
+
+	A fix added by RWMJ.
+
+	hivex: Split value_key function into value_key and value_key_len
+	This function breaks the value name calculation out so the name does
+	not need to be fetched and immediately thrown away when one only needs
+	the name.
+
+
+	RWMJ fixed hivex_value_key handling of errno.
+
+	generator: Add new return type to ABI: RSize
+	This patch adds RSize, similar to RNode and RValue.
+
+
+	OCaml bindings fixed by RWMJ.
+
+2011-09-06  Richard W.M. Jones  <rjones@redhat.com>
+
+	Include libintl.h to silence warning about bindtextdomain, textdomain.
+
+2011-09-06  Gillen Daniel  <gillen.daniel@gmail.com>
+
+	lib/byte_conversions.h: Use bswap* functions instead of __bswap* functions.
+
+2011-09-06  Alex Nelson  <ajnelson@cs.ucsc.edu>
+
+	Mac OS X: Run glibtoolize in absence of libtoolize
+
+	Mac OS X: setlocale function requires locale.h
+	In the style of libguestfs commit:
+	9e397cc16be51f4f3940c7a5b90d0bc43f3f13a8
+
+	Mac OS X: Detect bindtextdomain
+	In the style of libguestfs commit:
+	7581672c7893fd392ca10b47f044af327011f502
+
+2011-08-31  Alex Nelson  <ajnelson@cs.ucsc.edu>
+
+	ocaml: Fix binding for Hivex.value_type
+
+2011-08-26  Richard W.M. Jones  <rjones@redhat.com>
+
+	Version 1.3.1.
+
 2011-08-24  Hilko Bengen  <bengen@hilluzination.de>
 
 	hivex: Newer Python versions want parentheses around arguments of "print"

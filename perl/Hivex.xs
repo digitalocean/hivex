@@ -340,6 +340,22 @@ PREINIT:
       RETVAL
 
 SV *
+value_key_len (h, val)
+      hive_h *h;
+      int val;
+PREINIT:
+      /* hive_node_h = hive_value_h = size_t so we cheat
+         here to simplify the generator */
+      size_t r;
+   CODE:
+      r = hivex_value_key_len (h, val);
+      if (r == 0)
+        croak ("%s: %s", "value_key_len", strerror (errno));
+      RETVAL = newSViv (r);
+ OUTPUT:
+      RETVAL
+
+SV *
 value_key (h, val)
       hive_h *h;
       int val;
@@ -369,6 +385,38 @@ PREINIT:
       EXTEND (SP, 2);
       PUSHs (sv_2mortal (newSViv (type)));
       PUSHs (sv_2mortal (newSViv (len)));
+
+SV *
+node_struct_length (h, node)
+      hive_h *h;
+      int node;
+PREINIT:
+      /* hive_node_h = hive_value_h = size_t so we cheat
+         here to simplify the generator */
+      size_t r;
+   CODE:
+      r = hivex_node_struct_length (h, node);
+      if (r == 0)
+        croak ("%s: %s", "node_struct_length", strerror (errno));
+      RETVAL = newSViv (r);
+ OUTPUT:
+      RETVAL
+
+SV *
+value_struct_length (h, val)
+      hive_h *h;
+      int val;
+PREINIT:
+      /* hive_node_h = hive_value_h = size_t so we cheat
+         here to simplify the generator */
+      size_t r;
+   CODE:
+      r = hivex_value_struct_length (h, val);
+      if (r == 0)
+        croak ("%s: %s", "value_struct_length", strerror (errno));
+      RETVAL = newSViv (r);
+ OUTPUT:
+      RETVAL
 
 void
 value_value (h, val)

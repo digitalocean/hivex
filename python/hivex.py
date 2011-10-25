@@ -89,6 +89,10 @@ class Hivex:
         u"""return named key at node"""
         return libhivexmod.node_get_value (self._o, node, key)
 
+    def value_key_len (self, val):
+        u"""return the length of a value's key"""
+        return libhivexmod.value_key_len (self._o, val)
+
     def value_key (self, val):
         u"""return the key of a (key, value) pair"""
         return libhivexmod.value_key (self._o, val)
@@ -96,6 +100,14 @@ class Hivex:
     def value_type (self, val):
         u"""return data length and data type of a value"""
         return libhivexmod.value_type (self._o, val)
+
+    def node_struct_length (self, node):
+        u"""return the length of a node"""
+        return libhivexmod.node_struct_length (self._o, node)
+
+    def value_struct_length (self, val):
+        u"""return the length of a value data structure"""
+        return libhivexmod.value_struct_length (self._o, val)
 
     def value_value (self, val):
         u"""return data length, data type and data of a value"""

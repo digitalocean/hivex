@@ -57,7 +57,7 @@ check_PROGRAMS = test-just-header$(EXEEXT)
 TESTS = test-just-header$(EXEEXT)
 subdir = lib
 DIST_COMMON = $(include_HEADERS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in
+	$(srcdir)/Makefile.in mmap.c
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/00gnulib.m4 \
 	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/byteswap.m4 \
@@ -135,7 +135,7 @@ am__base_list = \
 am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(man3dir)" \
 	"$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libhivex_la_DEPENDENCIES = ../gnulib/lib/libgnu.la
+libhivex_la_DEPENDENCIES = ../gnulib/lib/libgnu.la $(LTLIBOBJS)
 am_libhivex_la_OBJECTS = libhivex_la-hivex.lo
 libhivex_la_OBJECTS = $(am_libhivex_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
@@ -984,11 +984,13 @@ lib_LTLIBRARIES = libhivex.la
 libhivex_la_SOURCES = \
   hivex.c \
   hivex.h \
+  hivex-internal.h \
   byte_conversions.h \
   gettext.h \
+  mmap.h \
   hivex.syms
 
-libhivex_la_LIBADD = ../gnulib/lib/libgnu.la
+libhivex_la_LIBADD = ../gnulib/lib/libgnu.la $(LTLIBOBJS)
 libhivex_la_LDFLAGS = \
 	-version-info 0:0:0 \
 	$(VERSION_SCRIPT_FLAGS)$(srcdir)/hivex.syms \
@@ -1097,6 +1099,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mmap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libhivex_la-hivex.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_just_header-test-just-header.Po@am__quote@
 
@@ -1552,7 +1555,7 @@ clean-am: clean-checkPROGRAMS clean-generic clean-libLTLIBRARIES \
 	clean-libtool mostlyclean-am
 
 distclean: distclean-recursive
-	-rm -rf ./$(DEPDIR)
+	-rm -rf $(DEPDIR) ./$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -1598,7 +1601,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-recursive
-	-rm -rf ./$(DEPDIR)
+	-rm -rf $(DEPDIR) ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

@@ -196,6 +196,20 @@ default key.
 
 This returns a value handle.
 
+=item value_key_len
+
+ $size = $h->value_key_len ($val)
+
+Return the length of the key (name) of a (key, value) pair.  The
+length can legitimately be 0, so errno is the necesary mechanism
+to check for errors.
+
+In the context of Windows Registries, a zero-length name means
+that this value is the default key for this node in the tree.
+This is usually written as C<"@">.
+
+This returns a size.
+
 =item value_key
 
  $string = $h->value_key ($val)
@@ -219,6 +233,24 @@ pair.  See also C<value_value> which returns all this
 information, and the value itself.  Also, C<value_*> functions
 below which can be used to return the value in a more useful form when
 you know the type in advance.
+
+=item node_struct_length
+
+ $size = $h->node_struct_length ($node)
+
+Return the length of the node data structure.  Returns 0
+and sets errno on error.
+
+This returns a size.
+
+=item value_struct_length
+
+ $size = $h->value_struct_length ($val)
+
+Return the length of the value data structure.  Returns 0
+and sets errno on error.
+
+This returns a size.
 
 =item value_value
 
