@@ -1,3 +1,10 @@
+hivex (1.3.2-1) unstable; urgency=low
+
+  * New upstream version
+  * [163d9e6] Added fix from upstream git that enables the hivexsh build.
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 26 Oct 2011 14:02:29 +0200
+
 hivex (1.3.1-1) unstable; urgency=low
 
   * Imported New upstream version
