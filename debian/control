@@ -88,7 +88,7 @@ Architecture: any
 Section: ocaml
 Depends: ${ocaml:Depends}, libhivex-dev, ${shlibs:Depends},  ${misc:Depends}
 Provides: ${ocaml:Provides}
-Description: OCaml bindings for hivex -- developtment files
+Description: OCaml bindings for hivex -- development files
  OCaml bindings for libhivex, a library for reading and writing
  Windows Registry "hive" binary files.
  .
