@@ -9,13 +9,14 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-PYTHONS        := $(shell pyversions --installed; py3versions --installed)
+# PYTHONS        := $(shell pyversions --installed; py3versions --installed)
+PYTHONS        := $(shell pyversions --installed)
 PYTHON_DEFAULT := $(shell pyversions --default)
 
 %:
 	dh \
 		--without python-support \
-		--with autotools-dev,ocaml,python2,python3 $@
+		--with autotools-dev,ocaml,python2 $@
 
 override_dh_auto_configure:
 	set -e; for p in $(PYTHONS); do \
