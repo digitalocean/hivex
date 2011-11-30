@@ -238,8 +238,7 @@ you know the type in advance.
 
  $size = $h->node_struct_length ($node)
 
-Return the length of the node data structure.  Returns 0
-and sets errno on error.
+Return the length of the node data structure.
 
 This returns a size.
 
@@ -247,8 +246,7 @@ This returns a size.
 
  $size = $h->value_struct_length ($val)
 
-Return the length of the value data structure.  Returns 0
-and sets errno on error.
+Return the length of the value data structure.
 
 This returns a size.
 

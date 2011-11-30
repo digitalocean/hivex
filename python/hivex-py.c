@@ -24,6 +24,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#include <config.h>
+
 #define PY_SSIZE_T_CLEAN 1
 #include <Python.h>
 
@@ -77,40 +79,42 @@ static int
 get_value (PyObject *v, hive_set_value *ret)
 {
   PyObject *obj;
+#ifndef HAVE_PYSTRING_ASSTRING
+  PyObject *bytes;
+#endif
 
   obj = PyDict_GetItemString (v, "key");
   if (!obj) {
     PyErr_SetString (PyExc_RuntimeError, "no 'key' element in dictionary");
     return -1;
   }
-  if (!PyString_Check (obj)) {
-    PyErr_SetString (PyExc_RuntimeError, "'key' element is not a string");
-    return -1;
-  }
+#ifdef HAVE_PYSTRING_ASSTRING
   ret->key = PyString_AsString (obj);
+#else
+  bytes = PyUnicode_AsUTF8String (obj);
+  ret->key = PyBytes_AS_STRING (bytes);
+#endif
 
   obj = PyDict_GetItemString (v, "t");
   if (!obj) {
     PyErr_SetString (PyExc_RuntimeError, "no 't' element in dictionary");
     return -1;
   }
-  if (!PyInt_Check (obj)) {
-    PyErr_SetString (PyExc_RuntimeError, "'t' element is not an integer");
-    return -1;
-  }
-  ret->t = PyInt_AsLong (obj);
+  ret->t = PyLong_AsLong (obj);
 
   obj = PyDict_GetItemString (v, "value");
   if (!obj) {
     PyErr_SetString (PyExc_RuntimeError, "no 'value' element in dictionary");
     return -1;
   }
-  if (!PyString_Check (obj)) {
-    PyErr_SetString (PyExc_RuntimeError, "'value' element is not a string");
-    return -1;
-  }
+#ifdef HAVE_PYSTRING_ASSTRING
   ret->value = PyString_AsString (obj);
   ret->len = PyString_Size (obj);
+#else
+  bytes = PyUnicode_AsUTF8String (obj);
+  ret->value = PyBytes_AS_STRING (bytes);
+  ret->len = PyBytes_GET_SIZE (bytes);
+#endif
 
   return 0;
 }
@@ -164,8 +168,13 @@ put_string_list (char * const * const argv)
     ;
 
   list = PyList_New (argc);
-  for (i = 0; i < argc; ++i)
+  for (i = 0; i < argc; ++i) {
+#ifdef HAVE_PYSTRING_ASSTRING
     PyList_SetItem (list, i, PyString_FromString (argv[i]));
+#else
+    PyList_SetItem (list, i, PyUnicode_FromString (argv[i]));
+#endif
+  }
 
   return list;
 }
@@ -201,7 +210,7 @@ static PyObject *
 put_len_type (size_t len, hive_type t)
 {
   PyObject *r = PyTuple_New (2);
-  PyTuple_SetItem (r, 0, PyInt_FromLong ((long) t));
+  PyTuple_SetItem (r, 0, PyLong_FromLong ((long) t));
   PyTuple_SetItem (r, 1, PyLong_FromLongLong ((long) len));
   return r;
 }
@@ -210,8 +219,12 @@ static PyObject *
 put_val_type (char *val, size_t len, hive_type t)
 {
   PyObject *r = PyTuple_New (2);
-  PyTuple_SetItem (r, 0, PyInt_FromLong ((long) t));
+  PyTuple_SetItem (r, 0, PyLong_FromLong ((long) t));
+#ifdef HAVE_PYSTRING_ASSTRING
   PyTuple_SetItem (r, 1, PyString_FromStringAndSize (val, len));
+#else
+  PyTuple_SetItem (r, 1, PyBytes_FromStringAndSize (val, len));
+#endif
   return r;
 }
 
@@ -323,7 +336,11 @@ py_hivex_node_name (PyObject *self, PyObject *args)
     return NULL;
   }
 
+#ifdef HAVE_PYSTRING_ASSTRING
   py_r = PyString_FromString (r);
+#else
+  py_r = PyUnicode_FromString (r);
+#endif
   free (r);  return py_r;
 }
 
@@ -518,7 +535,11 @@ py_hivex_value_key (PyObject *self, PyObject *args)
     return NULL;
   }
 
+#ifdef HAVE_PYSTRING_ASSTRING
   py_r = PyString_FromString (r);
+#else
+  py_r = PyUnicode_FromString (r);
+#endif
   free (r);  return py_r;
 }
 
@@ -638,7 +659,11 @@ py_hivex_value_string (PyObject *self, PyObject *args)
     return NULL;
   }
 
+#ifdef HAVE_PYSTRING_ASSTRING
   py_r = PyString_FromString (r);
+#else
+  py_r = PyUnicode_FromString (r);
+#endif
   free (r);  return py_r;
 }
 
@@ -686,7 +711,7 @@ py_hivex_value_dword (PyObject *self, PyObject *args)
     return NULL;
   }
 
-  py_r = PyInt_FromLong ((long) r);
+  py_r = PyLong_FromLong ((long) r);
   return py_r;
 }
 
@@ -873,12 +898,44 @@ static PyMethodDef methods[] = {
   { NULL, NULL, 0, NULL }
 };
 
+#if PY_MAJOR_VERSION >= 3
+static struct PyModuleDef moduledef = {
+  PyModuleDef_HEAD_INIT,
+  "libhivexmod",       /* m_name */
+  "hivex module",      /* m_doc */
+  -1,                    /* m_size */
+  methods,               /* m_methods */
+  NULL,                  /* m_reload */
+  NULL,                  /* m_traverse */
+  NULL,                  /* m_clear */
+  NULL,                  /* m_free */
+};
+#endif
+
+static PyObject *
+moduleinit (void)
+{
+  PyObject *m;
+
+#if PY_MAJOR_VERSION >= 3
+  m = PyModule_Create (&moduledef);
+#else
+  m = Py_InitModule ((char *) "libhivexmod", methods);
+#endif
+
+  return m; /* m might be NULL if module init failed */
+}
+
+#if PY_MAJOR_VERSION >= 3
+PyMODINIT_FUNC
+PyInit_libhivexmod (void)
+{
+  return moduleinit ();
+}
+#else
 void
 initlibhivexmod (void)
 {
-  static int initialized = 0;
-
-  if (initialized) return;
-  Py_InitModule ((char *) "libhivexmod", methods);
-  initialized = 1;
+  (void) moduleinit ();
 }
+#endif
