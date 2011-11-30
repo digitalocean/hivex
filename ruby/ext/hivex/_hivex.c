@@ -650,8 +650,7 @@ ruby_hivex_value_type (VALUE hv, VALUE valv)
  *
  * return the length of a node
  *
- * Return the length of the node data structure. Returns 0
- * and sets errno on error.
+ * Return the length of the node data structure.
  *
  *
  * (For the C API documentation for this function, see
@@ -683,8 +682,7 @@ ruby_hivex_node_struct_length (VALUE hv, VALUE nodev)
  *
  * return the length of a value data structure
  *
- * Return the length of the value data structure. Returns 0
- * and sets errno on error.
+ * Return the length of the value data structure.
  *
  *
  * (For the C API documentation for this function, see

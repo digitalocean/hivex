@@ -23,7 +23,7 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
 
-u"""Python bindings for hivex
+"""Python bindings for hivex
 
 import hivex
 h = hivex.Hivex (filename)
@@ -54,98 +54,98 @@ class Hivex:
         libhivexmod.close (self._o)
 
     def root (self):
-        u"""return the root node of the hive"""
+        """return the root node of the hive"""
         return libhivexmod.root (self._o)
 
     def last_modified (self):
-        u"""return the modification time from the header of the hive"""
+        """return the modification time from the header of the hive"""
         return libhivexmod.last_modified (self._o)
 
     def node_name (self, node):
-        u"""return the name of the node"""
+        """return the name of the node"""
         return libhivexmod.node_name (self._o, node)
 
     def node_timestamp (self, node):
-        u"""return the modification time of the node"""
+        """return the modification time of the node"""
         return libhivexmod.node_timestamp (self._o, node)
 
     def node_children (self, node):
-        u"""return children of node"""
+        """return children of node"""
         return libhivexmod.node_children (self._o, node)
 
     def node_get_child (self, node, name):
-        u"""return named child of node"""
+        """return named child of node"""
         return libhivexmod.node_get_child (self._o, node, name)
 
     def node_parent (self, node):
-        u"""return the parent of node"""
+        """return the parent of node"""
         return libhivexmod.node_parent (self._o, node)
 
     def node_values (self, node):
-        u"""return (key, value) pairs attached to a node"""
+        """return (key, value) pairs attached to a node"""
         return libhivexmod.node_values (self._o, node)
 
     def node_get_value (self, node, key):
-        u"""return named key at node"""
+        """return named key at node"""
         return libhivexmod.node_get_value (self._o, node, key)
 
     def value_key_len (self, val):
-        u"""return the length of a value's key"""
+        """return the length of a value's key"""
         return libhivexmod.value_key_len (self._o, val)
 
     def value_key (self, val):
-        u"""return the key of a (key, value) pair"""
+        """return the key of a (key, value) pair"""
         return libhivexmod.value_key (self._o, val)
 
     def value_type (self, val):
-        u"""return data length and data type of a value"""
+        """return data length and data type of a value"""
         return libhivexmod.value_type (self._o, val)
 
     def node_struct_length (self, node):
-        u"""return the length of a node"""
+        """return the length of a node"""
         return libhivexmod.node_struct_length (self._o, node)
 
     def value_struct_length (self, val):
-        u"""return the length of a value data structure"""
+        """return the length of a value data structure"""
         return libhivexmod.value_struct_length (self._o, val)
 
     def value_value (self, val):
-        u"""return data length, data type and data of a value"""
+        """return data length, data type and data of a value"""
         return libhivexmod.value_value (self._o, val)
 
     def value_string (self, val):
-        u"""return value as a string"""
+        """return value as a string"""
         return libhivexmod.value_string (self._o, val)
 
     def value_multiple_strings (self, val):
-        u"""return value as multiple strings"""
+        """return value as multiple strings"""
         return libhivexmod.value_multiple_strings (self._o, val)
 
     def value_dword (self, val):
-        u"""return value as a DWORD"""
+        """return value as a DWORD"""
         return libhivexmod.value_dword (self._o, val)
 
     def value_qword (self, val):
-        u"""return value as a QWORD"""
+        """return value as a QWORD"""
         return libhivexmod.value_qword (self._o, val)
 
     def commit (self, filename):
-        u"""commit (write) changes to file"""
+        """commit (write) changes to file"""
         return libhivexmod.commit (self._o, filename)
 
     def node_add_child (self, parent, name):
-        u"""add child node"""
+        """add child node"""
         return libhivexmod.node_add_child (self._o, parent, name)
 
     def node_delete_child (self, node):
-        u"""delete child node"""
+        """delete child node"""
         return libhivexmod.node_delete_child (self._o, node)
 
     def node_set_values (self, node, values):
-        u"""set (key, value) pairs at a node"""
+        """set (key, value) pairs at a node"""
         return libhivexmod.node_set_values (self._o, node, values)
 
     def node_set_value (self, node, val):
-        u"""set a single (key, value) pair at a given node"""
+        """set a single (key, value) pair at a given node"""
         return libhivexmod.node_set_value (self._o, node, val)
 

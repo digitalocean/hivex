@@ -1,4 +1,31 @@
+2011-11-29  Richard W.M. Jones  <rjones@redhat.com>
+
+	Update to latest gnulib (RHBZ#756981).
+
+	Revert "out of tree build: ruby"
+	This reverts commit 48d2e0d9ea5c12ae81f31706fa463f8e1ebd09af.
+
+	This commit breaks the ordinary build:
+
+	make[2]: Entering directory `/home/rjones/d/hivex/ruby'
+	rake build
+	rake/rdoctask is deprecated.  Use rdoc/task instead (in RDoc 2.4.2+)
+	rake/gempackagetask is deprecated.  Use rubygems/package_task instead
+	top_srcdir=$(pwd)/..; top_builddir=$(pwd)/..; export ARCHFLAGS="-arch $(uname -m)"; mkdir -p ./ext/guestfs; cd ./hivex; ruby #(EXT_CONF} --with-_hivex-include=$top_srcdir/lib --with-_hivex-lib=$top_builddir/lib/.libs
+	sh: line 0: cd: ./hivex: No such file or directory
+
+2011-11-22  Hilko Bengen  <bengen@hilluzination.de>
+
+	out of tree build: ruby
+
+2011-11-19  Richard W.M. Jones  <rjones@redhat.com>
+
+	python: Support Python 3 (RHBZ#752916).
+
 2011-10-24  Richard W.M. Jones  <rjones@redhat.com>
+
+	Fix conditional test for HAVE_HIVEXSH.
+	This fixes commit 0a28041f4156878a74543966f9a72ed3d214ba44.
 
 	Version 1.3.2.
 
