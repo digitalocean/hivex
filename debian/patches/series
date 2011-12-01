@@ -1,3 +1,2 @@
-0001-Fix-conditional-test-for-HAVE_HIVEXSH.patch
-0002-python-Support-Python-3-RHBZ-752916.patch
-0003-ran-autoreconf-generator.ml.patch
+0001-Fixed-gnulib-integration-for-hivexml.patch
+0002-automake.patch
