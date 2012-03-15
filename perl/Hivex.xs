@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2011 Red Hat Inc.
+ * Copyright (C) 2009-2012 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -417,6 +417,22 @@ PREINIT:
       RETVAL = newSViv (r);
  OUTPUT:
       RETVAL
+
+void
+value_data_cell_offset (h, val)
+      hive_h *h;
+      int val;
+PREINIT:
+      hive_value_h r;
+      size_t len;
+ PPCODE:
+      errno = 0;
+      r = hivex_value_data_cell_offset (h, val, &len);
+      if (r == 0 && errno)
+        croak ("%s: ", "value_data_cell_offset", strerror (errno));
+      EXTEND (SP, 2);
+      PUSHs (sv_2mortal (newSViv (len)));
+      PUSHs (sv_2mortal (newSViv (r)));
 
 void
 value_value (h, val)

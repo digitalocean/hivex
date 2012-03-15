@@ -18,7 +18,7 @@
 # major/minor/release must be numbers
 m4_define([hivex_major],   [1])
 m4_define([hivex_minor],   [3])
-m4_define([hivex_release], [3])
+m4_define([hivex_release], [5])
 # extra can be any string
 m4_define([hivex_extra],   [])
 
@@ -98,9 +98,12 @@ if test "$gl_gcc_warnings" = yes; then
   for w in $ws; do
     gl_WARN_ADD([$w])
   done
-  gl_WARN_ADD([-Wno-unused-parameter]) # stubs.c
-  gl_WARN_ADD([-Wno-jump-misses-init]) # stubs.c
-  gl_WARN_ADD([-Wno-unused-variable]) # FIXME: only temporary, for guestfs_protocol.c, etc
+
+  # Unused parameters are not a bug in C.
+  gl_WARN_ADD([-Wno-unused-parameter])
+
+  # Missing field initializers is not a bug in C.
+  gl_WARN_ADD([-Wno-missing-field-initializers])
 
   # In spite of excluding -Wlogical-op above, it is enabled, as of
   # gcc 4.5.0 20090517, and it provokes warnings in cat.c, dd.c, truncate.c
@@ -312,8 +315,19 @@ AM_CONDITIONAL([HAVE_PYTHON],
     [test "x$PYTHON" != "xno" && test "x$PYTHON_INCLUDEDIR" != "x" && test "x$PYTHON_INSTALLDIR" != "x"])
 
 dnl Check for Ruby and rake (optional, for Ruby bindings).
-AC_CHECK_LIB([ruby],[ruby_init],[HAVE_LIBRUBY=1],[HAVE_LIBRUBY=0])
-AC_CHECK_PROG([RAKE],[rake],[rake],[no])
+AC_ARG_ENABLE([ruby],
+        AS_HELP_STRING([--disable-ruby], [Disable Ruby language bindings]),
+        [],
+        [enable_ruby=yes])
+AS_IF([test "x$enable_ruby" != "xno"],
+        [
+        AC_CHECK_PROG([RUBY],[ruby],[ruby],[no])
+        AC_CHECK_PROG([RAKE],[rake],[rake],[no])
+        AC_CHECK_LIB([ruby],[ruby_init],[HAVE_LIBRUBY=1],[HAVE_LIBRUBY=0])
+        AC_SUBST(RAKE)
+        ])
+AM_CONDITIONAL([HAVE_RUBY],
+    [test "x$RAKE" != "xno" && test -n "$HAVE_LIBRUBY"])
 
 AM_CONDITIONAL([HAVE_RUBY],
     [test "x$RAKE" != "xno" && test -n "$HAVE_LIBRUBY"])

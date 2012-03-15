@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2011 Red Hat Inc.
+ * Copyright (C) 2009-2012 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -39,6 +39,14 @@
 #define RARRAY_LEN(r) (RARRAY((r))->len)
 #endif
 
+#ifndef RSTRING_LEN
+#define RSTRING_LEN(r) (RSTRING((r))->len)
+#endif
+
+#ifndef RSTRING_PTR
+#define RSTRING_PTR(r) (RSTRING((r))->ptr)
+#endif
+
 static VALUE m_hivex;			/* hivex module */
 static VALUE c_hivex;			/* hive_h handle */
 static VALUE e_Error;			/* used for all errors */
@@ -61,8 +69,8 @@ get_value (VALUE valv, hive_set_value *val)
 
   val->key = StringValueCStr (key);
   val->t = NUM2ULL (type);
-  val->len = RSTRING (value)->len;
-  val->value = RSTRING (value)->ptr;
+  val->len = RSTRING_LEN (value);
+  val->value = RSTRING_PTR (value);
 }
 
 static hive_set_value *
@@ -710,6 +718,53 @@ ruby_hivex_value_struct_length (VALUE hv, VALUE valv)
 
 /*
  * call-seq:
+ *   h.value_data_cell_offset(val) -> integer
+ *
+ * return the offset and length of a value data cell
+ *
+ * Return the offset and length of the value's data cell.
+ * 
+ * The data cell is a registry structure that contains the
+ * length (a 4 byte, little endian integer) followed by the
+ * data.
+ * 
+ * If the length of the value is less than or equal to 4
+ * bytes then the offset and length returned by this
+ * function is zero as the data is inlined in the value.
+ * 
+ * Returns 0 and sets errno on error.
+ *
+ *
+ * (For the C API documentation for this function, see
+ * +hivex_value_data_cell_offset+[http://libguestfs.org/hivex.3.html#hivex_value_data_cell_offset]).
+ */
+static VALUE
+ruby_hivex_value_data_cell_offset (VALUE hv, VALUE valv)
+{
+  hive_h *h;
+  Data_Get_Struct (hv, hive_h, h);
+  if (!h)
+    rb_raise (rb_eArgError, "%s: used handle after closing it",
+              "value_data_cell_offset");
+  hive_value_h val = NUM2ULL (valv);
+
+  errno = 0;
+  hive_value_h r;
+  size_t len;
+
+  r = hivex_value_data_cell_offset (h, val, &len);
+
+  if (r == 0 && errno != 0)
+    rb_raise (e_Error, "%s", strerror (errno));
+
+  VALUE rv = rb_hash_new ();
+  rb_hash_aset (rv, ID2SYM (rb_intern ("len")), INT2NUM (len));
+  rb_hash_aset (rv, ID2SYM (rb_intern ("off")), ULL2NUM (r));
+  return rv;
+}
+
+/*
+ * call-seq:
  *   h.value_value(val) -> hash
  *
  * return data length, data type and data of a value
@@ -1142,6 +1197,8 @@ void Init__hivex ()
                     ruby_hivex_node_struct_length, 1);
   rb_define_method (c_hivex, "value_struct_length",
                     ruby_hivex_value_struct_length, 1);
+  rb_define_method (c_hivex, "value_data_cell_offset",
+                    ruby_hivex_value_data_cell_offset, 1);
   rb_define_method (c_hivex, "value_value",
                     ruby_hivex_value_value, 1);
   rb_define_method (c_hivex, "value_string",

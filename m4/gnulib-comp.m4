@@ -1,5 +1,5 @@
 # DO NOT EDIT! GENERATED AUTOMATICALLY!
-# Copyright (C) 2002-2011 Free Software Foundation, Inc.
+# Copyright (C) 2002-2012 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -158,11 +158,15 @@ AC_DEFUN([gl_EARLY],
   # Code from module strnlen:
   # Code from module strnlen-tests:
   # Code from module strtoll:
+  # Code from module strtoll-tests:
   # Code from module strtoull:
+  # Code from module strtoull-tests:
   # Code from module symlink:
   # Code from module symlink-tests:
   # Code from module sys_stat:
   # Code from module sys_stat-tests:
+  # Code from module test-framework-sh:
+  # Code from module test-framework-sh-tests:
   # Code from module time:
   # Code from module time-tests:
   # Code from module unistd:
@@ -206,6 +210,11 @@ AC_DEFUN([gl_INIT],
   gl_source_base='gnulib/lib'
 gl_FUNC_ALLOCA
 gl_BYTESWAP
+gl_FUNC_CLOSE
+if test $REPLACE_CLOSE = 1; then
+  AC_LIBOBJ([close])
+fi
+gl_UNISTD_MODULE_INDICATOR([close])
 gl_FUNC_DUP2
 if test $HAVE_DUP2 = 0 || test $REPLACE_DUP2 = 1; then
   AC_LIBOBJ([dup2])
@@ -421,11 +430,6 @@ changequote([, ])dnl
   AC_SUBST([gltests_WITNESS])
   gl_module_indicator_condition=$gltests_WITNESS
   m4_pushdef([gl_MODULE_INDICATOR_CONDITION], [$gl_module_indicator_condition])
-gl_FUNC_CLOSE
-if test $REPLACE_CLOSE = 1; then
-  AC_LIBOBJ([close])
-fi
-gl_UNISTD_MODULE_INDICATOR([close])
 gl_ENVIRON
 gl_UNISTD_MODULE_INDICATOR([environ])
 gl_FUNC_FDOPEN
@@ -616,6 +620,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/byteswap.in.h
   lib/c-ctype.c
   lib/c-ctype.h
+  lib/close.c
   lib/dup2.c
   lib/errno.in.h
   lib/error.c
@@ -624,6 +629,8 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/exitfail.h
   lib/fcntl.c
   lib/fcntl.in.h
+  lib/fd-hook.c
+  lib/fd-hook.h
   lib/float+.h
   lib/float.c
   lib/float.in.h
@@ -801,6 +808,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-getopt.h
   tests/test-getopt_long.h
   tests/test-ignore-value.c
+  tests/test-init.sh
   tests/test-intprops.c
   tests/test-inttypes.c
   tests/test-lstat.c
@@ -824,6 +832,8 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-strerror.c
   tests/test-string.c
   tests/test-strnlen.c
+  tests/test-strtoll.c
+  tests/test-strtoull.c
   tests/test-symlink.c
   tests/test-symlink.h
   tests/test-sys_stat.c
@@ -847,10 +857,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-xstrtoull.c
   tests/zerosize-ptr.h
   tests=lib/binary-io.h
-  tests=lib/close.c
   tests=lib/dosname.h
-  tests=lib/fd-hook.c
-  tests=lib/fd-hook.h
   tests=lib/fdopen.c
   tests=lib/fpucw.h
   tests=lib/fstat.c

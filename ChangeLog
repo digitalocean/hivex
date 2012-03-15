@@ -1,6 +1,93 @@
+2012-03-13  Richard W.M. Jones  <rjones@redhat.com>
+
+	Version 1.3.5.
+
+	Fix ruby tests for ruby 1.9.
+
+	Version 1.3.4.
+
+	Distribute 'images/rlenvalue_test_hive' in tarball.
+
+	Add tx-pull.sh wrapper script from libguestfs.
+
+	Update gnulib to latest.
+
+	Ignore perl/MYMETA.json
+
+	builds: Disable -Wno-missing-field-initializers and enable some other warnings.
+
+2012-01-05  Alex Nelson  <ajnelson@cs.ucsc.edu>
+
+	ruby: Add unit test for new RLenValue type
+
+	python: Add unit test for new RLenValue type
+
+	perl: Add unit test for new RLenValue type
+
+	ocaml: Add unit test for new RLenValue type
+
+2012-01-05  Alex Nelson  <ajnelson@cs.ucsc.edu>
+
+	hivex: Add offset-&-length function for long value data
+	This patch adds value_data_cell_offset to the hivex ABI, to report the
+	hive space used for long (>4 bytes) value data.
+
+
+	RWMJ: Rewrote the description of this function to make it clearer.
+
+2012-01-05  Alex Nelson  <ajnelson@cs.ucsc.edu>
+
+	generator: Add new return type to ABI: RLenValue
+	RLenValue is similar to RLenType, though with one less argument.  This
+	required adding additional conversion functions for several languages'
+	bindings.
+
+	Add test hive and generator script
+
+2011-12-20  Richard W.M. Jones  <rjones@redhat.com>
+
+	hivexml: Remove unused variable.
+
+2011-12-09  Hilko Bengen  <bengen@hilluzination.de>
+
+	hivex: Fix Ruby bindings for 1.9; let the user explicitly choose ruby, rake
+
+2011-12-01  Hilko Bengen  <bengen@hilluzination.de>
+
+	hivex: Added gnulib includes from builddir, as suggested by the Gnulib documentation; link hivexml against libgnu.
+	    Since some modules (`getopt', for example) may copy files
+	    into the build directory, `top_builddir/lib' is needed as well as
+	    `top_srcdir/lib'. -- GNU Gnulib manual, section 2.2 Initial import
+
+	This fixes an in-tree build failure on a Debian/sid system (see
+	below). hivexml could be built out-of-tree, but it turned out that due
+	to a missing include path, in this case the system's getopt
+	implementation was used insted of Gnulib's.
+
+	make[2]: Entering directory `«SRCDIR»/xml'
+	gcc -std=gnu99 -DHAVE_CONFIG_H -I. -I..    -DLOCALEBASEDIR=\""/usr/local/share/locale"\" -I../gnulib/lib -I../lib -I/usr/include/libxml2     -g -O2 -MT hivexml-hivexml.o -MD -MP -MF .deps/hivexml-hivexml.Tpo -c -o hivexml-hivexml.o `test -f 'hivexml.c' || echo './'`hivexml.c
+	mv -f .deps/hivexml-hivexml.Tpo .deps/hivexml-hivexml.Po
+	/bin/bash ../libtool  --tag=CC   --mode=link gcc -std=gnu99 -DLOCALEBASEDIR=\""/usr/local/share/locale"\" -I../gnulib/lib -I../lib -I/usr/include/libxml2     -g -O2   -o hivexml hivexml-hivexml.o ../lib/libhivex.la -lxml2
+	libtool: link: gcc -std=gnu99 -DLOCALEBASEDIR=\"/usr/local/share/locale\" -I../gnulib/lib -I../lib -I/usr/include/libxml2 -g -O2 -o .libs/hivexml hivexml-hivexml.o  ../lib/.libs/libhivex.so /usr/lib/libxml2.so
+	hivexml-hivexml.o: In function `main':
+	«SRCDIR»/xml/hivexml.c:96: undefined reference to `rpl_getopt'
+	«SRCDIR»/xml/hivexml.c:110: undefined reference to `rpl_optind'
+	«SRCDIR»/xml/hivexml.c:154: undefined reference to `rpl_optind'
+	collect2: ld returned 1 exit status
+	make[2]: *** [hivexml] Error 1
+	make[2]: Leaving directory `«SRCDIR»/xml'
+
+2011-11-30  Hilko Bengen  <bengen@hilluzination.de>
+
+	out of tree build: ruby (second take)
+
 2011-11-29  Richard W.M. Jones  <rjones@redhat.com>
 
+	Version 1.3.3.
+
 	Update to latest gnulib (RHBZ#756981).
+
+2011-11-29  Richard W.M. Jones  <rjones@redhat.com>
 
 	Revert "out of tree build: ruby"
 	This reverts commit 48d2e0d9ea5c12ae81f31706fa463f8e1ebd09af.
@@ -79,6 +166,8 @@
 	makes it out.  This was observed in Software hives.
 	* Not having child text makes room for child elements.
 
+2011-09-06  Alex Nelson  <ajnelson@cs.ucsc.edu>
+
 	hivex: Add metadata length functions for nodes and values
 	This patch adds hivex_node_struct_length and hivex_value_struct_length
 	to the hivex ABI, to report the amount of hive space used for each
@@ -87,6 +176,8 @@
 
 	A fix added by RWMJ.
 
+2011-09-06  Alex Nelson  <ajnelson@cs.ucsc.edu>
+
 	hivex: Split value_key function into value_key and value_key_len
 	This function breaks the value name calculation out so the name does
 	not need to be fetched and immediately thrown away when one only needs
@@ -94,6 +185,8 @@
 
 
 	RWMJ fixed hivex_value_key handling of errno.
+
+2011-09-06  Alex Nelson  <ajnelson@cs.ucsc.edu>
 
 	generator: Add new return type to ABI: RSize
 	This patch adds RSize, similar to RNode and RValue.
@@ -198,6 +291,8 @@
 	both in-tree and out-of-tree.
 
 	-Hilko
+
+2011-08-12  Hilko Bengen  <bengen@hilluzination.de>
 
 	More changes needed separate builddir
 	Here's the fix for perl. Both in-tree and out-of-tree build and install
@@ -361,7 +456,11 @@
 
 	Thanks to Hilko Bengen and Török Edwin for coming up with this fix.
 
+2011-05-12  Richard W.M. Jones  <rjones@redhat.com>
+
 	Version 1.2.6.
+
+2011-05-12  Richard W.M. Jones  <rjones@redhat.com>
 
 	build: Workaround broken libtool.
 	Same as this error:
@@ -370,6 +469,8 @@
 
 	We don't know why latest libtool is so obviously broken, but this
 	works around the problem.
+
+2011-05-12  Richard W.M. Jones  <rjones@redhat.com>
 
 	bootstrap: Force gnulib-tool --libtool option.
 	This forces the recent gnulib to generate a libgnu.la file.  Otherwise
@@ -393,11 +494,15 @@
 
 	Now "make check" completes successfully on Sparc and PowerPC.
 
+2011-05-12  Hilko Bengen  <bengen@hilluzination.de>
+
 	hivex: check for presence of OCaml native compiler
 	Only compile bytecode otherwise, avoiding ocamlfind's helpful error
 	message "ocamlfind: Not supported in your configuration: ocamlopt"
 
 	(Successfully tested on Debian/unstable on alpha)
+
+2011-05-12  Hilko Bengen  <bengen@hilluzination.de>
 
 	hivex: Use OCaml bytecode compiler for caml_raise_with_args check
 	On installations where no native OCaml compiler is available, the
@@ -491,6 +596,8 @@
 
 	Remove no longer used internal function utf16_string_len_in_bytes.
 
+2011-04-13  Richard W.M. Jones  <rjones@redhat.com>
+
 	hivex_value_multiple_strings: Don't read uninitialized data.
 	If hivex_value_multiple_strings was given a value which had an odd
 	length or if the data in the value was unterminated,
@@ -499,9 +606,13 @@
 	Potentially (although very unlikely) this could cause a
 	non-exploitable segfault in the calling program.
 
+2011-04-13  Richard W.M. Jones  <rjones@redhat.com>
+
 	Handle odd-length "UTF16" strings.
 	If the length of the buffer is not even, then this would read a byte
 	of uninitialized data.  Fix the length check to avoid this.
+
+2011-04-13  Richard W.M. Jones  <rjones@redhat.com>
 
 	Return real length of buffer from hivex_value_value.
 	In real registries, often the length declared in the header does not
@@ -518,6 +629,8 @@
 
 	If hivex_value_value truncates a value like this, we also need to
 	return the shorter length to the user as well.
+
+2011-04-13  Richard W.M. Jones  <rjones@redhat.com>
 
 	Really fix the case where a UTF-16 string contains junk after the string.
 	The previous commit b71b88f588f8660935a7d462e97b84aa2d669249 attempted
@@ -561,6 +674,8 @@
 2010-08-27  Richard Jones  <rjones@redhat.com>
 
 	Version 1.2.3.
+
+2010-08-27  Richard Jones  <rjones@redhat.com>
 
 	build: Don't warn about 'long long'.
 	We have to allow this, even though it's a GCC extension.
@@ -674,6 +789,8 @@
 	(Thanks to Marko Myllynen for finding an example where this
 	happened).
 
+2010-03-29  Richard Jones  <rjones@redhat.com>
+
 	Increase HIVEX_MAX_VALUES from 1000 to 10000.
 	I was sent a genuine Windows XP hive by Marko Myllynen which
 	had a key with > 1000 values attached.
@@ -716,6 +833,8 @@
 2010-03-01  Richard Jones  <rjones@redhat.com>
 
 	RHEL 5: Fixes for old version of OCaml in EPEL 5.
+
+2010-03-01  Richard Jones  <rjones@redhat.com>
 
 	Prepare for version 1.2.0.
 	Fix hivexsh_SOURCES.
@@ -762,9 +881,13 @@
 
 	This also adds tests of the OCaml bindings.
 
+2010-02-24  Richard Jones  <rjones@redhat.com>
+
 	Add build framework for OCaml, Perl, Python bindings.
 	(No bindings are actually built, this just adds the build, test
 	and generator framework for them).
+
+2010-02-24  Richard Jones  <rjones@redhat.com>
 
 	configure: Comment out Ruby, Java, Haskell detection.
 	We will not be implementing bindings for Ruby, Java or Haskell
@@ -774,9 +897,13 @@
 	(This leaves OCaml, Perl, Python, which we will be writing
 	bindings for).
 
+2010-02-24  Richard Jones  <rjones@redhat.com>
+
 	Create separate toplevel directories for hivexsh and hivexml.
 
 	Rename hivex/ -> lib/
+
+2010-02-24  Richard Jones  <rjones@redhat.com>
 
 	Move test images to images/ and add a large, generated test image.
 	Previously we had one minimal test image.  This was located in
@@ -807,6 +934,8 @@
 	With this patch I was able to allocate 10,000's of blocks in
 	a deeply nested hive structure without any problems being reported
 	by valgrind.
+
+2010-02-23  Richard Jones  <rjones@redhat.com>
 
 	Link gnulib in to the hivex library, not end-user programs.
 	Gnulib should be statically linked into the hivex library, so
@@ -913,6 +1042,8 @@
 
 	hivex: Implement deleting child nodes.
 
+2010-02-19  Richard Jones  <rjones@redhat.com>
+
 	hivex: Add flags argument to internal get_children() function.
 	When we later call get_children to visit the intermediate
 	ri/lf/lh records, we have already deleted the subkey nk-records,
@@ -920,6 +1051,8 @@
 	helpful.
 
 	This commit adds a flag to turn these checks off.
+
+2010-02-19  Richard Jones  <rjones@redhat.com>
 
 	hivex: Don't die on valid registries which have bad declared data lengths.
 	Some apparently valid registries contain value data length
@@ -931,14 +1064,20 @@
 	turn this into a warning and just use the allocated block size
 	as the data length (in other words, truncate the value).
 
+2010-02-19  Richard Jones  <rjones@redhat.com>
+
 	hivex: Minimal registry example.
 	This is the smallest registry you can make and still have it
 	load correctly in Windows regedit.
+
+2010-02-19  Richard Jones  <rjones@redhat.com>
 
 	hivexsh: Add 'setval' and 'commit' commands.
 	This adds the 'setval' and 'commit' commands to the hivex shell.
 
 	Also adds some example scripts showing use of these.
+
+2010-02-19  Richard Jones  <rjones@redhat.com>
 
 	hivex: Begin implementation of writing to hives.
 	This implements hivex_node_set_values which is used to
@@ -947,6 +1086,8 @@
 
 	This also implements hivex_commit which is used to commit
 	changes to hives back to disk.
+
+2010-02-19  Richard Jones  <rjones@redhat.com>
 
 	hivex: Add HIVEX_OPEN_WRITE flag to allow hive to be opened for writing.
 	If this flag is omitted (as in the case for all existing callers)
@@ -962,6 +1103,8 @@
 	Note the manpage section L</WRITING TO HIVE FILES> comes in a later
 	commit.
 
+2010-02-19  Richard Jones  <rjones@redhat.com>
+
 	Tools for analyzing and reverse engineering hive files.
 	This commit is not of general interest.  It contains the tools which
 	I used to reverse engineer the hive format and to test changes.
@@ -975,6 +1118,8 @@
 
 	You will also need ocaml-extlib-devel and ocaml-bitstring-devel.
 
+2010-02-19  Richard Jones  <rjones@redhat.com>
+
 	hivexsh: Change some exit(1) -> exit(EXIT_FAILURE)
 
 	hivexsh: Only print final \n when interactive.
@@ -982,12 +1127,16 @@
 	annoying extra line.  Only print this line if we are being
 	used interactively.
 
+2010-02-19  Richard Jones  <rjones@redhat.com>
+
 	hivexsh: Change handling of prompt argument to rl_gets()
 	Make the result of isatty into a global variable (is_tty).
 
 	Change the rl_gets() function so it takes the prompt string
 	instead of a "display prompt?" flag.  rl_gets() then consults
 	the global to find out if it should display the prompt at all.
+
+2010-02-19  Richard Jones  <rjones@redhat.com>
 
 	Document that this flag is clear for default keys.
 
@@ -1003,6 +1152,8 @@
 
 	hivex: Add 'hivexsh' program (shell for navigating registry hives).
 
+2010-02-19  Richard Jones  <rjones@redhat.com>
+
 	Set locale in C programs so l10n works (RHBZ#559962).
 	This commit adds the calls to setlocale &c to all of the current
 	C programs.
@@ -1016,6 +1167,8 @@
 
 	(You can only do this test after installing the package, or at
 	least the 'pa.mo' mo-file in the correct place).
+
+2010-02-19  Richard Jones  <rjones@redhat.com>
 
 	hivex: Const-correctness fix on header_checksum (thanks Jim Meyering).
 
@@ -1039,6 +1192,8 @@
 	hivex: Clarify some more fields.
 	Taken from sentinelchicken.com documentation.
 
+2010-02-19  Richard Jones  <rjones@redhat.com>
+
 	hivex: Modify children/values functions to return intermediate blocks.
 	Modify the functions that return child subnodes and values so they
 	can also be used to return a list of the intermediate blocks.  This
@@ -1049,6 +1204,8 @@
 
 	Note that this commit should not change the semantics of the code.
 
+2010-02-19  Richard Jones  <rjones@redhat.com>
+
 	hivex: Add value_any callback to the visitor.
 	The visitor currently contains lots of value_* callbacks, such as
 	value_string which is called back when the value has type string.
@@ -1057,6 +1214,8 @@
 	you just want to see 'a value', and don't care about its type.
 
 	The value_any callback allows visitors to see values generically.
+
+2010-02-19  Richard Jones  <rjones@redhat.com>
 
 	hivex: Move header checksum code into a function.
 	This function can be reused later.
@@ -1099,6 +1258,8 @@
 	* hivex/hivexget.c (EXIT_NOT_FOUND): Define.
 	(main): Use exit (EXIT_NOT_FOUND), not "exit (2)".
 
+2010-02-19  Jim Meyering  <meyering@redhat.com>
+
 	maint: use EXIT_SUCCESS and EXIT_FAILURE, not 0 and 1 to exit
 	Convert all uses automatically, via these two commands:
 	git grep -l '\<exit *(1)' \
@@ -1112,6 +1273,8 @@
 	* .x-sc_prohibit_magic_number_exit: New file.
 
 	Edit (RWMJ): Don't change Java code.
+
+2010-02-19  Jim Meyering  <meyering@redhat.com>
 
 	use STREQ, not strcmp: part 1
 	git grep -l 'strcmp *([^=]*== *0'|xargs \
@@ -1162,6 +1325,8 @@
 	RHEL 5: Detect endianness functions and supply them.
 
 	Prepare for version 1.0.75.
+
+2010-02-19  Richard Jones  <rjones@redhat.com>
 
 	Support for Windows Registry.
 	In hivex/:  This mini-library allows us to extract Windows

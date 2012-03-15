@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2011 Red Hat Inc.
+ * Copyright (C) 2009-2012 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -138,6 +138,7 @@ extern char *hivex_value_key (hive_h *h, hive_value_h val);
 extern int hivex_value_type (hive_h *h, hive_value_h val, hive_type *t, size_t *len);
 extern size_t hivex_node_struct_length (hive_h *h, hive_node_h node);
 extern size_t hivex_value_struct_length (hive_h *h, hive_value_h val);
+extern hive_value_h hivex_value_data_cell_offset (hive_h *h, hive_value_h val, size_t *len);
 extern char *hivex_value_value (hive_h *h, hive_value_h val, hive_type *t, size_t *len);
 extern char *hivex_value_string (hive_h *h, hive_value_h val);
 extern char **hivex_value_multiple_strings (hive_h *h, hive_value_h val);

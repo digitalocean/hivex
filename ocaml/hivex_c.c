@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2011 Red Hat Inc.
+ * Copyright (C) 2009-2012 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -75,6 +75,7 @@ static hive_type HiveType_val (value);
 static value Val_hive_type (hive_type);
 static value copy_int_array (size_t *);
 static value copy_type_len (size_t, hive_type);
+static value copy_len_value (size_t, hive_value_h);
 static value copy_type_value (const char *, size_t, hive_type);
 static void raise_error (const char *) Noreturn;
 static void raise_closed (const char *) Noreturn;
@@ -540,6 +541,35 @@ ocaml_hivex_value_struct_length (value hv, value valv)
 }
 
 /* Automatically generated wrapper for function
+ * val value_data_cell_offset : t -> value -> int * value
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+CAMLprim value ocaml_hivex_value_data_cell_offset (value hv, value valv);
+
+CAMLprim value
+ocaml_hivex_value_data_cell_offset (value hv, value valv)
+{
+  CAMLparam2 (hv, valv);
+  CAMLlocal1 (rv);
+
+  hive_h *h = Hiveh_val (hv);
+  if (h == NULL)
+    raise_closed ("value_data_cell_offset");
+  hive_value_h val = Int_val (valv);
+
+  errno = 0;  hive_value_h r;
+  size_t len;
+  r = hivex_value_data_cell_offset (h, val, &len);
+
+  if (r == 0 && errno != 0)
+    raise_error ("value_data_cell_offset");
+
+  rv = copy_len_value (len, r);
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
  * val value_value : t -> value -> hive_type * string
  */
 
@@ -939,6 +969,20 @@ copy_type_len (size_t len, hive_type t)
   v = Val_hive_type (t);
   Store_field (rv, 0, v);
   v = Val_int (len);
+  Store_field (rv, 1, v);
+  CAMLreturn (rv);
+}
+
+static value
+copy_len_value (size_t len, hive_value_h r)
+{
+  CAMLparam0 ();
+  CAMLlocal2 (v, rv);
+
+  rv = caml_alloc (2, 0);
+  v = Val_int (len);
+  Store_field (rv, 0, v);
+  v = Val_int (r);
   Store_field (rv, 1, v);
   CAMLreturn (rv);
 }

@@ -3,7 +3,7 @@
 #   generator/generator.ml
 # ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 #
-# Copyright (C) 2009-2011 Red Hat Inc.
+# Copyright (C) 2009-2012 Red Hat Inc.
 # Derived from code by Petter Nordahl-Hagen under a compatible license:
 #   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
 # Derived from code by Markus Stephany under a compatible license:
@@ -250,6 +250,21 @@ Return the length of the value data structure.
 
 This returns a size.
 
+=item value_data_cell_offset
+
+ ($len, $value) = $h->value_data_cell_offset ($val)
+
+Return the offset and length of the value's data cell.
+
+The data cell is a registry structure that contains the length
+(a 4 byte, little endian integer) followed by the data.
+
+If the length of the value is less than or equal to 4 bytes
+then the offset and length returned by this function is zero
+as the data is inlined in the value.
+
+Returns 0 and sets errno on error.
+
 =item value_value
 
  ($type, $data) = $h->value_value ($val)
@@ -361,7 +376,7 @@ C<node> is the node to modify.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2009-2011 Red Hat Inc.
+Copyright (C) 2009-2012 Red Hat Inc.
 
 =head1 LICENSE
 

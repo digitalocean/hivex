@@ -10,8 +10,9 @@ Build-Depends: debhelper (>= 8.1.3~),
  libreadline-dev,
  libio-stringy-perl,
  ocaml-findlib, dh-ocaml (>= 0.9~), ocaml-nox (>= 3.11.1-3~),
- python-all-dev, python3-all-dev
-Standards-Version: 3.9.2
+ python-all-dev, python3-all-dev,
+ gem2deb, rake,
+Standards-Version: 3.9.3
 Homepage: http://libguestfs.org/
 Vcs-Git: git://git.debian.org/git/pkg-libvirt/hivex.git
 Vcs-Browser: http://git.debian.org/?p=pkg-libvirt/hivex.git
@@ -107,7 +108,11 @@ Description: Python bindings for hivex
  Python bindings for libhivex, a library for reading and writing
  Windows Registry "hive" binary files.
 
-# Package: libhivex-doc
-# Architecture: all
-# Description: documentation for hivex
-# <insert long description, indented with spaces>
+Package: ruby-hivex
+Architecture: any
+Section: ruby
+XB-Ruby-Versions: ${ruby:Versions}
+Depends: ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
+Description: Ruby bindings for hivex
+ Ruby bindings for libhivex, a library for reading and writing
+ Windows Registry "hive" binary files.

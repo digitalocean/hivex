@@ -11,45 +11,68 @@
 
 PYTHONS        := $(shell pyversions --installed; py3versions --installed)
 PYTHON_DEFAULT := $(shell pyversions --default)
+RUBIES         := ruby1.8 ruby1.9.1
+RUBY_DEFAULT   := ruby1.8
 
 %:
 	dh $@ \
 		--without python-support \
-		--with autotools-dev,ocaml,python2,python3
+		--with autotools-dev,ocaml,python2,python3,ruby
 
 override_dh_auto_configure:
-	set -e; for p in $(PYTHONS); do \
-	    if [ $$p = $(PYTHON_DEFAULT) ]; then \
+	dh_auto_configure --builddir=$(CURDIR)/debian/build-default \
+		-- \
+		PYTHON=${PYTHON_DEFAULT} \
+		RUBY=${RUBY_DEFAULT}
+
+	set -e; for p in $(filter-out $(PYTHON_DEFAULT), $(PYTHONS)) \
+	; do \
 		dh_auto_configure --builddir=$(CURDIR)/debian/build-$$p \
-                    -- RAKE=no ; \
-	    else \
-	        dh_auto_configure --builddir=$(CURDIR)/debian/build-$$p \
-	            -- PYTHON=$$p OCAMLC=no PERL=no RAKE=no ; \
-	    fi ; \
+		-- \
+		PYTHON=$$p OCAMLC=no PERL=no RUBY=no RAKE=no ; \
+	done
+	set -e; for v in $(patsubst ruby%,%,$(filter-out $(RUBY_DEFAULT), $(RUBIES))) \
+	; do \
+		dh_auto_configure --builddir=$(CURDIR)/debian/build-$$p \
+		-- \
+		PYTHON=no OCAMLC=no PERL=no RUBY=ruby$$v RAKE=rake$$v ; \
 	done
 
 override_dh_auto_build:
-	set -e; for p in $(PYTHONS); do \
-	    dh_auto_build --builddir=$(CURDIR)/debian/build-$$p \
-	        -- INSTALLDIRS=vendor LD_RUN_PATH=""; \
+	set -e; for p in \
+		default \
+		$(filter-out $(PYTHON_DEFAULT), $(PYTHONS)) \
+		$(filter-out $(RUBY_DEFAULT), $(RUBIES)) \
+	; do \
+		dh_auto_build --builddir=$(CURDIR)/debian/build-$$p \
+			-- INSTALLDIRS=vendor LD_RUN_PATH=""; \
 	done
 
 override_dh_auto_test:
-	dh_auto_test --builddir=$(CURDIR)/debian/build-$(PYTHON_DEFAULT) \
-	set -e; for p in $(PYTHONS); do \
-	    dh_auto_test --builddir=$(CURDIR)/debian/build-$$p/python ; \
+	dh_auto_test --builddir=$(CURDIR)/debian/build-default \
+	set -e; for p in $(filter-out $(PYTHON_DEFAULT), $(PYTHONS)) ; do \
+		dh_auto_test --builddir=$(CURDIR)/debian/build-$$p -- -C python ; \
+	done
+	set -e; for p in $(filter-out $(RUBY_DEFAULT), $(RUBIES)) ; do \
+		dh_auto_test --builddir=$(CURDIR)/debian/build-$$p -- -C ruby ; \
 	done
 
 override_dh_auto_install:
-	dh_auto_install --builddir=$(CURDIR)/debian/build-$(PYTHON_DEFAULT)
-	set -e; for p in $(PYTHONS); do \
-	    $(MAKE) -C $(CURDIR)/debian/build-$$p/python install \
-	        DESTDIR=$(CURDIR)/debian/tmp ; \
+	dh_auto_install --builddir=$(CURDIR)/debian/build-default
+	set -e; for p in $(filter-out $(PYTHON_DEFAULT), $(PYTHONS)) ; do \
+		dh_auto_install --builddir=$(CURDIR)/debian/build-$$p -- -C python ; \
+	done
+	set -e; for p in $(filter-out $(RUBY_DEFAULT), $(RUBIES)) ; do \
+		dh_auto_install --builddir=$(CURDIR)/debian/build-$$p -- -C ruby ; \
 	done
 
 override_dh_auto_clean:
-	set -e; for p in $(PYTHONS); do \
-	    dh_auto_clean --builddir=$(CURDIR)/debian/build-$$p ; \
+	set -e; for p in \
+		default \
+		$(filter-out $(PYTHON_DEFAULT), $(PYTHONS)) \
+		$(filter-out $(RUBY_DEFAULT), $(RUBIES)) \
+	; do \
+		dh_auto_clean --builddir=$(CURDIR)/debian/build-$$p ; \
 	done
 
 override_dh_strip:
