@@ -33,7 +33,7 @@ override_dh_auto_configure:
 	done
 	set -e; for v in $(patsubst ruby%,%,$(filter-out $(RUBY_DEFAULT), $(RUBIES))) \
 	; do \
-		dh_auto_configure --builddir=$(CURDIR)/debian/build-$$p \
+		dh_auto_configure --builddir=$(CURDIR)/debian/build-ruby$$v \
 		-- \
 		PYTHON=no OCAMLC=no PERL=no RUBY=ruby$$v RAKE=rake$$v ; \
 	done
