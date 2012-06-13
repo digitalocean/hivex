@@ -656,6 +656,7 @@ sys/stat.h: sys_stat.in.h $(top_builddir)/config.status $(CXXDEFS_H) $(ARG_NONNU
 	      -e 's|@''PRAGMA_SYSTEM_HEADER''@|@PRAGMA_SYSTEM_HEADER@|g' \
 	      -e 's|@''PRAGMA_COLUMNS''@|@PRAGMA_COLUMNS@|g' \
 	      -e 's|@''NEXT_SYS_STAT_H''@|$(NEXT_SYS_STAT_H)|g' \
+	      -e 's|@''WINDOWS_64_BIT_ST_SIZE''@|$(WINDOWS_64_BIT_ST_SIZE)|g' \
 	      -e 's/@''GNULIB_FCHMODAT''@/$(GNULIB_FCHMODAT)/g' \
 	      -e 's/@''GNULIB_FSTAT''@/$(GNULIB_FSTAT)/g' \
 	      -e 's/@''GNULIB_FSTATAT''@/$(GNULIB_FSTATAT)/g' \
@@ -709,6 +710,14 @@ check_PROGRAMS += test-sys_stat
 EXTRA_DIST += test-sys_stat.c
 
 ## end   gnulib module sys_stat-tests
+
+## begin gnulib module sys_types-tests
+
+TESTS += test-sys_types
+check_PROGRAMS += test-sys_types
+EXTRA_DIST += test-sys_types.c
+
+## end   gnulib module sys_types-tests
 
 ## begin gnulib module test-framework-sh-tests
 

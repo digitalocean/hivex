@@ -165,6 +165,8 @@ AC_DEFUN([gl_EARLY],
   # Code from module symlink-tests:
   # Code from module sys_stat:
   # Code from module sys_stat-tests:
+  # Code from module sys_types:
+  # Code from module sys_types-tests:
   # Code from module test-framework-sh:
   # Code from module test-framework-sh-tests:
   # Code from module time:
@@ -361,6 +363,8 @@ if test $HAVE_STRTOULL = 0; then
   gl_PREREQ_STRTOULL
 fi
 gl_STDLIB_MODULE_INDICATOR([strtoull])
+gl_SYS_TYPES_H
+AC_PROG_MKDIR_P
 gl_UNISTD_H
 gl_FUNC_VASNPRINTF
 gl_FUNC_VASPRINTF
@@ -368,7 +372,6 @@ gl_STDIO_MODULE_INDICATOR([vasprintf])
 m4_ifdef([AM_XGETTEXT_OPTION],
   [AM_][XGETTEXT_OPTION([--flag=asprintf:2:c-format])
    AM_][XGETTEXT_OPTION([--flag=vasprintf:2:c-format])])
-AC_SUBST([WARN_CFLAGS])
 gl_WCHAR_H
 gl_FUNC_WRITE
 if test $REPLACE_WRITE = 1; then
@@ -454,6 +457,7 @@ if test $REPLACE_GETPAGESIZE = 1; then
   AC_LIBOBJ([getpagesize])
 fi
 gl_UNISTD_MODULE_INDICATOR([getpagesize])
+AC_REQUIRE([gl_LARGEFILE])
 gl_FUNC_LSTAT
 if test $REPLACE_LSTAT = 1; then
   AC_LIBOBJ([lstat])
@@ -683,6 +687,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/strtoll.c
   lib/strtoul.c
   lib/strtoull.c
+  lib/sys_types.in.h
   lib/unistd.in.h
   lib/vasnprintf.c
   lib/vasnprintf.h
@@ -740,6 +745,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/msvc-nothrow.m4
   m4/multiarch.m4
   m4/nocrash.m4
+  m4/off_t.m4
   m4/onceonly.m4
   m4/open.m4
   m4/pathmax.m4
@@ -769,6 +775,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/symlink.m4
   m4/sys_socket_h.m4
   m4/sys_stat_h.m4
+  m4/sys_types_h.m4
   m4/time_h.m4
   m4/unistd_h.m4
   m4/vasnprintf.m4
@@ -837,6 +844,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-symlink.c
   tests/test-symlink.h
   tests/test-sys_stat.c
+  tests/test-sys_types.c
   tests/test-sys_wait.h
   tests/test-time.c
   tests/test-unistd.c

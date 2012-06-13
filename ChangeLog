@@ -1,3 +1,36 @@
+2012-06-12  Richard W.M. Jones  <rjones@redhat.com>
+
+	Version 1.3.6.
+
+2012-05-15  Richard W.M. Jones  <rjones@redhat.com>
+
+	python: Fix python tests.
+	$(srcdir) isn't expanded by configure.
+
+2012-05-11  Richard W.M. Jones  <rjones@redhat.com>
+
+	Update to latest gnulib.
+
+2012-05-11  Alex Nelson  <ajnelson@cs.ucsc.edu>
+
+	hivexml: Add byte run reporting functions
+	This patch adds value_byte_runs and node_byte_runs.  Each byte run
+	represents the offset and length of a data structure within the hive,
+	one per node, and one or two per value depending on the length of the
+	value data.
+
+	These byte run functions also add additional data sanity checks as a
+	hive is being parsed, mainly checking that a node address actually
+	points to a node, and similarly for values.
+
+2012-03-30  Richard W.M. Jones  <rjones@redhat.com>
+
+	RHEL 5: build: Define builddir, abs_srcdir if they don't exist.
+
+	RHEL 5: build: Fix some C99-isms that confuse old gcc.
+
+	RHEL 5: configure: Fix test for caml_raise_with_args.
+
 2012-03-13  Richard W.M. Jones  <rjones@redhat.com>
 
 	Version 1.3.5.

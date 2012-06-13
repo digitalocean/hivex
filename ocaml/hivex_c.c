@@ -654,7 +654,8 @@ ocaml_hivex_value_multiple_strings (value hv, value valv)
     raise_error ("value_multiple_strings");
 
   rv = caml_copy_string_array ((const char **) r);
-  for (int i = 0; r[i] != NULL; ++i) free (r[i]);
+  int i;
+  for (i = 0; r[i] != NULL; ++i) free (r[i]);
   free (r);
   CAMLreturn (rv);
 }
