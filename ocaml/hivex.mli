@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2011 Red Hat Inc.
+ * Copyright (C) 2009-2012 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -119,6 +119,9 @@ val node_struct_length : t -> node -> int64
 
 val value_struct_length : t -> value -> int64
 (** return the length of a value data structure *)
+
+val value_data_cell_offset : t -> value -> int * value
+(** return the offset and length of a value data cell *)
 
 val value_value : t -> value -> hive_type * string
 (** return data length, data type and data of a value *)

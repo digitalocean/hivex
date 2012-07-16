@@ -3,7 +3,7 @@
 #   generator/generator.ml
 # ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 #
-# Copyright (C) 2009-2011 Red Hat Inc.
+# Copyright (C) 2009-2012 Red Hat Inc.
 # Derived from code by Petter Nordahl-Hagen under a compatible license:
 #   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
 # Derived from code by Markus Stephany under a compatible license:
@@ -108,6 +108,10 @@ class Hivex:
     def value_struct_length (self, val):
         """return the length of a value data structure"""
         return libhivexmod.value_struct_length (self._o, val)
+
+    def value_data_cell_offset (self, val):
+        """return the offset and length of a value data cell"""
+        return libhivexmod.value_data_cell_offset (self._o, val)
 
     def value_value (self, val):
         """return data length, data type and data of a value"""

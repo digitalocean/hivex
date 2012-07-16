@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2011 Red Hat Inc.
+ * Copyright (C) 2009-2012 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -212,6 +212,15 @@ put_len_type (size_t len, hive_type t)
   PyObject *r = PyTuple_New (2);
   PyTuple_SetItem (r, 0, PyLong_FromLong ((long) t));
   PyTuple_SetItem (r, 1, PyLong_FromLongLong ((long) len));
+  return r;
+}
+
+static PyObject *
+put_len_val (size_t len, hive_value_h value)
+{
+  PyObject *r = PyTuple_New (2);
+  PyTuple_SetItem (r, 0, PyLong_FromLongLong ((long) len));
+  PyTuple_SetItem (r, 1, PyLong_FromLongLong ((long) value));
   return r;
 }
 
@@ -615,6 +624,31 @@ py_hivex_value_struct_length (PyObject *self, PyObject *args)
 }
 
 static PyObject *
+py_hivex_value_data_cell_offset (PyObject *self, PyObject *args)
+{
+  PyObject *py_r;
+  errno = 0;
+  int r;
+  size_t len;
+  hive_h *h;
+  PyObject *py_h;
+  long val;
+
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_value_data_cell_offset", &py_h, &val))
+    return NULL;
+  h = get_handle (py_h);
+  r = hivex_value_data_cell_offset (h, val, &len);
+  if (r == 0 && errno != 0) {
+    PyErr_SetString (PyExc_RuntimeError,
+                     strerror (errno));
+    return NULL;
+  }
+
+  py_r = put_len_val (len, r);
+  return py_r;
+}
+
+static PyObject *
 py_hivex_value_value (PyObject *self, PyObject *args)
 {
   PyObject *py_r;
@@ -885,6 +919,7 @@ static PyMethodDef methods[] = {
   { (char *) "value_type", py_hivex_value_type, METH_VARARGS, NULL },
   { (char *) "node_struct_length", py_hivex_node_struct_length, METH_VARARGS, NULL },
   { (char *) "value_struct_length", py_hivex_value_struct_length, METH_VARARGS, NULL },
+  { (char *) "value_data_cell_offset", py_hivex_value_data_cell_offset, METH_VARARGS, NULL },
   { (char *) "value_value", py_hivex_value_value, METH_VARARGS, NULL },
   { (char *) "value_string", py_hivex_value_string, METH_VARARGS, NULL },
   { (char *) "value_multiple_strings", py_hivex_value_multiple_strings, METH_VARARGS, NULL },

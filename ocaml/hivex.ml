@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2011 Red Hat Inc.
+ * Copyright (C) 2009-2012 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -79,6 +79,7 @@ external value_key : t -> value -> string = "ocaml_hivex_value_key"
 external value_type : t -> value -> hive_type * int = "ocaml_hivex_value_type"
 external node_struct_length : t -> node -> int64 = "ocaml_hivex_node_struct_length"
 external value_struct_length : t -> value -> int64 = "ocaml_hivex_value_struct_length"
+external value_data_cell_offset : t -> value -> int * value = "ocaml_hivex_value_data_cell_offset"
 external value_value : t -> value -> hive_type * string = "ocaml_hivex_value_value"
 external value_string : t -> value -> string = "ocaml_hivex_value_string"
 external value_multiple_strings : t -> value -> string array = "ocaml_hivex_value_multiple_strings"
