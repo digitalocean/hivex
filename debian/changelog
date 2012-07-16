@@ -1,3 +1,11 @@
+hivex (1.3.6-3) unstable; urgency=low
+
+  * [dea9b81] Removed autoreconf patch, changed build to use dh-autoreconf
+  * [e99b7fc] Added patch to configure.ac to correctly determine libpython
+    name (Closes: #681791)
+
+ -- Hilko Bengen <bengen@debian.org>  Mon, 16 Jul 2012 20:39:09 +0200
+
 hivex (1.3.6-2) unstable; urgency=low
 
   * [7de8ea3] changed pattern in .install files so that the multiarch
