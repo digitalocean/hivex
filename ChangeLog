@@ -1,3 +1,87 @@
+2012-10-11  Richard W.M. Jones  <rjones@redhat.com>
+
+	Version 1.3.7.
+
+2012-10-11  Peter Fokker  <peter@berestijn.nl>
+
+	patch for read support of "li"-records from "ri" intermediate
+	Richard,
+
+	Thank you for creating the hivex-library. Studying your source code helped
+	me a great deal to better understand the internals of the Windows Registry.
+
+	However, while I was browsing a real-world SOFTWARE-hive (XP, SP3) I
+	could not browse to the '\Classes' key. Instead I got this (debug)-message:
+
+	    get_children: returning ENOTSUP because ri-record offset does not
+	point to lf/lh (0x49020)
+
+	I tracked this issue down and I discovered that the intermediate
+	"ri"-record may not only contain offsets to "lf" and "lh" but to
+	"li"-records too.
+
+	Attached is a patch against hivex.c v1.3.3 that recognises
+	"li"-records referenced from "ri"-records. For me this fixed the issue
+	with browsing the '\Classes' key.
+
+	Note that I have not fixed the related problem of rewriting
+	"li"-records when inserting a new subkey or deleting an
+	existing one. This sure would cause problems when I were to
+	add/delete a subkey to/from '\Classes'.
+
+	RWMJ:
+	The original patch submitted is here:
+	https://www.redhat.com/archives/libguestfs/2012-March/msg00035.html
+	Changes made:
+	 - Removed commented-out code for writing.
+	 - Re-added some checking code to reduce the delta of this patch
+	   to the previous code.  The checks can be removed in a separate
+	   patch if necessary.
+
+2012-09-03  Richard W.M. Jones  <rjones@redhat.com>
+
+	Fix detection of Ruby C extensions library.
+	The configure.ac code is copied from libguestfs.
+
+	Add ./configure --disable-python option.
+	The configure.ac code is copied from libguestfs.
+
+	Add ./configure --disable-perl option.
+	The configure.ac code is copied from libguestfs.
+
+	Add ./configure --disable-ocaml option.
+	The configure.ac code is copied from libguestfs.
+
+2012-09-03  Hilko Bengen  <bengen@hilluzination.de>
+
+	Fixed checks for libpython features
+	The python3.1 package shipped with Debian/squeeze does not have the
+	'mu' suffix that was assumed before.
+
+	RWMJ: This was originally formulated for libguestfs, but the same
+	patch applies to hivex and fixes the following bug reported against
+	Gentoo by Joshua Rich:
+
+	https://bugs.gentoo.org/show_bug.cgi?id=433467
+
+2012-08-28  Jim Meyering  <meyering@redhat.com>
+
+	maint: remove unnecessary mkdir -p
+	* ocaml/Makefile.am (install-data-hook): Remove unneeded mkdir -p.
+	It's job is handled by the very next mkdir -p.
+
+	tests: avoid spurious failure when run in non-srcdir build
+	* ocaml/t/hivex_120_rlenvalue.ml: Avoid spurious failure when the
+	test is run in a non-srcdir (aka VPATH) build.  I.e., open a
+	$srcdir-relative name, rather than assuming $srcdir is ".".
+
+	build: update gnulib submodule to latest
+
+	maint: avoid some syntax-check test failures
+	* cfg.mk (_img_regexp): Exempt two VC'd image files from syntax
+	check rules that look for trailing blanks and empty lines at EOF.
+	* sh/hivexsh.pod: Remove trailing spaces.
+
 2012-06-12  Richard W.M. Jones  <rjones@redhat.com>
 
 	Version 1.3.6.
