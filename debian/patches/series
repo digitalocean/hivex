@@ -1,3 +1,2 @@
 0001-ruby-find-files-to-install-in-correct-directory.patch
 0002-ruby-install-to-vendor-directories.patch
-0003-python-bindings-Fix-for-Debian-bug-681791.patch
