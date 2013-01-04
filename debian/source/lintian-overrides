@@ -1,0 +1,3 @@
+# We are apparently using experimental debhelper features (multi-arch
+# support)
+hivex source: package-needs-versioned-debhelper-build-depends 9

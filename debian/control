@@ -3,7 +3,7 @@ Section: libs
 Priority: extra
 Maintainer: Debian Libvirt Maintainers <pkg-libvirt-maintainers@lists.alioth.debian.org>
 Uploaders: Hilko Bengen <bengen@debian.org>
-Build-Depends: debhelper (>= 7.0.50~),
+Build-Depends: debhelper (>= 8.1.3~),
  autotools-dev,
  pkg-config,
  libxml2-dev,
@@ -19,6 +19,8 @@ Vcs-Browser: http://git.debian.org/?p=pkg-libvirt/hivex.git
 Package: libhivex0
 Section: libs
 Architecture: any
+Multi-Arch: same
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Conflicts: libguestfs0 (<= 1.0.84-4)
 Description: library for reading and writing Windows Registry hives
@@ -34,6 +36,7 @@ Description: library for reading and writing Windows Registry hives
 Package: libhivex-dev
 Section: libdevel
 Architecture: any
+Multi-Arch: same
 Depends: ${misc:Depends}, libhivex0 (= ${binary:Version})
 Description: library for reading and writing Windows Registry hives
  libhivex is a self-contained library for reading and writing Windows
@@ -44,6 +47,7 @@ Description: library for reading and writing Windows Registry hives
 Package: libhivex0-dbg
 Section: debug
 Architecture: any
+Multi-Arch: same
 Depends: libhivex0, ${shlibs:Depends}, ${misc:Depends}
 Description: library for reading and writing Windows Registry hives
  libhivex is a self-contained library for reading and writing Windows
