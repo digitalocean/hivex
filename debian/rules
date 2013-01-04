@@ -29,14 +29,16 @@ override_dh_auto_configure:
 	; do \
 		dh_auto_configure --builddir=$(CURDIR)/debian/build-$$p \
 		-- \
-		PYTHON=$$p OCAMLC=no PERL=no RUBY=no RAKE=no ; \
+		--disable-ocaml --disable-perl \
+		PYTHON=$$p RUBY=no RAKE=no ; \
 	done
 	set -e; for v in $(patsubst ruby%,%,$(filter-out $(RUBY_DEFAULT), $(RUBIES))) \
 	; do \
 		if [ $$v = 1.8 ]; then rake=rake; else rake=rake$$v; fi ; \
 		dh_auto_configure --builddir=$(CURDIR)/debian/build-ruby$$v \
 		-- \
-		PYTHON=no OCAMLC=no PERL=no RUBY=ruby$$v RAKE=$$rake ; \
+		--disable-ocaml --disable-perl --disable-python \
+		RUBY=ruby$$v RAKE=$$rake ; \
 	done
 
 override_dh_auto_build:
