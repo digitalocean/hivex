@@ -1,0 +1,73 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Tue, 7 May 2013 17:37:15 +0200
+Subject: Fix building Python bindings if there is a separate
+ "platform-specific" include path
+
+(This is the case for Python 3.3 on Debian.)
+---
+ configure.ac       |   18 ++++++++++++------
+ python/Makefile.am |    2 +-
+ 2 files changed, 13 insertions(+), 7 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index df2bd44..8b632ad 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -265,7 +265,7 @@ AM_CONDITIONAL([HAVE_PERL],
+ dnl Check for Python (optional, for Python bindings).
+ PYTHON_PREFIX=
+ PYTHON_VERSION=
+-PYTHON_INCLUDEDIR=
++PYTHON_CFLAGS=
+ PYTHON_INSTALLDIR=
+ 
+ AC_ARG_ENABLE([python],
+@@ -288,12 +288,18 @@ AS_IF([test "x$enable_python" != "xno"],
+ 	    AC_MSG_RESULT([$PYTHON_VERSION])
+ 
+             AC_MSG_CHECKING([for Python include path])
+-            if test -z "$PYTHON_INCLUDEDIR"; then
++            if test -z "$PYTHON_CFLAGS"; then
+                 python_path=`$PYTHON -c "import distutils.sysconfig; \
+                                          print (distutils.sysconfig.get_python_inc ());"`
+-                PYTHON_INCLUDEDIR=$python_path
++                python_platpath=`$PYTHON -c "import distutils.sysconfig; \
++                                             print (distutils.sysconfig.get_python_inc (plat_specific=1));"`
++                if test "$python_path" = "$python_platpath"; then
++                    PYTHON_CFLAGS=-I$python_path
++                else
++                    PYTHON_CFLAGS="-I$python_path -I$python_platpath"
++                fi
+             fi
+-            AC_MSG_RESULT([$PYTHON_INCLUDEDIR])
++            AC_MSG_RESULT([$PYTHON_CFLAGS])
+ 
+             AC_ARG_WITH([python-installdir],
+                         [AS_HELP_STRING([--with-python-installdir],
+@@ -331,11 +337,11 @@ AS_IF([test "x$enable_python" != "xno"],
+ 
+         AC_SUBST(PYTHON_PREFIX)
+         AC_SUBST(PYTHON_VERSION)
+-        AC_SUBST(PYTHON_INCLUDEDIR)
++        AC_SUBST(PYTHON_CFLAGS)
+         AC_SUBST(PYTHON_INSTALLDIR)
+         ])
+ AM_CONDITIONAL([HAVE_PYTHON],
+-    [test "x$PYTHON" != "xno" && test "x$PYTHON_INCLUDEDIR" != "x" && test "x$PYTHON_INSTALLDIR" != "x"])
++    [test "x$PYTHON" != "xno" && test "x$PYTHON_CFLAGS" != "x" && test "x$PYTHON_INSTALLDIR" != "x"])
+ 
+ dnl Check for Ruby and rake (optional, for Ruby bindings).
+ AC_ARG_ENABLE([ruby],
+diff --git a/python/Makefile.am b/python/Makefile.am
+index be1523e..ead52b4 100644
+--- a/python/Makefile.am
++++ b/python/Makefile.am
+@@ -33,7 +33,7 @@ python_DATA = hivex.py
+ python_LTLIBRARIES = libhivexmod.la
+ 
+ libhivexmod_la_SOURCES = hivex-py.c
+-libhivexmod_la_CFLAGS = -Wall -I$(PYTHON_INCLUDEDIR) \
++libhivexmod_la_CFLAGS = -Wall $(PYTHON_CFLAGS) \
+ 		        -I$(top_srcdir)/lib -I$(top_builddir)/lib
+ libhivexmod_la_LIBADD = $(top_builddir)/lib/libhivex.la
+ libhivexmod_la_LDFLAGS = -avoid-version -shared

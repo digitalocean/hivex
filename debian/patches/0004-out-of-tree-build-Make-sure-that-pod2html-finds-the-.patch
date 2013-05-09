@@ -1,0 +1,56 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Tue, 7 May 2013 17:42:45 +0200
+Subject: out-of-tree build: Make sure that pod2html finds the POD file
+
+Otherwise we get "Can't open ..." warnings which don't seem to be fatal.
+---
+ regedit/Makefile.am |    2 +-
+ sh/Makefile.am      |    4 ++--
+ xml/Makefile.am     |    2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/regedit/Makefile.am b/regedit/Makefile.am
+index 4353ee8..4bcd248 100644
+--- a/regedit/Makefile.am
++++ b/regedit/Makefile.am
+@@ -40,6 +40,6 @@ $(top_builddir)/html/hivexregedit.1.html: hivexregedit
+ 	  --css 'pod.css' \
+ 	  --htmldir html \
+ 	  --outfile html/hivexregedit.1.html \
+-	  regedit/hivexregedit
++	  $(abs_srcdir)/hivexregedit
+ 
+ CLEANFILES = $(man_MANS)
+diff --git a/sh/Makefile.am b/sh/Makefile.am
+index a6f5ae6..1c2aba8 100644
+--- a/sh/Makefile.am
++++ b/sh/Makefile.am
+@@ -71,7 +71,7 @@ $(top_builddir)/html/hivexget.1.html: hivexget.pod
+ 	  --css 'pod.css' \
+ 	  --htmldir html \
+ 	  --outfile html/hivexget.1.html \
+-	  sh/hivexget.pod
++	  $(abs_srcdir)/hivexget.pod
+ 
+ $(top_builddir)/html/hivexsh.1.html: hivexsh.pod
+ 	mkdir -p $(top_builddir)/html
+@@ -79,6 +79,6 @@ $(top_builddir)/html/hivexsh.1.html: hivexsh.pod
+ 	  --css 'pod.css' \
+ 	  --htmldir html \
+ 	  --outfile html/hivexsh.1.html \
+-	  sh/hivexsh.pod
++	  $(abs_srcdir)/hivexsh.pod
+ 
+ CLEANFILES = $(man_MANS)
+diff --git a/xml/Makefile.am b/xml/Makefile.am
+index 67ba248..ca3f964 100644
+--- a/xml/Makefile.am
++++ b/xml/Makefile.am
+@@ -51,6 +51,6 @@ $(top_builddir)/html/hivexml.1.html: hivexml.pod
+ 	  --css 'pod.css' \
+ 	  --htmldir html \
+ 	  --outfile html/hivexml.1.html \
+-	  xml/hivexml.pod
++	  $(abs_srcdir)/hivexml.pod
+ 
+ CLEANFILES = $(man_MANS)

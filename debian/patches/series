@@ -1,2 +1,4 @@
 0001-ruby-find-files-to-install-in-correct-directory.patch
 0002-ruby-install-to-vendor-directories.patch
+0003-Fix-building-Python-bindings-if-there-is-a-separate-.patch
+0004-out-of-tree-build-Make-sure-that-pod2html-finds-the-.patch
