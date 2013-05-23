@@ -108,6 +108,15 @@ Description: Python bindings for hivex
  Python bindings for libhivex, a library for reading and writing
  Windows Registry "hive" binary files.
 
+Package: python3-hivex
+Architecture: any
+Section: python
+Breaks: python-hivex (<< 1.3.7-5~)
+Depends: ${python3:Depends}, ${shlibs:Depends}, ${misc:Depends}
+Description: Python 3 bindings for hivex
+ Python 3 bindings for libhivex, a library for reading and writing
+ Windows Registry "hive" binary files.
+
 Package: ruby-hivex
 Architecture: any
 Section: ruby
