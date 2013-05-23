@@ -3,3 +3,4 @@
 0003-Fix-building-Python-bindings-if-there-is-a-separate-.patch
 0004-out-of-tree-build-Make-sure-that-pod2html-finds-the-.patch
 0005-ruby-Use-updated-rake-package-names-but-allow-fallba.patch
+0006-Build-Python-extension-with-PEP-3149-compliant-suffi.patch
