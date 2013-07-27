@@ -3,21 +3,21 @@ Date: Thu, 15 Mar 2012 12:57:39 +0100
 Subject: ruby: install to vendor directories
 
 ---
- ruby/Makefile.am |   12 ++++++------
+ ruby/Makefile.am | 12 ++++++------
  1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/ruby/Makefile.am b/ruby/Makefile.am
-index 93a093e..1686ae2 100644
+index e78ab59..6d38fc1 100644
 --- a/ruby/Makefile.am
 +++ b/ruby/Makefile.am
-@@ -47,13 +47,13 @@ all:
+@@ -45,13 +45,13 @@ all:
  	$(RAKE) build
  	$(RAKE) rdoc
  
--RUBY_SITELIB := $(shell $(RUBY) -rrbconfig -e "puts Config::CONFIG['sitelibdir']")
--RUBY_SITEARCH := $(shell $(RUBY) -rrbconfig -e "puts Config::CONFIG['sitearchdir']")
-+RUBY_VENDORLIB := $(shell $(RUBY) -rrbconfig -e "puts Config::CONFIG['vendorlibdir']")
-+RUBY_VENDORARCH := $(shell $(RUBY) -rrbconfig -e "puts Config::CONFIG['vendorarchdir']")
+-RUBY_SITELIB := $(shell $(RUBY) -rrbconfig -e "puts RbConfig::CONFIG['sitelibdir']")
+-RUBY_SITEARCH := $(shell $(RUBY) -rrbconfig -e "puts RbConfig::CONFIG['sitearchdir']")
++RUBY_VENDORLIB := $(shell $(RUBY) -rrbconfig -e "puts RbConfig::CONFIG['vendorlibdir']")
++RUBY_VENDORARCH := $(shell $(RUBY) -rrbconfig -e "puts RbConfig::CONFIG['vendorarchdir']")
  
  install:
 -	$(MKDIR_P) $(DESTDIR)$(RUBY_SITELIB)

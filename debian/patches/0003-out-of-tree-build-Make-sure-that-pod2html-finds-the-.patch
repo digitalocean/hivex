@@ -4,16 +4,16 @@ Subject: out-of-tree build: Make sure that pod2html finds the POD file
 
 Otherwise we get "Can't open ..." warnings which don't seem to be fatal.
 ---
- regedit/Makefile.am |    2 +-
- sh/Makefile.am      |    4 ++--
- xml/Makefile.am     |    2 +-
+ regedit/Makefile.am | 2 +-
+ sh/Makefile.am      | 4 ++--
+ xml/Makefile.am     | 2 +-
  3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/regedit/Makefile.am b/regedit/Makefile.am
-index 4353ee8..4bcd248 100644
+index 7977334..476c059 100644
 --- a/regedit/Makefile.am
 +++ b/regedit/Makefile.am
-@@ -40,6 +40,6 @@ $(top_builddir)/html/hivexregedit.1.html: hivexregedit
+@@ -39,6 +39,6 @@ $(top_builddir)/html/hivexregedit.1.html: hivexregedit
  	  --css 'pod.css' \
  	  --htmldir html \
  	  --outfile html/hivexregedit.1.html \
