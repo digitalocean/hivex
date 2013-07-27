@@ -42,7 +42,11 @@ if HAVE_RUBY
 SUBDIRS += ruby
 endif
 
-EXTRA_DIST = hivex.pc hivex.pc.in LICENSE README tx-pull.sh
+if ALWAYS_FALSE
+SUBDIRS += extra-tests
+endif
+
+EXTRA_DIST = hivex.pc hivex.pc.in LICENSE README run.in tx-pull.sh
 
 # Generate the ChangeLog automatically from the gitlog.
 dist-hook:
@@ -66,4 +70,9 @@ WEBSITEDIR = $(HOME)/d/redhat/websites/libguestfs
 website: $(HTMLFILES)
 	cp $(HTMLFILES) $(WEBSITEDIR)
 
-CLEANFILES = $(HTMLFILES) pod2*.tmp
+# Tag HEAD with current version (only for maintainer).
+
+maintainer-tag:
+	git tag -a $(VERSION) -m "Version $(VERSION)" -f
+
+CLEANFILES = $(HTMLFILES) pod2*.tmp *~
