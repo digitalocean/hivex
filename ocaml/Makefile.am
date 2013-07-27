@@ -49,9 +49,7 @@ mlhivex.cmxa: $(XOBJS)
 hivex_c.o: hivex_c.c
 	$(CC) $(AM_CPPFLAGS) $(CFLAGS) -fPIC -Wall -c $<
 
-TESTS_ENVIRONMENT = \
-	LD_LIBRARY_PATH=$(top_builddir)/lib/.libs:$(top_builddir)/ocaml \
-	$(VG)
+TESTS_ENVIRONMENT = ../run
 
 TESTS = \
 	t/hivex_005_load \
@@ -82,7 +80,12 @@ depend: .depend
 
 .depend: $(wildcard *.mli) $(wildcard *.ml)
 	rm -f $@ $@-t
-	$(OCAMLFIND) ocamldep $^ | sed 's/  *$$//' | sort > $@-t
+	$(OCAMLFIND) ocamldep $^ | \
+	  $(SED) 's/ *$$//' | \
+	  $(SED) -e :a -e '/ *\\$$/N; s/ *\\\n */ /; ta' | \
+	  $(SED) -e 's, :,:,g' | \
+	  $(SED) -e 's,$(abs_srcdir)/,$(builddir)/,g' | \
+	  sort > $@-t
 	mv $@-t $@
 
 include .depend

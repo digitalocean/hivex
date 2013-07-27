@@ -18,7 +18,7 @@
 # major/minor/release must be numbers
 m4_define([hivex_major],   [1])
 m4_define([hivex_minor],   [3])
-m4_define([hivex_release], [7])
+m4_define([hivex_release], [8])
 # extra can be any string
 m4_define([hivex_extra],   [])
 
@@ -41,6 +41,14 @@ gl_EARLY
 gl_INIT
 
 AM_PROG_LIBTOOL
+
+dnl Define $(SED).
+m4_ifdef([AC_PROG_SED],[
+    AC_PROG_SED
+],[
+    dnl ... else hope for the best
+    AC_SUBST([SED], "sed")
+])
 
 dnl Check for basic C environment.
 AC_PROG_CC_STDC
@@ -176,6 +184,7 @@ AS_IF([test "x$with_readline" != xno],
 dnl For i18n.
 AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.17])
+AM_ICONV
 
 dnl libxml2.
 PKG_CHECK_MODULES([LIBXML2], [libxml-2.0])
@@ -265,7 +274,7 @@ AM_CONDITIONAL([HAVE_PERL],
 dnl Check for Python (optional, for Python bindings).
 PYTHON_PREFIX=
 PYTHON_VERSION=
-PYTHON_INCLUDEDIR=
+PYTHON_CFLAGS=
 PYTHON_INSTALLDIR=
 
 AC_ARG_ENABLE([python],
@@ -288,12 +297,18 @@ AS_IF([test "x$enable_python" != "xno"],
 	    AC_MSG_RESULT([$PYTHON_VERSION])
 
             AC_MSG_CHECKING([for Python include path])
-            if test -z "$PYTHON_INCLUDEDIR"; then
+            if test -z "$PYTHON_CFLAGS"; then
                 python_path=`$PYTHON -c "import distutils.sysconfig; \
                                          print (distutils.sysconfig.get_python_inc ());"`
-                PYTHON_INCLUDEDIR=$python_path
+                python_platpath=`$PYTHON -c "import distutils.sysconfig; \
+                                             print (distutils.sysconfig.get_python_inc (plat_specific=1));"`
+                if test "$python_path" = "$python_platpath"; then
+                    PYTHON_CFLAGS=-I$python_path
+                else
+                    PYTHON_CFLAGS="-I$python_path -I$python_platpath"
+                fi
             fi
-            AC_MSG_RESULT([$PYTHON_INCLUDEDIR])
+            AC_MSG_RESULT([$PYTHON_CFLAGS])
 
             AC_ARG_WITH([python-installdir],
                         [AS_HELP_STRING([--with-python-installdir],
@@ -311,6 +326,14 @@ AS_IF([test "x$enable_python" != "xno"],
                 fi
                 AC_MSG_RESULT([$PYTHON_INSTALLDIR])
             fi
+
+            AC_MSG_CHECKING([for Python extension suffix (PEP-3149)])
+            if test -z "$PYTHON_EXT_SUFFIX"; then
+                python_ext_suffix=`$PYTHON -c "import sysconfig; \
+                                             print (sysconfig.get_config_var('EXT_SUFFIX') or sysconfig.get_config_var('SO'))"`
+                PYTHON_EXT_SUFFIX=$python_ext_suffix
+            fi
+            AC_MSG_RESULT([$PYTHON_EXT_SUFFIX])
 
             dnl Look for some optional symbols in libpython.
             old_LIBS="$LIBS"
@@ -331,11 +354,12 @@ AS_IF([test "x$enable_python" != "xno"],
 
         AC_SUBST(PYTHON_PREFIX)
         AC_SUBST(PYTHON_VERSION)
-        AC_SUBST(PYTHON_INCLUDEDIR)
+        AC_SUBST(PYTHON_CFLAGS)
         AC_SUBST(PYTHON_INSTALLDIR)
+        AC_SUBST(PYTHON_EXT_SUFFIX)
         ])
 AM_CONDITIONAL([HAVE_PYTHON],
-    [test "x$PYTHON" != "xno" && test "x$PYTHON_INCLUDEDIR" != "x" && test "x$PYTHON_INSTALLDIR" != "x"])
+    [test "x$PYTHON" != "xno" && test "x$PYTHON_CFLAGS" != "x" && test "x$PYTHON_INSTALLDIR" != "x"])
 
 dnl Check for Ruby and rake (optional, for Ruby bindings).
 AC_ARG_ENABLE([ruby],
@@ -523,6 +547,7 @@ dnl     [test "x$GHC" != "xno"])
 dnl Produce output files.
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile
+                 extra-tests/Makefile
                  generator/Makefile
                  gnulib/lib/Makefile
                  gnulib/tests/Makefile
@@ -539,6 +564,7 @@ AC_CONFIG_FILES([Makefile
                  sh/Makefile
                  xml/Makefile])
 AC_CONFIG_FILES([python/run-python-tests], [chmod +x python/run-python-tests])
+AC_CONFIG_FILES([run], [chmod +x,-w run])
 AC_OUTPUT
 
 dnl Produce summary.

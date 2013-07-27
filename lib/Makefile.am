@@ -24,18 +24,25 @@ EXTRA_DIST = \
 lib_LTLIBRARIES = libhivex.la
 
 libhivex_la_SOURCES = \
-  hivex.c \
-  hivex.h \
-  hivex-internal.h \
-  byte_conversions.h \
-  gettext.h \
-  mmap.h \
-  hivex.syms
+	byte_conversions.h \
+	gettext.h \
+	handle.c \
+	hivex.h \
+	hivex-internal.h \
+	mmap.h \
+	node.c \
+	offset-list.c \
+	utf16.c \
+	util.c \
+	value.c \
+	visit.c \
+	write.c
 
 libhivex_la_LIBADD =  ../gnulib/lib/libgnu.la $(LTLIBOBJS)
 libhivex_la_LDFLAGS = \
 	-version-info 0:0:0 \
 	$(VERSION_SCRIPT_FLAGS)$(srcdir)/hivex.syms \
+	$(LTLIBICONV) \
 	$(LTLIBINTL) \
 	$(LTLIBTHREAD)
 libhivex_la_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
@@ -67,7 +74,7 @@ $(top_builddir)/html/hivex.3.html: hivex.pod
 	  --outfile $(top_builddir)/html/hivex.3.html \
 	  $<
 
-CLEANFILES = $(man_MANS)
+CLEANFILES = $(man_MANS) *~
 
 # Tests.
 

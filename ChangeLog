@@ -1,3 +1,241 @@
+2013-07-25  Richard W.M. Jones  <rjones@redhat.com>
+
+	Version 1.3.8.
+
+	translations: Change transifex download URL.
+
+	build: Add 'make maintainer-tag' rule (copied from libguestfs).
+
+	tests: Add extra-tests directory to go with hivex-test-data.
+
+2013-07-25  Richard W.M. Jones  <rjones@redhat.com>
+
+	build: Add a ./run script.
+	As with libguestfs and other projects, this script allows you to run
+	programs without installing them first, eg:
+
+	  ./run ./regedit/hivexregedit ...
+
+	It also simplifies writing the tests.
+
+2013-07-25  Richard W.M. Jones  <rjones@redhat.com>
+
+	lib: node_add_child: Checks that we don't extend records beyond maximum number of subkeys permitted.
+	Previously we didn't check this, so it was possible that
+	nr_subkeys/nr_offsets would wrap around to 0.
+
+	lib: node_add_child: Handle li-records as intermediate notes (RHBZ#987463).
+	This commit implements adding a child to a registry key that uses
+	li-records for intermediate nodes.
+
+	lib: node_add_child: Factor out subkey insertion into separate function.
+	No functional change.
+
+	lib: get_children: Handle li-records as intermediate nodes (RHBZ#717583).
+	This is a full fix for
+	https://bugzilla.redhat.com/show_bug.cgi?id=717583
+
+	lib: get_children: Add a check that we don't overrun ri-record when reading.
+
+	lib: get_children: Handle ri-record by just recursing.
+	No functional change.
+
+	lib: get_children: Add additional check that each child is an nk block.
+
+	lib: get_children: Factor out valid block test into separate function.
+	Just refactoring, no functional change.
+
+	lib: get_children: Refactor this into two functions.
+	Although this change seems rather large, including removing a large
+	block of dead code, there should be no functional change.
+
+	lib: get_children: Use offset_list limits to limit length of returned lists.
+	This will allow us to change the function to work recursively, and
+	still enforce these limits.
+
+2013-07-24  Richard W.M. Jones  <rjones@redhat.com>
+
+	lib: get_children: Document the function, and small non-functional cleanups.
+
+	lib: Split up the large file lib/hivex.c into multiple small source files.
+
+	Fix .gitignore.
+
+2013-07-24  Richard W.M. Jones  <rjones@redhat.com>
+
+	lib: Add macros for setting errno and checking if the hive is writable.
+	This is code cleanup, but there are a couple of small changes:
+
+	 - the msglvl for errno explanations moves from debug (2) to verbose (1)
+
+	 - add and tidy up some of the error messages
+
+2013-07-24  Richard W.M. Jones  <rjones@redhat.com>
+
+	lib: Add a DEBUG macro and use it instead of fprintf.
+	Allows us to control the format of debug messages more carefully.
+
+	lib: Add some debugging.
+
+	Revert "patch for read support of "li"-records from "ri" intermediate"
+	This reverts commit c29d2625c2286b026c4e36a8b5469991c41b4299.
+
+	lib: Move the 'offset_list' struct into a separate compilation unit.
+
+	build: Add *~ to CLEANFILES.
+
+	build: Ignore .gdb_history file.
+
+2013-07-23  Richard W.M. Jones  <rjones@redhat.com>
+
+	lib: Cast h->addr to char* in macro.
+	This is a fix for commit f8b62e4cd2f65cd712164c59094e81f2958aa000.
+
+2013-06-28  Richard W.M. Jones  <rjones@redhat.com>
+
+	commit: Set O_CLOEXEC or FD_CLOEXEC on the file descriptor.
+
+2013-06-28  Daniel Gillen  <gillen.daniel@gmail.com>
+
+	hivex: Add O_BINARY flag to open calls for platforms where this isn't the default (such as Win32)
+
+2013-06-25  Hilko Bengen  <bengen@hilluzination.de>
+
+	Add read support for "big data" blocks to hivex
+	Large values are split into multiple blocks. References to these
+	sub-blocks are kept in a list whose structure seems to be identical to
+	a value list.
+
+	A "db" record contains information on the number of sub-blocks and a
+	pointer to the list. It is referenced by the vk record.
+
+	I came across this when comparing the contents of HKLM\SOFTWARE hives
+	from Windows7 systems and finding that hivex_value_value would only give
+	me identical first 12 bytes for certain records though the data size had
+	changed. If one runs hivexsh with debug messages enabled, it gives a
+	warning when listing these values, for example:
+
+	SOFTWARE\Microsoft\SystemCertificates\AuthRoot\AutoUpdate> lsval
+	[...]
+	hivex_value_value: warning: declared data length is longer than the
+	block it is in (data 0x28b9b60, data len 115347, block len 16)
+	"EncodedCtl"=hex(3):64,62,08,00,70,8b,8b,02,00,b2,00,00
+
+2013-06-19  Hilko Bengen  <bengen@hilluzination.de>
+
+	Relax size checks for integer types
+	I recenetly came across a Windows XP image, where one REG_QWORD value
+	(HKLM\Software\Microsoft\Windows\CurrentVersion\Group Policy\State\Machine\Scripts\Shutdown\0\0\ExecTime)
+	would be displayed by hivexsh but hivex_value_qword() would return -1.
+
+	It turned out that the data length of this value was 16 bytes instead
+	of 8.
+
+	There is no problem in simply interpreting the first 4 (DWORD) or
+	8 (QWORD) bytes -- if there are enough bytes to be interpreted.
+
+2013-05-30  Hilko Bengen  <bengen@hilluzination.de>
+
+	Revert "perl: Ignore run-perl-tests (generated script)."
+	This reverts commit 72e2abf312358c228889cfff2f6ac10e9f61c5b5.
+
+2013-05-30  Hilko Bengen  <bengen@hilluzination.de>
+
+	Revert "Build and test Perl bindings out-of-tree."
+	There seems to be no sane way to build/test an
+	ExtUtils::MakeMaker-based project in a separate directory and get
+	identical results.
+
+	This reverts commit 887466794a40f57b84ce32524e1a650d6674c7e6.
+
+2013-05-24  Richard W.M. Jones  <rjones@redhat.com>
+
+	perl: Ignore run-perl-tests (generated script).
+
+2013-05-24  Hilko Bengen  <bengen@hilluzination.de>
+
+	Build Python extension with PEP-3149 compliant suffix if defined.
+
+	Fix bindings for python 3.3 (as shipped with Debian and Ubuntu).
+
+2013-04-29  Hilko Bengen  <bengen@hilluzination.de>
+
+	Build and test Perl bindings out-of-tree.
+	Remaining issue: The C file that is generated from XS is still built
+	in the source directory
+
+2013-04-05  Alex Nelson  <a.nelson@prometheuscomputing.com>
+
+	Mac OS X: Link iconv in libhivex
+	hivexml on OS X was failing with a symbol-not-found error while
+	dynamically linking.  Adding iconv to libhivex fixes the issue and lets
+	OS X process 'images/large' with hivexml.
+
+	It took careful iconv autotool additions to get compilation working in
+	Fedora as well, but these two lines build and run on OS X 10.6 and
+	10.8, and Fedora 17 and 18.
+
+	Unfortunately, a separate issue is revealed here in OS X, as some of
+	the hivexml value data appears as Kanji.  However, that is an issue
+	distinct from getting the program to run.
+
+2013-04-05  Alex Nelson  <a.nelson@prometheuscomputing.com>
+
+	Remove obsolete AM serial-tests
+	Per recommendations at:
+	http://www.gnu.org/software/automake/manual/html_node/Serial-Test-Harness.html
+
+	Also per build failure in Fedora 17.  Automake v1.11.6.
+
+2013-02-15  Richard W.M. Jones  <rjones@redhat.com>
+
+	ruby: Use RbConfig instead of Config.
+	This works as well on Ruby 1.8.
+
+	automake: Force serial-tests.
+	In automake 1.13, parallel tests is the default.
+
+	ruby: Use updated rake package names, but allow fallback to the old names.
+
+2013-01-24  Richard W.M. Jones  <rjones@redhat.com>
+
+	python: Make class derive from 'object'.
+	For an overview, see this question and the links from there:
+	http://stackoverflow.com/questions/4015417/python-class-inherits-object
+
+2012-12-27  Richard W.M. Jones  <rjones@redhat.com>
+
+	arm: Prevent cast-align warnings.
+	The implicit alignment of char* is 1 byte, so on ARM we get a
+	cast-align warning whenever we try to cast this to a larger type
+	(eg. casting to uint32_t).
+
+	The implicit alignment of void* is whatever malloc returns, and so
+	this can be cast to any type.
+
+	The cost of this is that we have to add (char *) casts all over the
+	code, but this seems unavoidable.
+
+	Thanks: Leif Lindholm, Peter Robinson.
+
+2012-12-10  Richard W.M. Jones  <rjones@redhat.com>
+
+	Rewrite and simplify hivex_node_set_value.
+	Coverity pointed to multiple use-of-uninitialized-value errors in this
+	function.  However the function was incredibly hard to follow, so I
+	couldn't really tell if this was a real problem or not.  In any case,
+	I rewrote the function to be more sane.
+
+	sh: Don't leak 'data' when printing (found by Coverity).
+
+	sh: Don't leak 'data' along error path (found by Coverity).
+
+	ocaml: Stable dependencies.
+
+2012-11-22  Richard W.M. Jones  <rjones@redhat.com>
+
+	regedit: Update unix2dos command in man page (thanks Skippy VonDrake).
+
 2012-10-11  Richard W.M. Jones  <rjones@redhat.com>
 
 	Version 1.3.7.
