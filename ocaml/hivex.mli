@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2013 Red Hat Inc.
+ * Copyright (C) 2009-2014 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -86,6 +86,9 @@ val last_modified : t -> int64
 
 val node_name : t -> node -> string
 (** return the name of the node *)
+
+val node_name_len : t -> node -> int64
+(** return the length of a node's name *)
 
 val node_timestamp : t -> node -> int64
 (** return the modification time of the node *)

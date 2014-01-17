@@ -32,7 +32,6 @@
 
 #include "hivex.h"
 #include "hivex-internal.h"
-#include "byte_conversions.h"
 
 int
 _hivex_get_values (hive_h *h, hive_node_h node,
@@ -187,13 +186,14 @@ hivex_value_key_len (hive_h *h, hive_value_h value)
   /* vk->name_len is unsigned, 16 bit, so this is safe ...  However
    * we have to make sure the length doesn't exceed the block length.
    */
-  size_t ret = le16toh (vk->name_len);
+  size_t len = le16toh (vk->name_len);
+
   size_t seg_len = block_len (h, value, NULL);
-  if (sizeof (struct ntreg_vk_record) + ret - 1 > seg_len) {
-    SET_ERRNO (EFAULT, "key length is too long (%zu, %zu)", ret, seg_len);
+  if (sizeof (struct ntreg_vk_record) + len - 1 > seg_len) {
+    SET_ERRNO (EFAULT, "key length is too long (%zu, %zu)", len, seg_len);
     return 0;
   }
-  return ret;
+  return _hivex_utf8_strlen (vk->name, len, ! (le16toh (vk->flags) & 0x01));
 }
 
 char *
@@ -207,20 +207,19 @@ hivex_value_key (hive_h *h, hive_value_h value)
   struct ntreg_vk_record *vk =
     (struct ntreg_vk_record *) ((char *) h->addr + value);
 
-  /* AFAIK the key is always plain ASCII, so no conversion to UTF-8 is
-   * necessary.  However we do need to nul-terminate the string.
-   */
-  errno = 0;
-  size_t len = hivex_value_key_len (h, value);
-  if (len == 0 && errno != 0)
-    return NULL;
+  size_t flags = le16toh (vk->flags);
+  size_t len = le16toh (vk->name_len);
 
-  char *ret = malloc (len + 1);
-  if (ret == NULL)
+  size_t seg_len = block_len (h, value, NULL);
+  if (sizeof (struct ntreg_vk_record) + len - 1 > seg_len) {
+    SET_ERRNO (EFAULT, "key length is too long (%zu, %zu)", len, seg_len);
     return NULL;
-  memcpy (ret, vk->name, len);
-  ret[len] = '\0';
-  return ret;
+  }
+  if (flags & 0x01) {
+    return _hivex_windows_latin1_to_utf8 (vk->name, len);
+  } else {
+    return _hivex_windows_utf16_to_utf8 (vk->name, len);
+  }
 }
 
 int
@@ -463,7 +462,27 @@ hivex_value_string (hive_h *h, hive_value_h value)
   return ret;
 }
 
-/* http://blogs.msdn.com/oldnewthing/archive/2009/10/08/9904646.aspx */
+/* Even though
+ * http://msdn.microsoft.com/en-us/library/windows/desktop/ms724884.aspx
+ * and
+ * http://blogs.msdn.com/oldnewthing/archive/2009/10/08/9904646.aspx
+ * claim that it is not possible to store empty strings in MULTI_SZ
+ * string lists, such lists are used by Windows itself:
+ *
+ * The MoveFileEx function can schedule files to be renamed (or
+ * removed) at restart time by storing pairs of filenames in the
+ * HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\PendingFileRenameOperations
+ * value.
+ *
+ * The documentation for MoveFileEx
+ * (http://msdn.microsoft.com/en-us/library/windows/desktop/aa365240)
+ * states that "[i]f dwFlags specifies MOVEFILE_DELAY_UNTIL_REBOOT,
+ * and lpNewFileName is NULL, MoveFileEx registers the
+ * lpExistingFileName file to be deleted when the system restarts."
+ *
+ * For scheduled removals, the second file name of any pair stored in
+ * PendingFileRenameOperations is an empty string.
+ */
 char **
 hivex_value_multiple_strings (hive_h *h, hive_value_h value)
 {
@@ -491,8 +510,8 @@ hivex_value_multiple_strings (hive_h *h, hive_value_h value)
   char *p = data;
   size_t plen;
 
-  while (p < data + len &&
-         (plen = _hivex_utf16_string_len_in_bytes_max (p, data + len - p)) > 0) {
+  while (p < data + len) {
+    plen = _hivex_utf16_string_len_in_bytes_max (p, data + len - p);
     nr_strings++;
     char **ret2 = realloc (ret, (1 + nr_strings) * sizeof (char *));
     if (ret2 == NULL) {

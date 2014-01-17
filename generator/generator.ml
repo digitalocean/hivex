@@ -179,7 +179,14 @@ C<$$$PROTO.HIV> (other names are possible: it seems to depend on the
 tool or program that created the hive in the first place).  You can
 only know the \"real\" name of the root node by knowing which registry
 file this hive originally comes from, which is knowledge that is
-outside the scope of this library.";
+outside the scope of this library.
+
+The name is recoded to UTF-8 and may contain embedded NUL characters.";
+
+  "node_name_len", (RSize, [AHive; ANode "node"]),
+    "return the length of a node's name",
+    "\
+Return the length of the node name as produced by C<hivex_node_name>.";
 
   "node_timestamp", (RInt64, [AHive; ANode "node"]),
     "return the modification time of the node",
@@ -233,13 +240,15 @@ default key.";
   "value_key_len", (RSize, [AHive; AValue "val"]),
     "return the length of a value's key",
     "\
-Return the length of the key (name) of a (key, value) pair.  The
-length can legitimately be 0, so errno is the necesary mechanism
-to check for errors.
+Return the length of the key (name) of a (key, value) pair as produced
+by C<hivex_value_key>. The length can legitimately be 0, so errno is 
+the necesary mechanism to check for errors.
 
 In the context of Windows Registries, a zero-length name means
 that this value is the default key for this node in the tree.
-This is usually written as C<\"@\">.";
+This is usually written as C<\"@\">.
+
+The key is recoded to UTF-8 and may contain embedded NUL characters.";
 
   "value_key", (RString, [AHive; AValue "val"]),
     "return the key of a (key, value) pair",
@@ -370,6 +379,11 @@ new key is added.  Key matching is case insensitive.
 
 C<node> is the node to modify.";
 ]
+
+let f_len_exists n =
+  List.exists
+    (function (cand, _, _, _) -> cand = (String.concat "" [n; "_len"]))
+    functions
 
 (* Useful functions.
  * Note we don't want to use any external OCaml libraries which
@@ -1830,9 +1844,7 @@ static void raise_closed (const char *) Noreturn;
        * call, so don't do it.  XXX
        *)
       (*pr "  caml_enter_blocking_section ();\n";*)
-      pr "  r = hivex_%s (%s" name (List.hd c_params);
-      List.iter (pr ", %s") (List.tl c_params);
-      pr ");\n";
+      pr "  r = hivex_%s (%s);\n" name (String.concat ", " c_params);
       (*pr "  caml_leave_blocking_section ();\n";*)
       pr "\n";
 
@@ -1881,7 +1893,13 @@ static void raise_closed (const char *) Noreturn;
            pr "  rv = copy_int_array (r);\n";
            pr "  free (r);\n"
        | RString ->
-           pr "  rv = caml_copy_string (r);\n";
+           if f_len_exists name then (
+             pr "  size_t sz;\n  sz = hivex_%s_len (%s);\n"
+               name (String.concat ", " c_params);
+             pr "  rv = caml_alloc_string (sz);\n";
+             pr "  memcpy (String_val (rv), r, sz);\n"
+           ) else
+             pr "  rv = caml_copy_string (r);\n";
            pr "  free (r);\n"
        | RStringList ->
            pr "  rv = caml_copy_string_array ((const char **) r);\n";
@@ -2629,7 +2647,11 @@ DESTROY (h)
              pr "      if (r == NULL)\n";
              pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
 	       name;
-             pr "      RETVAL = newSVpv (r, 0);\n";
+             if f_len_exists name then
+               pr "      RETVAL = newSVpvn_utf8 (r, hivex_%s_len (%s), 1);\n"
+                 name (String.concat ", " c_params)
+             else
+               pr "      RETVAL = newSVpv (r, 0);\n";
 	     pr "      free (r);\n";
              pr " OUTPUT:\n";
              pr "      RETVAL\n"
@@ -2903,11 +2925,7 @@ put_string_list (char * const * const argv)
 
   list = PyList_New (argc);
   for (i = 0; i < argc; ++i) {
-#ifdef HAVE_PYSTRING_ASSTRING
-    PyList_SetItem (list, i, PyString_FromString (argv[i]));
-#else
-    PyList_SetItem (list, i, PyUnicode_FromString (argv[i]));
-#endif
+    PyList_SetItem (list, i, PyUnicode_DecodeUTF8 (argv[i], strlen (argv[i]), NULL));
   }
 
   return list;
@@ -2963,11 +2981,7 @@ put_val_type (char *val, size_t len, hive_type t)
 {
   PyObject *r = PyTuple_New (2);
   PyTuple_SetItem (r, 0, PyLong_FromLong ((long) t));
-#ifdef HAVE_PYSTRING_ASSTRING
-  PyTuple_SetItem (r, 1, PyString_FromStringAndSize (val, len));
-#else
-  PyTuple_SetItem (r, 1, PyBytes_FromStringAndSize (val, len));
-#endif
+  PyTuple_SetItem (r, 1, PyUnicode_DecodeUTF8 (val, len, NULL));
   return r;
 }
 
@@ -3169,11 +3183,13 @@ put_val_type (char *val, size_t len, hive_type t)
        | RValue ->
            pr "  py_r = PyLong_FromLongLong (r);\n"
        | RString ->
-           pr "#ifdef HAVE_PYSTRING_ASSTRING\n";
-           pr "  py_r = PyString_FromString (r);\n";
-           pr "#else\n";
-           pr "  py_r = PyUnicode_FromString (r);\n";
-           pr "#endif\n";
+           if f_len_exists name then
+             pr "  size_t sz = hivex_%s_len (%s);\n"
+               name (String.concat ", " c_params);
+           if f_len_exists name then
+             pr "  py_r = PyUnicode_DecodeUTF8 (r, sz, NULL);\n"
+           else
+             pr "  py_r = PyUnicode_DecodeUTF8 (r, strlen (r), NULL);\n";
            pr "  free (r);"
        | RStringList ->
            pr "  py_r = put_string_list (r);\n";
@@ -3336,6 +3352,9 @@ and generate_ruby_c () =
 #include <stdint.h>
 
 #include <ruby.h>
+#ifdef HAVE_RUBY_ENCODING_H
+#include <ruby/encoding.h>
+#endif
 
 #include \"hivex.h\"
 
@@ -3624,7 +3643,14 @@ get_values (VALUE valuesv, size_t *nr_values)
         pr "  free (r);\n";
         pr "  return rv;\n"
       | RString ->
-        pr "  VALUE rv = rb_str_new2 (r);\n";
+        if f_len_exists name then (
+          pr "  size_t sz = hivex_%s_len (%s);\n" name (String.concat ", " c_params);
+          pr "  VALUE rv = rb_str_new (r, sz);\n";
+          pr "#ifdef HAVE_RUBY_ENCODING_H\n";
+          pr "  rb_enc_associate (rv, rb_utf8_encoding ());\n";
+          pr "#endif\n";
+        ) else
+          pr "  VALUE rv = rb_str_new2 (r);\n";
         pr "  free (r);\n";
         pr "  return rv;\n"
       | RStringList ->

@@ -3,7 +3,7 @@
 #   generator/generator.ml
 # ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 #
-# Copyright (C) 2009-2013 Red Hat Inc.
+# Copyright (C) 2009-2014 Red Hat Inc.
 # Derived from code by Petter Nordahl-Hagen under a compatible license:
 #   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
 # Derived from code by Markus Stephany under a compatible license:
@@ -64,6 +64,10 @@ class Hivex(object):
     def node_name (self, node):
         """return the name of the node"""
         return libhivexmod.node_name (self._o, node)
+
+    def node_name_len (self, node):
+        """return the length of a node's name"""
+        return libhivexmod.node_name_len (self._o, node)
 
     def node_timestamp (self, node):
         """return the modification time of the node"""

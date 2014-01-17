@@ -1496,7 +1496,7 @@ $(top_builddir)/html/hivexml.1.html: hivexml.pod
 	  --css 'pod.css' \
 	  --htmldir html \
 	  --outfile html/hivexml.1.html \
-	  xml/hivexml.pod
+	  $(abs_srcdir)/hivexml.pod
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

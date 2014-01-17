@@ -1555,7 +1555,7 @@ $(top_builddir)/html/hivexget.1.html: hivexget.pod
 	  --css 'pod.css' \
 	  --htmldir html \
 	  --outfile html/hivexget.1.html \
-	  sh/hivexget.pod
+	  $(abs_srcdir)/hivexget.pod
 
 $(top_builddir)/html/hivexsh.1.html: hivexsh.pod
 	mkdir -p $(top_builddir)/html
@@ -1563,7 +1563,7 @@ $(top_builddir)/html/hivexsh.1.html: hivexsh.pod
 	  --css 'pod.css' \
 	  --htmldir html \
 	  --outfile html/hivexsh.1.html \
-	  sh/hivexsh.pod
+	  $(abs_srcdir)/hivexsh.pod
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
