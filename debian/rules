@@ -61,12 +61,15 @@ override_dh_auto_test:
 	done
 
 override_dh_auto_install:
-	dh_auto_install --builddir=$(CURDIR)/debian/build-default
+	dh_auto_install --builddir=$(CURDIR)/debian/build-default \
+			-- INSTALLDIRS=vendor
 	set -e; for p in $(filter-out $(PYTHON_DEFAULT), $(PYTHONS)) ; do \
-		dh_auto_install --builddir=$(CURDIR)/debian/build-$$p -- -C python ; \
+		dh_auto_install --builddir=$(CURDIR)/debian/build-$$p \
+			-- -C python ; \
 	done
 	set -e; for p in $(filter-out $(RUBY_DEFAULT), $(RUBIES)) ; do \
-		dh_auto_install --builddir=$(CURDIR)/debian/build-$$p -- -C ruby ; \
+		dh_auto_install --builddir=$(CURDIR)/debian/build-$$p \
+			-- -C ruby INSTALLDIRS=vendor ; \
 	done
 
 override_dh_auto_clean:
