@@ -3,7 +3,7 @@
 #   generator/generator.ml
 # ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 #
-# Copyright (C) 2009-2013 Red Hat Inc.
+# Copyright (C) 2009-2014 Red Hat Inc.
 # Derived from code by Petter Nordahl-Hagen under a compatible license:
 #   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
 # Derived from code by Markus Stephany under a compatible license:
@@ -131,6 +131,16 @@ only know the "real" name of the root node by knowing which registry
 file this hive originally comes from, which is knowledge that is
 outside the scope of this library.
 
+The name is recoded to UTF-8 and may contain embedded NUL characters.
+
+=item node_name_len
+
+ $size = $h->node_name_len ($node)
+
+Return the length of the node name as produced by C<node_name>.
+
+This returns a size.
+
 =item node_timestamp
 
  $int64 = $h->node_timestamp ($node)
@@ -200,13 +210,15 @@ This returns a value handle.
 
  $size = $h->value_key_len ($val)
 
-Return the length of the key (name) of a (key, value) pair.  The
-length can legitimately be 0, so errno is the necesary mechanism
-to check for errors.
+Return the length of the key (name) of a (key, value) pair as produced
+by C<value_key>. The length can legitimately be 0, so errno is 
+the necesary mechanism to check for errors.
 
 In the context of Windows Registries, a zero-length name means
 that this value is the default key for this node in the tree.
 This is usually written as C<"@">.
+
+The key is recoded to UTF-8 and may contain embedded NUL characters.
 
 This returns a size.
 
@@ -376,7 +388,7 @@ C<node> is the node to modify.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2009-2013 Red Hat Inc.
+Copyright (C) 2009-2014 Red Hat Inc.
 
 =head1 LICENSE
 

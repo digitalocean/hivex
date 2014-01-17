@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2013 Red Hat Inc.
+ * Copyright (C) 2009-2014 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -29,6 +29,9 @@
 #include <stdint.h>
 
 #include <ruby.h>
+#ifdef HAVE_RUBY_ENCODING_H
+#include <ruby/encoding.h>
+#endif
 
 #include "hivex.h"
 
@@ -268,6 +271,9 @@ ruby_hivex_last_modified (VALUE hv)
  * the root node by knowing which registry file this hive
  * originally comes from, which is knowledge that is
  * outside the scope of this library.
+ * 
+ * The name is recoded to UTF-8 and may contain embedded
+ * NUL characters.
  *
  *
  * (For the C API documentation for this function, see
@@ -290,9 +296,46 @@ ruby_hivex_node_name (VALUE hv, VALUE nodev)
   if (r == NULL)
     rb_raise (e_Error, "%s", strerror (errno));
 
-  VALUE rv = rb_str_new2 (r);
+  size_t sz = hivex_node_name_len (h, node);
+  VALUE rv = rb_str_new (r, sz);
+#ifdef HAVE_RUBY_ENCODING_H
+  rb_enc_associate (rv, rb_utf8_encoding ());
+#endif
   free (r);
   return rv;
+}
+
+/*
+ * call-seq:
+ *   h.node_name_len(node) -> integer
+ *
+ * return the length of a node's name
+ *
+ * Return the length of the node name as produced by
+ * "h.node_name".
+ *
+ *
+ * (For the C API documentation for this function, see
+ * +hivex_node_name_len+[http://libguestfs.org/hivex.3.html#hivex_node_name_len]).
+ */
+static VALUE
+ruby_hivex_node_name_len (VALUE hv, VALUE nodev)
+{
+  hive_h *h;
+  Data_Get_Struct (hv, hive_h, h);
+  if (!h)
+    rb_raise (rb_eArgError, "%s: used handle after closing it",
+              "node_name_len");
+  hive_node_h node = NUM2ULL (nodev);
+
+  size_t r;
+
+  r = hivex_node_name_len (h, node);
+
+  if (r == 0)
+    rb_raise (e_Error, "%s", strerror (errno));
+
+  return ULL2NUM (r);
 }
 
 /*
@@ -536,12 +579,16 @@ ruby_hivex_node_get_value (VALUE hv, VALUE nodev, VALUE keyv)
  * return the length of a value's key
  *
  * Return the length of the key (name) of a (key, value)
- * pair. The length can legitimately be 0, so errno is the
- * necesary mechanism to check for errors.
+ * pair as produced by "h.value_key". The length can
+ * legitimately be 0, so errno is the necesary mechanism to
+ * check for errors.
  * 
  * In the context of Windows Registries, a zero-length name
  * means that this value is the default key for this node
  * in the tree. This is usually written as "@".
+ * 
+ * The key is recoded to UTF-8 and may contain embedded NUL
+ * characters.
  *
  *
  * (For the C API documentation for this function, see
@@ -605,7 +652,11 @@ ruby_hivex_value_key (VALUE hv, VALUE valv)
   if (r == NULL)
     rb_raise (e_Error, "%s", strerror (errno));
 
-  VALUE rv = rb_str_new2 (r);
+  size_t sz = hivex_value_key_len (h, val);
+  VALUE rv = rb_str_new (r, sz);
+#ifdef HAVE_RUBY_ENCODING_H
+  rb_enc_associate (rv, rb_utf8_encoding ());
+#endif
   free (r);
   return rv;
 }
@@ -1175,6 +1226,8 @@ void Init__hivex ()
                     ruby_hivex_last_modified, 0);
   rb_define_method (c_hivex, "node_name",
                     ruby_hivex_node_name, 1);
+  rb_define_method (c_hivex, "node_name_len",
+                    ruby_hivex_node_name_len, 1);
   rb_define_method (c_hivex, "node_timestamp",
                     ruby_hivex_node_timestamp, 1);
   rb_define_method (c_hivex, "node_children",

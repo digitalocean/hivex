@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2013 Red Hat Inc.
+ * Copyright (C) 2009-2014 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -215,8 +215,39 @@ ocaml_hivex_node_name (value hv, value nodev)
   if (r == NULL)
     raise_error ("node_name");
 
-  rv = caml_copy_string (r);
+  size_t sz;
+  sz = hivex_node_name_len (h, node);
+  rv = caml_alloc_string (sz);
+  memcpy (String_val (rv), r, sz);
   free (r);
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
+ * val node_name_len : t -> node -> int64
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+CAMLprim value ocaml_hivex_node_name_len (value hv, value nodev);
+
+CAMLprim value
+ocaml_hivex_node_name_len (value hv, value nodev)
+{
+  CAMLparam2 (hv, nodev);
+  CAMLlocal1 (rv);
+
+  hive_h *h = Hiveh_val (hv);
+  if (h == NULL)
+    raise_closed ("node_name_len");
+  hive_node_h node = Int_val (nodev);
+
+  size_t r;
+  r = hivex_node_name_len (h, node);
+
+  if (r == 0)
+    raise_error ("node_name_len");
+
+  rv = caml_copy_int64 (r);
   CAMLreturn (rv);
 }
 
@@ -449,7 +480,10 @@ ocaml_hivex_value_key (value hv, value valv)
   if (r == NULL)
     raise_error ("value_key");
 
-  rv = caml_copy_string (r);
+  size_t sz;
+  sz = hivex_value_key_len (h, val);
+  rv = caml_alloc_string (sz);
+  memcpy (String_val (rv), r, sz);
   free (r);
   CAMLreturn (rv);
 }

@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2013 Red Hat Inc.
+ * Copyright (C) 2009-2014 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -68,6 +68,7 @@ external close : t -> unit = "ocaml_hivex_close"
 external root : t -> node = "ocaml_hivex_root"
 external last_modified : t -> int64 = "ocaml_hivex_last_modified"
 external node_name : t -> node -> string = "ocaml_hivex_node_name"
+external node_name_len : t -> node -> int64 = "ocaml_hivex_node_name_len"
 external node_timestamp : t -> node -> int64 = "ocaml_hivex_node_timestamp"
 external node_children : t -> node -> node array = "ocaml_hivex_node_children"
 external node_get_child : t -> node -> string -> node = "ocaml_hivex_node_get_child"

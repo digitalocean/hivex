@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2013 Red Hat Inc.
+ * Copyright (C) 2009-2014 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -233,8 +233,24 @@ PREINIT:
       r = hivex_node_name (h, node);
       if (r == NULL)
         croak ("%s: %s", "node_name", strerror (errno));
-      RETVAL = newSVpv (r, 0);
+      RETVAL = newSVpvn_utf8 (r, hivex_node_name_len (h, node), 1);
       free (r);
+ OUTPUT:
+      RETVAL
+
+SV *
+node_name_len (h, node)
+      hive_h *h;
+      int node;
+PREINIT:
+      /* hive_node_h = hive_value_h = size_t so we cheat
+         here to simplify the generator */
+      size_t r;
+   CODE:
+      r = hivex_node_name_len (h, node);
+      if (r == 0)
+        croak ("%s: %s", "node_name_len", strerror (errno));
+      RETVAL = newSViv (r);
  OUTPUT:
       RETVAL
 
@@ -365,7 +381,7 @@ PREINIT:
       r = hivex_value_key (h, val);
       if (r == NULL)
         croak ("%s: %s", "value_key", strerror (errno));
-      RETVAL = newSVpv (r, 0);
+      RETVAL = newSVpvn_utf8 (r, hivex_value_key_len (h, val), 1);
       free (r);
  OUTPUT:
       RETVAL

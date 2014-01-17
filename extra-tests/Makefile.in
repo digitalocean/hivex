@@ -1195,7 +1195,7 @@ test_hives_xz = $(wildcard $(HIVEX_TEST_DATA)/*.xz)
 test_hives = $(test_hives_xz:$(HIVEX_TEST_DATA)/%.xz=%.hive)
 check_DATA = $(test_hives)
 TESTS_ENVIRONMENT = ../run
-TESTS = check-regedit.sh
+TESTS = check-regedit.sh insert-keys.pl
 CLEANFILES = *~ *.hive
 all: all-am
 
@@ -1388,6 +1388,13 @@ recheck: all $(check_DATA)
 check-regedit.sh.log: check-regedit.sh
 	@p='check-regedit.sh'; \
 	b='check-regedit.sh'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+insert-keys.pl.log: insert-keys.pl
+	@p='insert-keys.pl'; \
+	b='insert-keys.pl'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \

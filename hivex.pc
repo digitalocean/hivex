@@ -4,7 +4,7 @@ libdir=${exec_prefix}/lib
 includedir=${prefix}/include
 
 Name: hivex
-Version: 1.3.8
+Version: 1.3.9
 Description: Read and write Windows Registry Hive files.
 Requires:
 Cflags:

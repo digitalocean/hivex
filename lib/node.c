@@ -34,7 +34,6 @@
 
 #include "hivex.h"
 #include "hivex-internal.h"
-#include "byte_conversions.h"
 
 hive_node_h
 hivex_root (hive_h *h)
@@ -80,11 +79,6 @@ hivex_node_name (hive_h *h, hive_node_h node)
   struct ntreg_nk_record *nk =
     (struct ntreg_nk_record *) ((char *) h->addr + node);
 
-  /* AFAIK the node name is always plain ASCII, so no conversion
-   * to UTF-8 is necessary.  However we do need to nul-terminate
-   * the string.
-   */
-
   /* nk->name_len is unsigned, 16 bit, so this is safe ...  However
    * we have to make sure the length doesn't exceed the block length.
    */
@@ -94,14 +88,37 @@ hivex_node_name (hive_h *h, hive_node_h node)
     SET_ERRNO (EFAULT, "node name is too long (%zu, %zu)", len, seg_len);
     return NULL;
   }
-
-  char *ret = malloc (len + 1);
-  if (ret == NULL)
-    return NULL;
-  memcpy (ret, nk->name, len);
-  ret[len] = '\0';
-  return ret;
+  size_t flags = le16toh (nk->flags);
+  if (flags & 0x20) {
+    return _hivex_windows_latin1_to_utf8 (nk->name, len);
+  } else {
+    return _hivex_windows_utf16_to_utf8 (nk->name, len);
+  }
 }
+
+size_t
+hivex_node_name_len (hive_h *h, hive_node_h node)
+{
+  if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
+    SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
+    return 0;
+  }
+  struct ntreg_nk_record *nk =
+    (struct ntreg_nk_record *) ((char *) h->addr + node);
+
+  /* nk->name_len is unsigned, 16 bit, so this is safe ...  However
+   * we have to make sure the length doesn't exceed the block length.
+   */
+  size_t len = le16toh (nk->name_len);
+  size_t seg_len = block_len (h, node, NULL);
+  if (sizeof (struct ntreg_nk_record) + len - 1 > seg_len) {
+    SET_ERRNO (EFAULT, "node name is too long (%zu, %zu)", len, seg_len);
+    return 0;
+  }
+
+  return _hivex_utf8_strlen (nk->name, len, ! (le16toh (nk->flags) & 0x20));
+}
+
 
 static int64_t
 timestamp_check (hive_h *h, hive_node_h node, int64_t timestamp)
@@ -334,6 +351,16 @@ _hivex_get_children (hive_h *h, hive_node_h node,
   }
 
  out:
+#if 0
+  if (h->msglvl >= 2) {
+    fprintf (stderr, "%s: %s: children = ", "hivex", __func__);
+    _hivex_print_offset_list (&children, stderr);
+    fprintf (stderr, "\n%s: %s: blocks = ", "hivex", __func__);
+    _hivex_print_offset_list (&blocks, stderr);
+    fprintf (stderr, "\n");
+  }
+#endif
+
   *children_ret = _hivex_return_offset_list (&children);
   *blocks_ret = _hivex_return_offset_list (&blocks);
   if (!*children_ret || !*blocks_ret)

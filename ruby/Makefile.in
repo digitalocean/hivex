@@ -96,7 +96,8 @@ build_triplet = @build@
 host_triplet = @host@
 subdir = ruby
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
-	$(srcdir)/Rakefile.in $(top_srcdir)/build-aux/test-driver
+	$(srcdir)/Rakefile.in $(srcdir)/run-ruby-tests.in \
+	$(top_srcdir)/build-aux/test-driver
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/00gnulib.m4 \
 	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/byteswap.m4 \
@@ -155,7 +156,7 @@ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
-CONFIG_CLEAN_FILES = Rakefile
+CONFIG_CLEAN_FILES = Rakefile run-ruby-tests
 CONFIG_CLEAN_VPATH_FILES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -1210,8 +1211,12 @@ CLEANFILES = \
 
 @HAVE_RUBY_TRUE@TESTS = run-ruby-tests
 @HAVE_RUBY_TRUE@TESTS_ENVIRONMENT = ../run
-@HAVE_RUBY_TRUE@RUBY_SITELIB := $(shell $(RUBY) -rrbconfig -e "puts RbConfig::CONFIG['sitelibdir']")
-@HAVE_RUBY_TRUE@RUBY_SITEARCH := $(shell $(RUBY) -rrbconfig -e "puts RbConfig::CONFIG['sitearchdir']")
+
+# Packagers can override this by doing: make INSTALLDIRS=vendor install
+# INSTALLDIRS also affects where Perl bindings are installed.
+@HAVE_RUBY_TRUE@INSTALLDIRS = site
+@HAVE_RUBY_TRUE@RUBY_LIBDIR := $(shell $(RUBY) -rrbconfig -e "puts RbConfig::CONFIG['$(INSTALLDIRS)libdir']")
+@HAVE_RUBY_TRUE@RUBY_ARCHDIR := $(shell $(RUBY) -rrbconfig -e "puts RbConfig::CONFIG['$(INSTALLDIRS)archdir']")
 all: all-am
 
 .SUFFIXES:
@@ -1247,6 +1252,8 @@ $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
 Rakefile: $(top_builddir)/config.status $(srcdir)/Rakefile.in
+	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+run-ruby-tests: $(top_builddir)/config.status $(srcdir)/run-ruby-tests.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 mostlyclean-libtool:
@@ -1580,10 +1587,10 @@ uninstall-am:
 @HAVE_RUBY_TRUE@	$(RAKE) rdoc
 
 @HAVE_RUBY_TRUE@install:
-@HAVE_RUBY_TRUE@	$(MKDIR_P) $(DESTDIR)$(RUBY_SITELIB)
-@HAVE_RUBY_TRUE@	$(MKDIR_P) $(DESTDIR)$(RUBY_SITEARCH)
-@HAVE_RUBY_TRUE@	$(INSTALL) -p -m 0644 lib/hivex.rb $(DESTDIR)$(RUBY_SITELIB)
-@HAVE_RUBY_TRUE@	$(INSTALL) -p -m 0755 ext/hivex/_hivex.so $(DESTDIR)$(RUBY_SITEARCH)
+@HAVE_RUBY_TRUE@	$(MKDIR_P) $(DESTDIR)$(RUBY_LIBDIR)
+@HAVE_RUBY_TRUE@	$(MKDIR_P) $(DESTDIR)$(RUBY_ARCHDIR)
+@HAVE_RUBY_TRUE@	$(INSTALL) -p -m 0644 $(srcdir)/lib/hivex.rb $(DESTDIR)$(RUBY_LIBDIR)
+@HAVE_RUBY_TRUE@	$(INSTALL) -p -m 0755 $(builddir)/ext/hivex/_hivex.so $(DESTDIR)$(RUBY_ARCHDIR)
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

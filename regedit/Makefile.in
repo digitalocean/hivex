@@ -1317,7 +1317,7 @@ $(top_builddir)/html/hivexregedit.1.html: hivexregedit
 	  --css 'pod.css' \
 	  --htmldir html \
 	  --outfile html/hivexregedit.1.html \
-	  regedit/hivexregedit
+	  $(abs_srcdir)/hivexregedit
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

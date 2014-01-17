@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2013 Red Hat Inc.
+ * Copyright (C) 2009-2014 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -127,6 +127,7 @@ extern int hivex_close (hive_h *h);
 extern hive_node_h hivex_root (hive_h *h);
 extern int64_t hivex_last_modified (hive_h *h);
 extern char *hivex_node_name (hive_h *h, hive_node_h node);
+extern size_t hivex_node_name_len (hive_h *h, hive_node_h node);
 extern int64_t hivex_node_timestamp (hive_h *h, hive_node_h node);
 extern hive_node_h *hivex_node_children (hive_h *h, hive_node_h node);
 extern hive_node_h hivex_node_get_child (hive_h *h, hive_node_h node, const char *name);

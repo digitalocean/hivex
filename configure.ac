@@ -1,5 +1,5 @@
 # hivex
-# Copyright (C) 2009-2011 Red Hat Inc.
+# Copyright (C) 2009-2014 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 # major/minor/release must be numbers
 m4_define([hivex_major],   [1])
 m4_define([hivex_minor],   [3])
-m4_define([hivex_release], [8])
+m4_define([hivex_release], [9])
 # extra can be any string
 m4_define([hivex_extra],   [])
 
@@ -329,8 +329,8 @@ AS_IF([test "x$enable_python" != "xno"],
 
             AC_MSG_CHECKING([for Python extension suffix (PEP-3149)])
             if test -z "$PYTHON_EXT_SUFFIX"; then
-                python_ext_suffix=`$PYTHON -c "import sysconfig; \
-                                             print (sysconfig.get_config_var('EXT_SUFFIX') or sysconfig.get_config_var('SO'))"`
+                python_ext_suffix=`$PYTHON -c "import distutils.sysconfig; \
+                                               print (distutils.sysconfig.get_config_var('EXT_SUFFIX') or distutils.sysconfig.get_config_var('SO'))"`
                 PYTHON_EXT_SUFFIX=$python_ext_suffix
             fi
             AC_MSG_RESULT([$PYTHON_EXT_SUFFIX])
@@ -564,6 +564,7 @@ AC_CONFIG_FILES([Makefile
                  sh/Makefile
                  xml/Makefile])
 AC_CONFIG_FILES([python/run-python-tests], [chmod +x python/run-python-tests])
+AC_CONFIG_FILES([ruby/run-ruby-tests], [chmod +x ruby/run-ruby-tests])
 AC_CONFIG_FILES([run], [chmod +x,-w run])
 AC_OUTPUT
 
