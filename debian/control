@@ -12,7 +12,7 @@ Build-Depends: debhelper (>= 8.1.3~),
  ocaml-findlib, dh-ocaml (>= 0.9~), ocaml-nox (>= 3.11.1-3~),
  python-all-dev, python3-all-dev,
  gem2deb, rake,
-Standards-Version: 3.9.3
+Standards-Version: 3.9.5
 Homepage: http://libguestfs.org/
 Vcs-Git: git://git.debian.org/git/pkg-libvirt/hivex.git
 Vcs-Browser: http://git.debian.org/?p=pkg-libvirt/hivex.git
