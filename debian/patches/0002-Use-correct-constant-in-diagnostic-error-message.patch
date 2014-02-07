@@ -1,0 +1,21 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Fri, 7 Feb 2014 18:12:02 +0100
+Subject: Use correct constant in diagnostic error message
+
+---
+ lib/value.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/value.c b/lib/value.c
+index c4e21ec..f222b41 100644
+--- a/lib/value.c
++++ b/lib/value.c
+@@ -334,7 +334,7 @@ hivex_value_value (hive_h *h, hive_value_h value,
+   /* Arbitrarily limit the length that we will read. */
+   if (len > HIVEX_MAX_VALUE_LEN) {
+     SET_ERRNO (ERANGE, "data length > HIVEX_MAX_VALUE_LEN (%zu > %d)",
+-               len, HIVEX_MAX_SUBKEYS);
++               len, HIVEX_MAX_VALUE_LEN);
+     return NULL;
+   }
+ 
