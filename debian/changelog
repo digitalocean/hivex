@@ -1,3 +1,10 @@
+hivex (1.3.10-1) unstable; urgency=medium
+
+  * New upstream version
+  * Cleared patch queue
+
+ -- Hilko Bengen <bengen@debian.org>  Wed, 23 Apr 2014 17:24:36 +0200
+
 hivex (1.3.9-2) unstable; urgency=medium
 
   * Added patches from upstream trunk
