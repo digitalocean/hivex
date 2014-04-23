@@ -1,3 +1,52 @@
+2014-04-23  Richard W.M. Jones  <rjones@redhat.com>
+
+	Version 1.3.10.
+
+	Update gnulib to latest.
+	This update enables the -Wjump-misses-init warning, so we have to
+	disable it in configure.ac, since a lot of hivex code does this.
+
+	gitignore: Ignore run-ruby-tests (generated).
+
+2014-04-23  Pino Toscano  <ptoscano@redhat.com>
+
+	ruby: tests: convert from Test::Unit to MiniTest (RHBZ#1090407)
+	Convert the tests to the MiniTest test framework, but keeping the usage
+	of the old Test::Unit as fallback in case MiniTest is not available.
+	In the latter case, use a bit of "glue" to make the old API look like
+	the new API, so we can just rely on the newer MiniTest API.
+
+	(This is the same change as 2f5e9066db817f75b245f256abc0c64dd1ae54eb
+	in libguestfs.)
+
+2014-04-23  Pino Toscano  <ptoscano@redhat.com>
+
+	ruby: tests: isolate boilerplate in common file
+	Isolate in a common file all the standard boilerplate in tests, i.e. the
+	import of the test framework and the guestfs module (including the
+	import path hack needed for the latter).
+
+	(This is the same change as fbae7f3e69ce598c52af71ec204f8dbd0a9ce5e5
+	in libguestfs.)
+
+2014-03-26  Richard W.M. Jones  <rjones@redhat.com>
+
+	lib: Fix memory leak (found by Coverity).
+
+2014-02-07  Hilko Bengen  <bengen@hilluzination.de>
+
+	Bump value size limit
+	I actually encountered a binary value with 1033680 bytes.
+
+	Use correct constant in diagnostic error message
+
+2014-02-03  Hilko Bengen  <bengen@hilluzination.de>
+
+	python: value_value no longer generates Unicode strings
+	This fixes Github issue #2 reported by "kupiakos".
+
+	<https://github.com/libguestfs/hivex/issues/2>
+
 2014-01-17  Richard W.M. Jones  <rjones@redhat.com>
 
 	Version 1.3.9.

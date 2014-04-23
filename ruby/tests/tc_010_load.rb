@@ -1,5 +1,5 @@
 # hivex Ruby bindings -*- ruby -*-
-# Copyright (C) 2009-2011 Red Hat Inc.
+# Copyright (C) 2009-2014 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,12 +15,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-require 'test/unit'
-require 'hivex'
+require File::join(File::dirname(__FILE__), 'test_helper')
 
-class TestLoad < Test::Unit::TestCase
+class TestLoad < MiniTest::Unit::TestCase
   def test_load
     h = Hivex::open("../images/minimal", {})
-    assert_not_nil (h)
+    refute_nil (h)
   end
 end
