@@ -1,5 +1,5 @@
 # DO NOT EDIT! GENERATED AUTOMATICALLY!
-# Copyright (C) 2002-2012 Free Software Foundation, Inc.
+# Copyright (C) 2002-2014 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ AC_DEFUN([gl_EARLY],
   m4_pattern_allow([^gl_LIBOBJS$])dnl a variable
   m4_pattern_allow([^gl_LTLIBOBJS$])dnl a variable
   AC_REQUIRE([gl_PROG_AR_RANLIB])
+  # Code from module absolute-header:
   # Code from module alloca-opt:
   # Code from module alloca-opt-tests:
   # Code from module binary-io:
@@ -59,6 +60,7 @@ AC_DEFUN([gl_EARLY],
   # Code from module exitfail:
   # Code from module extensions:
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
+  # Code from module extern-inline:
   # Code from module fcntl:
   # Code from module fcntl-h:
   # Code from module fcntl-h-tests:
@@ -88,6 +90,8 @@ AC_DEFUN([gl_EARLY],
   # Code from module getopt-posix-tests:
   # Code from module getpagesize:
   # Code from module gettext-h:
+  # Code from module gettimeofday:
+  # Code from module gettimeofday-tests:
   # Code from module gitlog-to-changelog:
   # Code from module gnu-make:
   # Code from module gnumakefile:
@@ -165,6 +169,8 @@ AC_DEFUN([gl_EARLY],
   # Code from module symlink-tests:
   # Code from module sys_stat:
   # Code from module sys_stat-tests:
+  # Code from module sys_time:
+  # Code from module sys_time-tests:
   # Code from module sys_types:
   # Code from module sys_types-tests:
   # Code from module test-framework-sh:
@@ -232,6 +238,7 @@ AC_DEFUN([gl_INIT],
   m4_ifdef([AM_XGETTEXT_OPTION],
     [AM_][XGETTEXT_OPTION([--flag=error:3:c-format])
      AM_][XGETTEXT_OPTION([--flag=error_at_line:5:c-format])])
+  AC_REQUIRE([gl_EXTERN_INLINE])
   gl_FUNC_FCNTL
   if test $HAVE_FCNTL = 0 || test $REPLACE_FCNTL = 1; then
     AC_LIBOBJ([fcntl])
@@ -246,7 +253,7 @@ AC_DEFUN([gl_INIT],
     AC_LIBOBJ([itold])
   fi
   gl_FUNC_GETDTABLESIZE
-  if test $HAVE_GETDTABLESIZE = 0; then
+  if test $HAVE_GETDTABLESIZE = 0 || test $REPLACE_GETDTABLESIZE = 1; then
     AC_LIBOBJ([getdtablesize])
     gl_PREREQ_GETDTABLESIZE
   fi
@@ -287,6 +294,7 @@ AC_DEFUN([gl_INIT],
   gl_INTTYPES_INCOMPLETE
   AC_CONFIG_COMMANDS_PRE([m4_ifdef([AH_HEADER],
     [AC_SUBST([CONFIG_INCLUDE], m4_defn([AH_HEADER]))])])
+  AC_REQUIRE([AC_PROG_SED])
   gl_FUNC_MEMCHR
   if test $HAVE_MEMCHR = 0 || test $REPLACE_MEMCHR = 1; then
     AC_LIBOBJ([memchr])
@@ -432,7 +440,6 @@ changequote([, ])dnl
   AC_SUBST([gltests_WITNESS])
   gl_module_indicator_condition=$gltests_WITNESS
   m4_pushdef([gl_MODULE_INDICATOR_CONDITION], [$gl_module_indicator_condition])
-  AC_REQUIRE([AC_C_INLINE])
   gl_ENVIRON
   gl_UNISTD_MODULE_INDICATOR([environ])
   gl_FUNC_FDOPEN
@@ -457,6 +464,12 @@ changequote([, ])dnl
     AC_LIBOBJ([getpagesize])
   fi
   gl_UNISTD_MODULE_INDICATOR([getpagesize])
+  gl_FUNC_GETTIMEOFDAY
+  if test $HAVE_GETTIMEOFDAY = 0 || test $REPLACE_GETTIMEOFDAY = 1; then
+    AC_LIBOBJ([gettimeofday])
+    gl_PREREQ_GETTIMEOFDAY
+  fi
+  gl_SYS_TIME_MODULE_INDICATOR([gettimeofday])
   AC_REQUIRE([gl_LARGEFILE])
   gl_FUNC_LSTAT
   if test $REPLACE_LSTAT = 1; then
@@ -484,6 +497,7 @@ changequote([, ])dnl
   gl_FUNC_PUTENV
   if test $REPLACE_PUTENV = 1; then
     AC_LIBOBJ([putenv])
+    gl_PREREQ_PUTENV
   fi
   gl_STDLIB_MODULE_INDICATOR([putenv])
   gl_FUNC_SETENV
@@ -497,8 +511,8 @@ changequote([, ])dnl
     gl_PREREQ_STAT
   fi
   gl_SYS_STAT_MODULE_INDICATOR([stat])
-  gt_TYPE_WCHAR_T
-  gt_TYPE_WINT_T
+  AC_REQUIRE([gt_TYPE_WCHAR_T])
+  AC_REQUIRE([gt_TYPE_WINT_T])
   dnl Check for prerequisites for memory fence checks.
   gl_FUNC_MMAP_ANON
   AC_CHECK_HEADERS_ONCE([sys/mman.h])
@@ -509,6 +523,8 @@ changequote([, ])dnl
   fi
   gl_UNISTD_MODULE_INDICATOR([symlink])
   gl_HEADER_SYS_STAT_H
+  AC_PROG_MKDIR_P
+  gl_HEADER_SYS_TIME_H
   AC_PROG_MKDIR_P
   gl_HEADER_TIME_H
   gl_FUNC_UNSETENV
@@ -688,6 +704,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/strtoul.c
   lib/strtoull.c
   lib/sys_types.in.h
+  lib/unistd.c
   lib/unistd.in.h
   lib/vasnprintf.c
   lib/vasnprintf.h
@@ -695,6 +712,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/verify.h
   lib/wchar.in.h
   lib/write.c
+  lib/xsize.c
   lib/xsize.h
   lib/xstrtol-error.c
   lib/xstrtol.c
@@ -703,6 +721,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/xstrtoul.c
   lib/xstrtoull.c
   m4/00gnulib.m4
+  m4/absolute-header.m4
   m4/alloca.m4
   m4/byteswap.m4
   m4/close.m4
@@ -713,6 +732,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/error.m4
   m4/exponentd.m4
   m4/extensions.m4
+  m4/extern-inline.m4
   m4/fcntl-o.m4
   m4/fcntl.m4
   m4/fcntl_h.m4
@@ -724,6 +744,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/getdtablesize.m4
   m4/getopt.m4
   m4/getpagesize.m4
+  m4/gettimeofday.m4
   m4/gnu-make.m4
   m4/gnulib-common.m4
   m4/include_next.m4
@@ -775,6 +796,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/symlink.m4
   m4/sys_socket_h.m4
   m4/sys_stat_h.m4
+  m4/sys_time_h.m4
   m4/sys_types_h.m4
   m4/time_h.m4
   m4/unistd_h.m4
@@ -814,6 +836,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-getopt.c
   tests/test-getopt.h
   tests/test-getopt_long.h
+  tests/test-gettimeofday.c
   tests/test-ignore-value.c
   tests/test-init.sh
   tests/test-intprops.c
@@ -844,6 +867,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-symlink.c
   tests/test-symlink.h
   tests/test-sys_stat.c
+  tests/test-sys_time.c
   tests/test-sys_types.c
   tests/test-sys_wait.h
   tests/test-time.c
@@ -864,6 +888,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-xstrtoul.c
   tests/test-xstrtoull.c
   tests/zerosize-ptr.h
+  tests=lib/binary-io.c
   tests=lib/binary-io.h
   tests=lib/dosname.h
   tests=lib/fdopen.c
@@ -871,6 +896,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests=lib/fstat.c
   tests=lib/getcwd-lgpl.c
   tests=lib/getpagesize.c
+  tests=lib/gettimeofday.c
   tests=lib/lstat.c
   tests=lib/malloc.c
   tests=lib/malloca.c
@@ -884,6 +910,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests=lib/stat.c
   tests=lib/symlink.c
   tests=lib/sys_stat.in.h
+  tests=lib/sys_time.in.h
   tests=lib/time.in.h
   tests=lib/unsetenv.c
   top/GNUmakefile

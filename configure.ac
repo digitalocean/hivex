@@ -18,7 +18,7 @@
 # major/minor/release must be numbers
 m4_define([hivex_major],   [1])
 m4_define([hivex_minor],   [3])
-m4_define([hivex_release], [9])
+m4_define([hivex_release], [10])
 # extra can be any string
 m4_define([hivex_extra],   [])
 
@@ -100,6 +100,7 @@ if test "$gl_gcc_warnings" = yes; then
   nw="$nw -Wsuggest-attribute=pure" # Don't suggest pure functions.
 #  nw="$nw -Wsuggest-attribute=const" # Don't suggest const functions.
 #  nw="$nw -Wunsuffixed-float-constants" # Don't care about these.
+  nw="$nw -Wjump-misses-init"       # Be nice to enable this in future.
 
   gl_MANYWARN_ALL_GCC([ws])
   gl_MANYWARN_COMPLEMENT([ws], [$ws], [$nw])

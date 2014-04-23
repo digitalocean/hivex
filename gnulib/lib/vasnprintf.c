@@ -1,5 +1,5 @@
 /* vsprintf with automatic memory allocation.
-   Copyright (C) 1999, 2002-2012 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002-2014 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1530,7 +1530,7 @@ is_borderline (const char *digits, size_t precision)
 
 /* Returns the number of TCHAR_T units needed as temporary space for the result
    of sprintf or SNPRINTF of a single conversion directive.  */
-static inline size_t
+static size_t
 MAX_ROOM_NEEDED (const arguments *ap, size_t arg_index, FCHAR_T conversion,
                  arg_type type, int flags, size_t width, int has_precision,
                  size_t precision, int pad_ourselves)
@@ -5153,7 +5153,8 @@ VASNPRINTF (DCHAR_T *resultbuf, size_t *lengthp,
                                 size_t tmp_length =
                                   MAX_ROOM_NEEDED (&a, dp->arg_index,
                                                    dp->conversion, type, flags,
-                                                   width, has_precision,
+                                                   has_width ? width : 0,
+                                                   has_precision,
                                                    precision, pad_ourselves);
 
                                 if (maxlen < tmp_length)
