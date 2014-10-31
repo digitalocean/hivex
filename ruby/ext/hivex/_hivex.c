@@ -50,9 +50,9 @@
 #define RSTRING_PTR(r) (RSTRING((r))->ptr)
 #endif
 
-static VALUE m_hivex;			/* hivex module */
-static VALUE c_hivex;			/* hive_h handle */
-static VALUE e_Error;			/* used for all errors */
+static VALUE m_hivex;                   /* hivex module */
+static VALUE c_hivex;                   /* hive_h handle */
+static VALUE e_Error;                   /* used for all errors */
 
 static void
 ruby_hivex_free (void *hvp)
@@ -580,8 +580,8 @@ ruby_hivex_node_get_value (VALUE hv, VALUE nodev, VALUE keyv)
  *
  * Return the length of the key (name) of a (key, value)
  * pair as produced by "h.value_key". The length can
- * legitimately be 0, so errno is the necesary mechanism to
- * check for errors.
+ * legitimately be 0, so errno is the necessary mechanism
+ * to check for errors.
  * 
  * In the context of Windows Registries, a zero-length name
  * means that this value is the default key for this node

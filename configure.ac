@@ -18,7 +18,7 @@
 # major/minor/release must be numbers
 m4_define([hivex_major],   [1])
 m4_define([hivex_minor],   [3])
-m4_define([hivex_release], [10])
+m4_define([hivex_release], [11])
 # extra can be any string
 m4_define([hivex_extra],   [])
 
@@ -344,10 +344,6 @@ AS_IF([test "x$enable_python" != "xno"],
             AC_CHECK_LIB([c],[PyCapsule_New],
                          [AC_DEFINE([HAVE_PYCAPSULE_NEW],1,
                                     [Found PyCapsule_New in libpython])],
-                         [],[$PYTHON_BLDLIBRARY])
-            AC_CHECK_LIB([c],[PyString_AsString],
-                         [AC_DEFINE([HAVE_PYSTRING_ASSTRING],1,
-                                    [Found PyString_AsString in libpython])],
                          [],[$PYTHON_BLDLIBRARY])
 
             LIBS="$old_LIBS"

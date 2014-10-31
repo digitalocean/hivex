@@ -104,6 +104,13 @@ hivex_open (const char *filename, int flags)
 
   h->size = statbuf.st_size;
 
+  if (h->size < 0x2000) {
+    SET_ERRNO (EINVAL,
+               "%s: file is too small to be a Windows NT Registry hive file",
+               filename);
+    goto error;
+  }
+
   if (!h->writable) {
     h->addr = mmap (NULL, h->size, PROT_READ, MAP_SHARED, h->fd, 0);
     if (h->addr == MAP_FAILED)
@@ -236,6 +243,13 @@ hivex_open (const char *filename, int flags)
         (page_size & 0x0fff) != 0) {
       SET_ERRNO (ENOTSUP,
                  "%s: page size %zu at 0x%zx, bad registry",
+                 filename, page_size, off);
+      goto error;
+    }
+
+    if (off + page_size > h->size) {
+      SET_ERRNO (ENOTSUP,
+                 "%s: page size %zu at 0x%zx extends beyond end of file, bad registry",
                  filename, page_size, off);
       goto error;
     }

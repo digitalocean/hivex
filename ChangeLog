@@ -1,3 +1,201 @@
+2014-10-30  Richard W.M. Jones  <rjones@redhat.com>
+
+	Version 1.3.11.
+
+	extra-tests: Add trivial fuzz tester.
+	Could be improved greatly, but it's a start.
+
+	handle: Check that pages do not extend beyond the end of the file.
+	Thanks: Mahmoud Al-Qudsi
+
+2014-10-30  Richard W.M. Jones  <rjones@redhat.com>
+
+	handle: Refuse to open files < 8192 bytes in size.
+	These cannot be valid hives, since they don't contain a full header
+	page and at least a single page of data (in other words they couldn't
+	contain a root node).
+
+	Thanks: Mahmoud Al-Qudsi
+
+2014-09-22  Richard W.M. Jones  <rjones@redhat.com>
+
+	hivexml: Tidy up error handling and printing.
+
+2014-09-22  Richard W.M. Jones  <rjones@redhat.com>
+
+	value: Set errno = 0 on non-error path in hivex_value_data_cell_offset (RHBZ#1145056).
+	hivex_value_data_cell_offset may return 0 to indicate that the data is
+	inline.  This is not an error return, but it was possible for errno to
+	have a random (non-zero) value along this path.  Explicitly set errno
+	= 0 on this path.
+
+	Thanks: Wei Shi
+
+2014-08-18  Peter Wu  <peter@lekensteyn.nl>
+
+	generator: Fix mixed tabs/spaces
+	vim :set ts=8 :retab
+
+	python: add heavier tests for setvalue
+	Ensure that invalid types are not silently ignored (and test to avoid
+	segfaults).
+
+2014-08-18  Peter Wu  <peter@lekensteyn.nl>
+
+	python: fix crash by validating key and value
+	User-visible changes: no crashes if you try to pass a non-str type as
+	key/value in Python 3. Exceptions are thrown rather than silently
+	ignoring type violations (such as passing a Unicode string as value
+	in Python 2).
+
+	Until now, Python 2 keys and values were assumes to be bytes, in
+	Python 3 these were seen as Unicode strings instead. Remove the
+	compile-check for a deprecated Python 2 function (`PyString_AsString`)
+	and check for byte types instead.
+
+	For keys, accept both strings and bytes as the common case is to pass
+	a ASCII string name. (The `\u20ac` Unicode character (Euro-sign) is
+	apparently also valid as key name, verified with Python 3 and
+	Windows 7).
+
+	For values, be more conservative and reject all types except bytes. This
+	better matches the C API and removes the burden of character conversion
+	from the wrapper. Instead, callers should know the correct encoding
+	and terminate strings.
+
+	Modify tests to specify bytes instead of strings. (Otherwise Python 3
+	would break while Python 2 still passes.)
+
+2014-08-18  Peter Wu  <peter@lekensteyn.nl>
+
+	python: check some types for get_value
+	Recognise early that a value passed to node_get_value is not a dict
+	rather than spitting out "no 'key' element in dictionary".
+
+	Detect errors for invalid `t` elements instead of silently using `-1`.
+
+2014-08-18  Peter Wu  <peter@lekensteyn.nl>
+
+	python: use PyErr_NoMemory
+	If malloc fails, just throw a NoMemory exception rather than showing
+	"RuntimeError: Cannot allocate memory".
+
+2014-08-18  Peter Wu  <peter@lekensteyn.nl>
+
+	python: use errors more specific than RuntimeError
+	KeyError is documented as:
+	"Raised when a mapping (dictionary) key is not found in the set of
+	existing keys."
+
+	TypeError is documented as:
+	"Raised when an operation or function is applied to an object of
+	inappropriate type."
+
+	RuntimeError is documented as:
+	"Raised when an error is detected that doesn’t fall in any of the other
+	categories."
+
+	Let's be more specific with exceptions. The exception all inherit from
+	StandardError (and from Exception), but not from RuntimeError, so this
+	might need some code changes (if users would catch this specific error).
+	However, this behavior was not documented so it is perfectly fine to
+	change it.
+
+2014-08-12  Richard W.M. Jones  <rjones@redhat.com>
+
+	Ignore python/hivex directory.
+	It contains only generated files.
+
+2014-08-12  Peter Wu  <peter@lekensteyn.nl>
+
+	python: export hive_types constants
+	Instead of using magic numbers or copying the numbers all over place,
+	make the hive type constants available so you can do:
+
+	    import hivex
+	    from hivex.hive_types import *
+
+	    h = hivex.Hivex ("../images/minimal", write = True)
+	    new_value = { "key": "abc", "t": REG_BINARY, "value": b"xyz" }
+	    h.node_set_value (h.root (), new_value)
+
+2014-08-12  Peter Wu  <peter@lekensteyn.nl>
+
+	python: move module to separate directory
+	This allows submodules to be added under the 'hivex' namespace. A new
+	`pythonmoddir` variable was added for separating libhivexmod.so and the
+	Python hivex module.
+
+2014-08-12  Peter Wu  <peter@lekensteyn.nl>
+
+	python: expose package version
+	Exposing the module version through the `__version__` property conforms
+	to PEP-396. The recommended versioning scheme is specified in
+	PEP-386[1].
+
+	 [1]: https://www.python.org/dev/peps/pep-0386/
+
+2014-08-08  Peter Wu  <peter@lekensteyn.nl>
+
+	Avoid calling calloc(0, x)
+	The return value for zero-size allocations is implementation-defined
+	(can be NULL or a unique pointer for free()). Just return early here as
+	there is nothing to print.
+
+	Caught by Clang static analyzer.
+
+2014-08-08  Peter Wu  <peter@lekensteyn.nl>
+
+	Silence dead assigmnents/initialization/increments
+	Some of these assignments were introduced in commit
+	c9d5cd059c45fd3aa6d16b3ba185d7cb3a08de9e ("hivex: Fix allocations that
+	may move C heap buffer."), but turn out to be unnecessary (unused).
+	Replace the assignments by a comment in case someone extends the code
+	later.
+
+	Caught by Clang static analyzer.
+
+2014-08-07  Peter Wu  <peter@lekensteyn.nl>
+
+	Fix overly long assertion string
+	With GCC 4.9.1 I get a -Woverlength-strings warning:
+	hivex-internal.h:123:23: error: string length ‘3823’ is greater than ...
+	   (STREQLEN (((struct ntreg_hbin_block *)((char *) (h)->addr + (offs)))->id, (eqid), 2))
+
+	The compile command can be shortened to:
+
+	    cd lib && cpp -DHAVE_CONFIG_H -I.. -I../gnulib/lib  -I. \
+	        -Woverlength-strings -Werror -g -O2 write.c
+
+	After that, be amazed at the huge assertion string produced by the
+	macro which is also visible in libhivex.so (two times).
+
+	To fix that mess, use an inline function. The `STR*` macros were moved
+	and a string.h header added since STREQLEN is used in the function.
+
+2014-08-07  Peter Wu  <peter@lekensteyn.nl>
+
+	Fix garbage return value on error
+	If str contains invalid characters, ret is not initialised. Caught by
+	Clang static analyzer.
+
+2014-05-20  Richard W.M. Jones  <rjones@redhat.com>
+
+	generator: Fix a spelling mistake in the documentation (RHBZ#1099286).
+
+2014-05-14  Richard W.M. Jones  <rjones@redhat.com>
+
+	perl: Provide alternate definition of newSVpvn_utf8 for older Perl.
+	Commit 40fff10318e0001fb3a145f5e1a905704e3f5695 uses newSVpvn_utf8.
+	This macro did not exist in Perl < 5.12, but we can use newSVpvn
+	instead.
+
+	Also update the associated test script:
+
+	- Don't use 'done_testing'.  Not supported by ancient Perl.
+
+	- Skip the tests entirely on ancient Perl.
+
 2014-04-23  Richard W.M. Jones  <rjones@redhat.com>
 
 	Version 1.3.10.

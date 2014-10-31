@@ -1205,14 +1205,14 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-EXTRA_DIST = README check-regedit.sh
+EXTRA_DIST = README check-regedit.sh insert-keys.pl fuzz.pl
 
 # Test hives.
 test_hives_xz = $(wildcard $(HIVEX_TEST_DATA)/*.xz)
 test_hives = $(test_hives_xz:$(HIVEX_TEST_DATA)/%.xz=%.hive)
 check_DATA = $(test_hives)
 TESTS_ENVIRONMENT = ../run
-TESTS = check-regedit.sh insert-keys.pl
+TESTS = check-regedit.sh insert-keys.pl fuzz.pl
 CLEANFILES = *~ *.hive
 all: all-am
 
@@ -1412,6 +1412,13 @@ check-regedit.sh.log: check-regedit.sh
 insert-keys.pl.log: insert-keys.pl
 	@p='insert-keys.pl'; \
 	b='insert-keys.pl'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+fuzz.pl.log: fuzz.pl
+	@p='fuzz.pl'; \
+	b='fuzz.pl'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \

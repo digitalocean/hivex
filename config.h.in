@@ -314,9 +314,6 @@
 /* Found PyCapsule_New in libpython */
 #undef HAVE_PYCAPSULE_NEW
 
-/* Found PyString_AsString in libpython */
-#undef HAVE_PYSTRING_ASSTRING
-
 /* Define to 1 if you have the `raise' function. */
 #undef HAVE_RAISE
 

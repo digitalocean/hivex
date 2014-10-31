@@ -242,7 +242,7 @@ default key.";
     "\
 Return the length of the key (name) of a (key, value) pair as produced
 by C<hivex_value_key>. The length can legitimately be 0, so errno is 
-the necesary mechanism to check for errors.
+the necessary mechanism to check for errors.
 
 In the context of Windows Registries, a zero-length name means
 that this value is the default key for this node in the tree.
@@ -1069,10 +1069,10 @@ here.  Often it's not documented at all.
       pr "\n";
 
       if List.mem AUnusedFlags (snd style) then
-	pr "The flags parameter is unused.  Always pass 0.\n\n";
+        pr "The flags parameter is unused.  Always pass 0.\n\n";
 
       if List.mem ASetValues (snd style) then
-	pr "C<values> is an array of (key, value) pairs.  There
+        pr "C<values> is an array of (key, value) pairs.  There
 should be C<nr_values> elements in this array.
 
 Any existing values stored at the node are discarded, and their
@@ -1080,7 +1080,7 @@ C<hive_value_h> handles become invalid.  Thus you can remove all
 values stored at C<node> by passing C<nr_values = 0>.\n\n";
 
       if List.mem ASetValue (snd style) then
-	pr "C<value> is a single (key, value) pair.
+        pr "C<value> is a single (key, value) pair.
 
 Existing C<hive_value_h> handles become invalid.\n\n";
 
@@ -1791,8 +1791,8 @@ static void raise_closed (const char *) Noreturn;
         | ASetValues ->
             pr "  int nrvalues = Wosize_val (valuesv);\n";
             pr "  hive_set_value *values = HiveSetValues_val (valuesv);\n"
-	| ASetValue ->
-	    pr "  hive_set_value *val = HiveSetValue_val (valv);\n"
+        | ASetValue ->
+            pr "  hive_set_value *val = HiveSetValue_val (valv);\n"
       ) (snd style);
       pr "\n";
 
@@ -1864,9 +1864,9 @@ static void raise_closed (const char *) Noreturn;
         | ASetValues ->
             pr "  free (values);\n";
             pr "\n";
-	| ASetValue ->
-	    pr "  free (val);\n";
-	    pr "\n";
+        | ASetValue ->
+            pr "  free (val);\n";
+            pr "\n";
       ) (snd style);
 
       (* Check for errors. *)
@@ -1903,7 +1903,7 @@ static void raise_closed (const char *) Noreturn;
            pr "  free (r);\n"
        | RStringList ->
            pr "  rv = caml_copy_string_array ((const char **) r);\n";
-	   pr "  int i;\n";
+           pr "  int i;\n";
            pr "  for (i = 0; r[i] != NULL; ++i) free (r[i]);\n";
            pr "  free (r);\n"
        | RLenType -> pr "  rv = copy_type_len (len, t);\n"
@@ -2220,45 +2220,45 @@ sub open {
        * Therefore we don't generate prototypes for these two calls:
        *)
       if fst style <> RErrDispose && List.hd (snd style) = AHive then (
-	let longdesc = replace_str longdesc "C<hivex_" "C<" in
-	pr "=item %s\n\n " name;
-	generate_perl_prototype name style;
-	pr "\n\n";
-	pr "%s\n\n" longdesc;
+        let longdesc = replace_str longdesc "C<hivex_" "C<" in
+        pr "=item %s\n\n " name;
+        generate_perl_prototype name style;
+        pr "\n\n";
+        pr "%s\n\n" longdesc;
 
-	(match fst style with
-	 | RErr
-	 | RErrDispose
-	 | RHive
-	 | RString
-	 | RStringList
-	 | RLenType
-	 | RLenValue
-	 | RLenTypeVal
-	 | RInt32
-	 | RInt64 -> ()
-	 | RSize ->
+        (match fst style with
+         | RErr
+         | RErrDispose
+         | RHive
+         | RString
+         | RStringList
+         | RLenType
+         | RLenValue
+         | RLenTypeVal
+         | RInt32
+         | RInt64 -> ()
+         | RSize ->
              pr "\
 This returns a size.\n\n"
-	 | RNode ->
-	     pr "\
+         | RNode ->
+             pr "\
 This returns a node handle.\n\n"
-	 | RNodeNotFound ->
-	     pr "\
+         | RNodeNotFound ->
+             pr "\
 This returns a node handle, or C<undef> if the node was not found.\n\n"
-	 | RNodeList ->
-	     pr "\
+         | RNodeList ->
+             pr "\
 This returns a list of node handles.\n\n"
-	 | RValue ->
-	     pr "\
+         | RValue ->
+             pr "\
 This returns a value handle.\n\n"
-	 | RValueList ->
-	     pr "\
+         | RValueList ->
+             pr "\
 This returns a list of value handles.\n\n"
-	);
+        );
 
-	if List.mem ASetValues (snd style) then
-	  pr "C<@values> is an array of (keys, value) pairs.
+        if List.mem ASetValues (snd style) then
+          pr "C<@values> is an array of (keys, value) pairs.
 Each element should be a hashref containing C<key>, C<t> (type)
 and C<data>.
 
@@ -2350,6 +2350,11 @@ and generate_perl_xs () =
 #include <string.h>
 #include <hivex.h>
 #include <inttypes.h>
+
+/* For Perl < 5.12 */
+#ifndef newSVpvn_utf8
+#define newSVpvn_utf8(a,b,u) newSVpvn((a),(b))
+#endif
 
 static SV *
 my_newSVll(long long val) {
@@ -2519,172 +2524,172 @@ DESTROY (h)
     fun (name, style, _, longdesc) ->
       (* The close and open calls are handled specially above. *)
       if fst style <> RErrDispose && List.hd (snd style) = AHive then (
-	(match fst style with
-	 | RErr -> pr "void\n"
-	 | RErrDispose -> failwith "perl bindings cannot handle a call which disposes of the handle"
-	 | RHive -> failwith "perl bindings cannot handle a call which returns a handle"
-	 | RSize
-	 | RNode
-	 | RNodeNotFound
-	 | RValue
-	 | RString -> pr "SV *\n"
-	 | RNodeList
-	 | RValueList
-	 | RStringList
-	 | RLenType
-	 | RLenValue
-	 | RLenTypeVal -> pr "void\n"
-	 | RInt32 -> pr "SV *\n"
-	 | RInt64 -> pr "SV *\n"
-	);
+        (match fst style with
+         | RErr -> pr "void\n"
+         | RErrDispose -> failwith "perl bindings cannot handle a call which disposes of the handle"
+         | RHive -> failwith "perl bindings cannot handle a call which returns a handle"
+         | RSize
+         | RNode
+         | RNodeNotFound
+         | RValue
+         | RString -> pr "SV *\n"
+         | RNodeList
+         | RValueList
+         | RStringList
+         | RLenType
+         | RLenValue
+         | RLenTypeVal -> pr "void\n"
+         | RInt32 -> pr "SV *\n"
+         | RInt64 -> pr "SV *\n"
+        );
 
-	(* Call and arguments. *)
-	let perl_params =
-	  filter_map (function
-		      | AUnusedFlags -> None
-		      | arg -> Some (name_of_argt arg)) (snd style) in
+        (* Call and arguments. *)
+        let perl_params =
+          filter_map (function
+                      | AUnusedFlags -> None
+                      | arg -> Some (name_of_argt arg)) (snd style) in
 
-	let c_params =
-	  List.map (function
-		    | AUnusedFlags -> "0"
-		    | ASetValues -> "values.nr_values, values.values"
-		    | arg -> name_of_argt arg) (snd style) in
+        let c_params =
+          List.map (function
+                    | AUnusedFlags -> "0"
+                    | ASetValues -> "values.nr_values, values.values"
+                    | arg -> name_of_argt arg) (snd style) in
 
-	pr "%s (%s)\n" name (String.concat ", " perl_params);
-	iteri (
+        pr "%s (%s)\n" name (String.concat ", " perl_params);
+        iteri (
           fun i ->
             function
             | AHive ->
-		pr "      hive_h *h;\n"
-	    | ANode n
-	    | AValue n ->
-		pr "      int %s;\n" n
-	    | AString n ->
-		pr "      char *%s;\n" n
+                pr "      hive_h *h;\n"
+            | ANode n
+            | AValue n ->
+                pr "      int %s;\n" n
+            | AString n ->
+                pr "      char *%s;\n" n
             | AStringNullable n ->
-		(* http://www.perlmonks.org/?node_id=554277 *)
-		pr "      char *%s = SvOK(ST(%d)) ? SvPV_nolen(ST(%d)) : NULL;\n" n i i
-	    | AOpenFlags ->
-		pr "      int flags;\n"
-	    | AUnusedFlags -> ()
-	    | ASetValues ->
-		pr "      pl_set_values values = unpack_pl_set_values (ST(%d));\n" i
-	    | ASetValue ->
-		pr "      hive_set_value *val = unpack_set_value (ST(%d));\n" i
-	) (snd style);
+                (* http://www.perlmonks.org/?node_id=554277 *)
+                pr "      char *%s = SvOK(ST(%d)) ? SvPV_nolen(ST(%d)) : NULL;\n" n i i
+            | AOpenFlags ->
+                pr "      int flags;\n"
+            | AUnusedFlags -> ()
+            | ASetValues ->
+                pr "      pl_set_values values = unpack_pl_set_values (ST(%d));\n" i
+            | ASetValue ->
+                pr "      hive_set_value *val = unpack_set_value (ST(%d));\n" i
+        ) (snd style);
 
-	let free_args () =
-	  List.iter (
-	    function
-	    | ASetValues ->
-		pr "      free (values.values);\n"
-	    | ASetValue ->
-		pr "      free (val);\n"
-	    | AHive | ANode _ | AValue _ | AString _ | AStringNullable _
-	    | AOpenFlags | AUnusedFlags -> ()
-	  ) (snd style)
-	in
+        let free_args () =
+          List.iter (
+            function
+            | ASetValues ->
+                pr "      free (values.values);\n"
+            | ASetValue ->
+                pr "      free (val);\n"
+            | AHive | ANode _ | AValue _ | AString _ | AStringNullable _
+            | AOpenFlags | AUnusedFlags -> ()
+          ) (snd style)
+        in
 
-	(* Code. *)
-	(match fst style with
-	 | RErr ->
+        (* Code. *)
+        (match fst style with
+         | RErr ->
              pr "PREINIT:\n";
              pr "      int r;\n";
              pr " PPCODE:\n";
              pr "      r = hivex_%s (%s);\n"
-	       name (String.concat ", " c_params);
-	     free_args ();
+               name (String.concat ", " c_params);
+             free_args ();
              pr "      if (r == -1)\n";
              pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
-	       name;
+               name;
 
-	 | RErrDispose -> assert false
-	 | RHive -> assert false
+         | RErrDispose -> assert false
+         | RHive -> assert false
 
-	 | RSize
-	 | RNode
-	 | RValue ->
+         | RSize
+         | RNode
+         | RValue ->
              pr "PREINIT:\n";
-	     pr "      /* hive_node_h = hive_value_h = size_t so we cheat\n";
-	     pr "         here to simplify the generator */\n";
+             pr "      /* hive_node_h = hive_value_h = size_t so we cheat\n";
+             pr "         here to simplify the generator */\n";
              pr "      size_t r;\n";
              pr "   CODE:\n";
              pr "      r = hivex_%s (%s);\n"
-	       name (String.concat ", " c_params);
-	     free_args ();
+               name (String.concat ", " c_params);
+             free_args ();
              pr "      if (r == 0)\n";
              pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
-	       name;
+               name;
              pr "      RETVAL = newSViv (r);\n";
              pr " OUTPUT:\n";
              pr "      RETVAL\n"
 
-	 | RNodeNotFound ->
+         | RNodeNotFound ->
              pr "PREINIT:\n";
              pr "      hive_node_h r;\n";
              pr "   CODE:\n";
-	     pr "      errno = 0;\n";
+             pr "      errno = 0;\n";
              pr "      r = hivex_%s (%s);\n"
-	       name (String.concat ", " c_params);
-	     free_args ();
+               name (String.concat ", " c_params);
+             free_args ();
              pr "      if (r == 0 && errno != 0)\n";
              pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
-	       name;
-	     pr "      if (r == 0)\n";
+               name;
+             pr "      if (r == 0)\n";
              pr "        RETVAL = &PL_sv_undef;\n";
-	     pr "      else\n";
+             pr "      else\n";
              pr "        RETVAL = newSViv (r);\n";
              pr " OUTPUT:\n";
              pr "      RETVAL\n"
 
-	 | RString ->
+         | RString ->
              pr "PREINIT:\n";
              pr "      char *r;\n";
              pr "   CODE:\n";
              pr "      r = hivex_%s (%s);\n"
-	       name (String.concat ", " c_params);
-	     free_args ();
+               name (String.concat ", " c_params);
+             free_args ();
              pr "      if (r == NULL)\n";
              pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
-	       name;
+               name;
              if f_len_exists name then
                pr "      RETVAL = newSVpvn_utf8 (r, hivex_%s_len (%s), 1);\n"
                  name (String.concat ", " c_params)
              else
                pr "      RETVAL = newSVpv (r, 0);\n";
-	     pr "      free (r);\n";
+             pr "      free (r);\n";
              pr " OUTPUT:\n";
              pr "      RETVAL\n"
 
-	 | RNodeList
-	 | RValueList ->
+         | RNodeList
+         | RValueList ->
              pr "PREINIT:\n";
              pr "      size_t *r;\n";
              pr "      int i, n;\n";
              pr " PPCODE:\n";
              pr "      r = hivex_%s (%s);\n"
-	       name (String.concat ", " c_params);
-	     free_args ();
+               name (String.concat ", " c_params);
+             free_args ();
              pr "      if (r == NULL)\n";
              pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
-	       name;
+               name;
              pr "      for (n = 0; r[n] != 0; ++n) /**/;\n";
              pr "      EXTEND (SP, n);\n";
              pr "      for (i = 0; i < n; ++i)\n";
              pr "        PUSHs (sv_2mortal (newSViv (r[i])));\n";
              pr "      free (r);\n";
 
-	 | RStringList ->
+         | RStringList ->
              pr "PREINIT:\n";
              pr "      char **r;\n";
              pr "      int i, n;\n";
              pr " PPCODE:\n";
              pr "      r = hivex_%s (%s);\n"
-	       name (String.concat ", " c_params);
-	     free_args ();
+               name (String.concat ", " c_params);
+             free_args ();
              pr "      if (r == NULL)\n";
              pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
-	       name;
+               name;
              pr "      for (n = 0; r[n] != NULL; ++n) /**/;\n";
              pr "      EXTEND (SP, n);\n";
              pr "      for (i = 0; i < n; ++i) {\n";
@@ -2693,86 +2698,86 @@ DESTROY (h)
              pr "      }\n";
              pr "      free (r);\n";
 
-	 | RLenType ->
-	     pr "PREINIT:\n";
-	     pr "      int r;\n";
-	     pr "      size_t len;\n";
-	     pr "      hive_type type;\n";
-	     pr " PPCODE:\n";
+         | RLenType ->
+             pr "PREINIT:\n";
+             pr "      int r;\n";
+             pr "      size_t len;\n";
+             pr "      hive_type type;\n";
+             pr " PPCODE:\n";
              pr "      r = hivex_%s (%s, &type, &len);\n"
-	       name (String.concat ", " c_params);
-	     free_args ();
+               name (String.concat ", " c_params);
+             free_args ();
              pr "      if (r == -1)\n";
              pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
-	       name;
-	     pr "      EXTEND (SP, 2);\n";
-	     pr "      PUSHs (sv_2mortal (newSViv (type)));\n";
-	     pr "      PUSHs (sv_2mortal (newSViv (len)));\n";
+               name;
+             pr "      EXTEND (SP, 2);\n";
+             pr "      PUSHs (sv_2mortal (newSViv (type)));\n";
+             pr "      PUSHs (sv_2mortal (newSViv (len)));\n";
 
-	 | RLenValue ->
-	     pr "PREINIT:\n";
-	     pr "      hive_value_h r;\n";
-	     pr "      size_t len;\n";
-	     pr " PPCODE:\n";
+         | RLenValue ->
+             pr "PREINIT:\n";
+             pr "      hive_value_h r;\n";
+             pr "      size_t len;\n";
+             pr " PPCODE:\n";
              pr "      errno = 0;\n";
              pr "      r = hivex_%s (%s, &len);\n"
-	       name (String.concat ", " c_params);
-	     free_args ();
+               name (String.concat ", " c_params);
+             free_args ();
              pr "      if (r == 0 && errno)\n";
              pr "        croak (\"%%s: \", \"%s\", strerror (errno));\n"
-	       name;
-	     pr "      EXTEND (SP, 2);\n";
-	     pr "      PUSHs (sv_2mortal (newSViv (len)));\n";
-	     pr "      PUSHs (sv_2mortal (newSViv (r)));\n";
+               name;
+             pr "      EXTEND (SP, 2);\n";
+             pr "      PUSHs (sv_2mortal (newSViv (len)));\n";
+             pr "      PUSHs (sv_2mortal (newSViv (r)));\n";
 
-	 | RLenTypeVal ->
-	     pr "PREINIT:\n";
-	     pr "      char *r;\n";
-	     pr "      size_t len;\n";
-	     pr "      hive_type type;\n";
-	     pr " PPCODE:\n";
+         | RLenTypeVal ->
+             pr "PREINIT:\n";
+             pr "      char *r;\n";
+             pr "      size_t len;\n";
+             pr "      hive_type type;\n";
+             pr " PPCODE:\n";
              pr "      r = hivex_%s (%s, &type, &len);\n"
-	       name (String.concat ", " c_params);
-	     free_args ();
+               name (String.concat ", " c_params);
+             free_args ();
              pr "      if (r == NULL)\n";
              pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
-	       name;
-	     pr "      EXTEND (SP, 2);\n";
-	     pr "      PUSHs (sv_2mortal (newSViv (type)));\n";
-	     pr "      PUSHs (sv_2mortal (newSVpvn (r, len)));\n";
-	     pr "      free (r);\n";
+               name;
+             pr "      EXTEND (SP, 2);\n";
+             pr "      PUSHs (sv_2mortal (newSViv (type)));\n";
+             pr "      PUSHs (sv_2mortal (newSVpvn (r, len)));\n";
+             pr "      free (r);\n";
 
-	 | RInt32 ->
+         | RInt32 ->
              pr "PREINIT:\n";
              pr "      int32_t r;\n";
              pr "   CODE:\n";
-	     pr "      errno = 0;\n";
+             pr "      errno = 0;\n";
              pr "      r = hivex_%s (%s);\n"
-	       name (String.concat ", " c_params);
-	     free_args ();
+               name (String.concat ", " c_params);
+             free_args ();
              pr "      if (r == -1 && errno != 0)\n";
              pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
-	       name;
+               name;
              pr "      RETVAL = newSViv (r);\n";
              pr " OUTPUT:\n";
              pr "      RETVAL\n"
 
-	 | RInt64 ->
+         | RInt64 ->
              pr "PREINIT:\n";
              pr "      int64_t r;\n";
              pr "   CODE:\n";
-	     pr "      errno = 0;\n";
+             pr "      errno = 0;\n";
              pr "      r = hivex_%s (%s);\n"
-	       name (String.concat ", " c_params);
-	     free_args ();
+               name (String.concat ", " c_params);
+             free_args ();
              pr "      if (r == -1 && errno != 0)\n";
              pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
-	       name;
+               name;
              pr "      RETVAL = my_newSVll (r);\n";
              pr " OUTPUT:\n";
              pr "      RETVAL\n"
-	);
-	pr "\n"
+        );
+        pr "\n"
       )
   ) functions
 
@@ -2835,42 +2840,60 @@ static int
 get_value (PyObject *v, hive_set_value *ret)
 {
   PyObject *obj;
-#ifndef HAVE_PYSTRING_ASSTRING
   PyObject *bytes;
-#endif
+
+  if (!PyDict_Check (v)) {
+    PyErr_SetString (PyExc_TypeError, \"expected dictionary type for value\");
+    return -1;
+  }
 
   obj = PyDict_GetItemString (v, \"key\");
   if (!obj) {
-    PyErr_SetString (PyExc_RuntimeError, \"no 'key' element in dictionary\");
+    PyErr_SetString (PyExc_KeyError, \"no 'key' element in dictionary\");
     return -1;
   }
-#ifdef HAVE_PYSTRING_ASSTRING
-  ret->key = PyString_AsString (obj);
-#else
-  bytes = PyUnicode_AsUTF8String (obj);
-  ret->key = PyBytes_AS_STRING (bytes);
-#endif
+  if (PyUnicode_Check (obj)) {
+    /* TODO: use PyUnicode_DecodeASCII or PyUnicode_AsUTF16String instead? */
+    bytes = PyUnicode_AsUTF8String (obj);
+    if (bytes == NULL) {
+      PyErr_SetString (PyExc_ValueError, \"failed to decode 'key'\");
+      return -1;
+    }
+    ret->key = PyBytes_AS_STRING (bytes);
+  } else if (PyBytes_Check (obj)) {
+    ret->key = PyBytes_AS_STRING (obj);
+  } else {
+    PyErr_SetString (PyExc_TypeError, \"expected bytes type for 'key'\");
+    return -1;
+  }
 
   obj = PyDict_GetItemString (v, \"t\");
   if (!obj) {
-    PyErr_SetString (PyExc_RuntimeError, \"no 't' element in dictionary\");
+    PyErr_SetString (PyExc_KeyError, \"no 't' element in dictionary\");
     return -1;
   }
   ret->t = PyLong_AsLong (obj);
+  if (PyErr_Occurred ()) {
+    PyErr_SetString (PyExc_TypeError, \"expected int type for 't'\");
+    return -1;
+  }
 
   obj = PyDict_GetItemString (v, \"value\");
   if (!obj) {
-    PyErr_SetString (PyExc_RuntimeError, \"no 'value' element in dictionary\");
+    PyErr_SetString (PyExc_KeyError, \"no 'value' element in dictionary\");
     return -1;
   }
-#ifdef HAVE_PYSTRING_ASSTRING
-  ret->value = PyString_AsString (obj);
-  ret->len = PyString_Size (obj);
-#else
-  bytes = PyUnicode_AsUTF8String (obj);
-  ret->value = PyBytes_AS_STRING (bytes);
-  ret->len = PyBytes_GET_SIZE (bytes);
-#endif
+  /* Support bytes only. As the registry can use multiple character sets, reject
+   * Unicode str types and let the caller handle conversion to nul-terminated
+   * UTF-16-LE, ASCII, etc. as necessary. This means that 'x' and b'x' are valid
+   * in Python 2 (but not u'x') but that in Python 3, only b'x' is valid. */
+  if (PyBytes_Check (obj)) {
+    ret->len = PyBytes_GET_SIZE (obj);
+    ret->value = PyBytes_AS_STRING (obj);
+  } else {
+    PyErr_SetString (PyExc_TypeError, \"expected bytes type for 'value'\");
+    return -1;
+  }
 
   return 0;
 }
@@ -2900,7 +2923,7 @@ get_values (PyObject *v, py_set_values *ret)
   ret->nr_values = len;
   ret->values = malloc (len * sizeof (hive_set_value));
   if (!ret->values) {
-    PyErr_SetString (PyExc_RuntimeError, strerror (errno));
+    PyErr_NoMemory ();
     return -1;
   }
 
@@ -2996,10 +3019,10 @@ put_val_type (char *val, size_t len, hive_type t)
       pr "  PyObject *py_r;\n";
 
       let error_code =
-	match fst style with
+        match fst style with
         | RErr -> pr "  int r;\n"; "-1"
-	| RErrDispose -> pr "  int r;\n"; "-1"
-	| RHive -> pr "  hive_h *r;\n"; "NULL"
+        | RErrDispose -> pr "  int r;\n"; "-1"
+        | RHive -> pr "  hive_h *r;\n"; "NULL"
         | RSize -> pr "  size_t r;\n"; "0"
         | RNode -> pr "  hive_node_h r;\n"; "0"
         | RNodeNotFound ->
@@ -3037,11 +3060,11 @@ put_val_type (char *val, size_t len, hive_type t)
 
       (* Call and arguments. *)
       let c_params =
-	List.map (function
-		  | AUnusedFlags -> "0"
-		  | ASetValues -> "values.nr_values, values.values"
+        List.map (function
+                  | AUnusedFlags -> "0"
+                  | ASetValues -> "values.nr_values, values.values"
                   | ASetValue -> "&val"
-		  | arg -> name_of_argt arg) (snd style) in
+                  | arg -> name_of_argt arg) (snd style) in
       let c_params =
         match fst style with
         | RLenType | RLenTypeVal -> c_params @ ["&t"; "&len"]
@@ -3051,23 +3074,23 @@ put_val_type (char *val, size_t len, hive_type t)
       List.iter (
         function
         | AHive ->
-	    pr "  hive_h *h;\n";
+            pr "  hive_h *h;\n";
             pr "  PyObject *py_h;\n"
-	| ANode n
-	| AValue n ->
-	    pr "  long %s;\n" n
-	| AString n
+        | ANode n
+        | AValue n ->
+            pr "  long %s;\n" n
+        | AString n
         | AStringNullable n ->
-	    pr "  char *%s;\n" n
-	| AOpenFlags ->
-	    pr "  int flags;\n"
-	| AUnusedFlags -> ()
-	| ASetValues ->
-	    pr "  py_set_values values;\n";
-	    pr "  PyObject *py_values;\n"
-	| ASetValue ->
-	    pr "  hive_set_value val;\n";
-	    pr "  PyObject *py_val;\n"
+            pr "  char *%s;\n" n
+        | AOpenFlags ->
+            pr "  int flags;\n"
+        | AUnusedFlags -> ()
+        | ASetValues ->
+            pr "  py_set_values values;\n";
+            pr "  PyObject *py_values;\n"
+        | ASetValue ->
+            pr "  hive_set_value val;\n";
+            pr "  PyObject *py_val;\n"
       ) (snd style);
 
       pr "\n";
@@ -3077,19 +3100,19 @@ put_val_type (char *val, size_t len, hive_type t)
       List.iter (
         function
         | AHive ->
-	    pr "O"
-	| ANode n
-	| AValue n ->
-	    pr "l"
-	| AString n ->
-	    pr "s"
+            pr "O"
+        | ANode n
+        | AValue n ->
+            pr "l"
+        | AString n ->
+            pr "s"
         | AStringNullable n ->
-	    pr "z"
-	| AOpenFlags ->
-	    pr "i"
-	| AUnusedFlags -> ()
-	| ASetValues
-	| ASetValue ->
+            pr "z"
+        | AOpenFlags ->
+            pr "i"
+        | AUnusedFlags -> ()
+        | ASetValues
+        | ASetValue ->
             pr "O"
       ) (snd style);
 
@@ -3098,19 +3121,19 @@ put_val_type (char *val, size_t len, hive_type t)
       List.iter (
         function
         | AHive ->
-	    pr ", &py_h"
-	| ANode n
-	| AValue n ->
-	    pr ", &%s" n
-	| AString n
+            pr ", &py_h"
+        | ANode n
+        | AValue n ->
+            pr ", &%s" n
+        | AString n
         | AStringNullable n ->
-	    pr ", &%s" n
-	| AOpenFlags ->
-	    pr ", &flags"
-	| AUnusedFlags -> ()
-	| ASetValues ->
+            pr ", &%s" n
+        | AOpenFlags ->
+            pr ", &flags"
+        | AUnusedFlags -> ()
+        | ASetValues ->
             pr ", &py_values"
-	| ASetValue ->
+        | ASetValue ->
             pr ", &py_val"
         ) (snd style);
 
@@ -3122,16 +3145,16 @@ put_val_type (char *val, size_t len, hive_type t)
         function
         | AHive ->
             pr "  h = get_handle (py_h);\n"
-	| ANode _
-	| AValue _
-	| AString _
+        | ANode _
+        | AValue _
+        | AString _
         | AStringNullable _
-	| AOpenFlags
-	| AUnusedFlags -> ()
-	| ASetValues ->
+        | AOpenFlags
+        | AUnusedFlags -> ()
+        | ASetValues ->
             pr "  if (get_values (py_values, &values) == -1)\n";
             pr "    return NULL;\n"
-	| ASetValue ->
+        | ASetValue ->
             pr "  if (get_value (py_val, &val) == -1)\n";
             pr "    return NULL;\n"
       ) (snd style);
@@ -3142,12 +3165,12 @@ put_val_type (char *val, size_t len, hive_type t)
       (* Free up arguments. *)
       List.iter (
         function
-	| AHive | ANode _ | AValue _
+        | AHive | ANode _ | AValue _
         | AString _ | AStringNullable _
-	| AOpenFlags | AUnusedFlags -> ()
-	| ASetValues ->
-	    pr "  free (values.values);\n"
-	| ASetValue -> ()
+        | AOpenFlags | AUnusedFlags -> ()
+        | ASetValues ->
+            pr "  free (values.values);\n"
+        | ASetValue -> ()
       ) (snd style);
 
       (* Check for errors from C library. *)
@@ -3249,6 +3272,10 @@ moduleinit (void)
   m = Py_InitModule ((char *) \"libhivexmod\", methods);
 #endif
 
+  if (m) {
+    PyModule_AddStringConstant (m, \"__version__\", PACKAGE_VERSION);
+  }
+
   return m; /* m might be NULL if module init failed */
 }
 
@@ -3283,6 +3310,8 @@ Read the hivex(3) man page to find out how to use the API.
 \"\"\"
 
 import libhivexmod
+
+__version__ = libhivexmod.__version__
 
 class Hivex(object):
     \"\"\"Instances of this class are hivex API handles.\"\"\"
@@ -3330,18 +3359,35 @@ class Hivex(object):
           fun arg ->
             pr ", ";
             match arg with
-	    | AHive -> assert false
+            | AHive -> assert false
             | ANode n | AValue n
             | AString n | AStringNullable n -> pr "%s" n
-	    | AOpenFlags
+            | AOpenFlags
             | AUnusedFlags -> assert false
-	    | ASetValues -> pr "values"
-	    | ASetValue -> pr "val"
+            | ASetValues -> pr "values"
+            | ASetValue -> pr "val"
         ) args;
         pr ")\n";
         pr "\n"
       )
   ) functions
+
+and generate_python_hive_types_py () =
+  generate_header HashStyle LGPLv2plus;
+
+  pr "\
+\"\"\"Define integer constants for hive type
+
+The names correspond with the hive_type enum type of the C API, but without
+'hive_t_' prefix.
+\"\"\"
+
+";
+  List.iter (
+    fun (t, _, new_style, description) ->
+      pr "# %s\n" description;
+      pr "REG_%s = %d\n" new_style t
+  ) hive_types;
 
 and generate_ruby_c () =
   generate_header CStyle LGPLv2plus;
@@ -3373,9 +3419,9 @@ and generate_ruby_c () =
 #define RSTRING_PTR(r) (RSTRING((r))->ptr)
 #endif
 
-static VALUE m_hivex;			/* hivex module */
-static VALUE c_hivex;			/* hive_h handle */
-static VALUE e_Error;			/* used for all errors */
+static VALUE m_hivex;                   /* hivex module */
+static VALUE c_hivex;                   /* hive_h handle */
+static VALUE e_Error;                   /* used for all errors */
 
 static void
 ruby_hivex_free (void *hvp)
@@ -3530,10 +3576,10 @@ get_values (VALUE valuesv, size_t *nr_values)
       pr "\n";
 
       let error_code =
-	match ret with
+        match ret with
         | RErr -> pr "  int r;\n"; "-1"
-	| RErrDispose -> pr "  int r;\n"; "-1"
-	| RHive -> pr "  hive_h *r;\n"; "NULL"
+        | RErrDispose -> pr "  int r;\n"; "-1"
+        | RHive -> pr "  hive_h *r;\n"; "NULL"
         | RSize -> pr "  size_t r;\n"; "0"
         | RNode -> pr "  hive_node_h r;\n"; "0"
         | RNodeNotFound ->
@@ -3787,7 +3833,9 @@ Run it from the top source directory using the command
   output_to "perl/lib/Win/Hivex.pm" generate_perl_pm;
   output_to "perl/Hivex.xs" generate_perl_xs;
 
-  output_to "python/hivex.py" generate_python_py;
+  (try Unix.mkdir "python/hivex" 0o755 with Unix_error _ -> ());
+  output_to "python/hivex/__init__.py" generate_python_py;
+  output_to "python/hivex/hive_types.py" generate_python_hive_types_py;
   output_to "python/hivex-py.c" generate_python_c;
 
   output_to "ruby/ext/hivex/_hivex.c" generate_ruby_c;
