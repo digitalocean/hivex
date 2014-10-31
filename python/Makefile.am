@@ -20,15 +20,19 @@ builddir ?= $(top_builddir)/python
 
 EXTRA_DIST = \
 	run-python-tests \
-	hivex.py \
+	hivex/__init__.py \
+	hivex/hive_types.py \
 	hivex-py.c \
 	t/*.py
 
 if HAVE_PYTHON
 
 pythondir = $(PYTHON_INSTALLDIR)
+pythonmoddir = $(PYTHON_INSTALLDIR)/hivex
 
-python_DATA = hivex.py
+pythonmod_DATA = \
+	hivex/hive_types.py \
+	hivex/__init__.py
 
 python_LTLIBRARIES = libhivexmod.la
 
@@ -42,6 +46,15 @@ TESTS_ENVIRONMENT = ../run
 
 TESTS = run-python-tests
 
-CLEANFILES = hivex.pyc
+# hivex.py got moved to hivex/__init.py
+CLEANFILES = \
+	hivex.py \
+	hivex.pyc \
+	hivex/hive_types.pyc \
+	hivex/__init__.pyc
+
+# For Python 3
+clean-local:
+	-rm -rf __pycache__/ hivex/__pycache__/
 
 endif

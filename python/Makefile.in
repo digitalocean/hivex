@@ -189,7 +189,7 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(pythondir)" "$(DESTDIR)$(pythondir)"
+am__installdirs = "$(DESTDIR)$(pythondir)" "$(DESTDIR)$(pythonmoddir)"
 LTLIBRARIES = $(python_LTLIBRARIES)
 @HAVE_PYTHON_TRUE@libhivexmod_la_DEPENDENCIES =  \
 @HAVE_PYTHON_TRUE@	$(top_builddir)/lib/libhivex.la
@@ -247,7 +247,7 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-DATA = $(python_DATA)
+DATA = $(pythonmod_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -1268,12 +1268,17 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 EXTRA_DIST = \
 	run-python-tests \
-	hivex.py \
+	hivex/__init__.py \
+	hivex/hive_types.py \
 	hivex-py.c \
 	t/*.py
 
 @HAVE_PYTHON_TRUE@pythondir = $(PYTHON_INSTALLDIR)
-@HAVE_PYTHON_TRUE@python_DATA = hivex.py
+@HAVE_PYTHON_TRUE@pythonmoddir = $(PYTHON_INSTALLDIR)/hivex
+@HAVE_PYTHON_TRUE@pythonmod_DATA = \
+@HAVE_PYTHON_TRUE@	hivex/hive_types.py \
+@HAVE_PYTHON_TRUE@	hivex/__init__.py
+
 @HAVE_PYTHON_TRUE@python_LTLIBRARIES = libhivexmod.la
 @HAVE_PYTHON_TRUE@libhivexmod_la_SOURCES = hivex-py.c
 @HAVE_PYTHON_TRUE@libhivexmod_la_CFLAGS = -Wall $(PYTHON_CFLAGS) \
@@ -1283,7 +1288,14 @@ EXTRA_DIST = \
 @HAVE_PYTHON_TRUE@libhivexmod_la_LDFLAGS = -avoid-version -shared -module -shrext $(PYTHON_EXT_SUFFIX)
 @HAVE_PYTHON_TRUE@TESTS_ENVIRONMENT = ../run
 @HAVE_PYTHON_TRUE@TESTS = run-python-tests
-@HAVE_PYTHON_TRUE@CLEANFILES = hivex.pyc
+
+# hivex.py got moved to hivex/__init.py
+@HAVE_PYTHON_TRUE@CLEANFILES = \
+@HAVE_PYTHON_TRUE@	hivex.py \
+@HAVE_PYTHON_TRUE@	hivex.pyc \
+@HAVE_PYTHON_TRUE@	hivex/hive_types.pyc \
+@HAVE_PYTHON_TRUE@	hivex/__init__.pyc
+
 all: all-am
 
 .SUFFIXES:
@@ -1400,27 +1412,27 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
-install-pythonDATA: $(python_DATA)
+install-pythonmodDATA: $(pythonmod_DATA)
 	@$(NORMAL_INSTALL)
-	@list='$(python_DATA)'; test -n "$(pythondir)" || list=; \
+	@list='$(pythonmod_DATA)'; test -n "$(pythonmoddir)" || list=; \
 	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(pythondir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(pythondir)" || exit 1; \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(pythonmoddir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(pythonmoddir)" || exit 1; \
 	fi; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(pythondir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(pythondir)" || exit $$?; \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(pythonmoddir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(pythonmoddir)" || exit $$?; \
 	done
 
-uninstall-pythonDATA:
+uninstall-pythonmodDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(python_DATA)'; test -n "$(pythondir)" || list=; \
+	@list='$(pythonmod_DATA)'; test -n "$(pythonmoddir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(pythondir)'; $(am__uninstall_files_from_dir)
+	dir='$(DESTDIR)$(pythonmoddir)'; $(am__uninstall_files_from_dir)
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -1672,7 +1684,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(LTLIBRARIES) $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(pythondir)" "$(DESTDIR)$(pythondir)"; do \
+	for dir in "$(DESTDIR)$(pythondir)" "$(DESTDIR)$(pythonmoddir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -1709,10 +1721,11 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+@HAVE_PYTHON_FALSE@clean-local:
 clean: clean-am
 
-clean-am: clean-generic clean-libtool clean-pythonLTLIBRARIES \
-	mostlyclean-am
+clean-am: clean-generic clean-libtool clean-local \
+	clean-pythonLTLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -1732,7 +1745,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-pythonDATA install-pythonLTLIBRARIES
+install-data-am: install-pythonLTLIBRARIES install-pythonmodDATA
 
 install-dvi: install-dvi-am
 
@@ -1778,29 +1791,33 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-pythonDATA uninstall-pythonLTLIBRARIES
+uninstall-am: uninstall-pythonLTLIBRARIES uninstall-pythonmodDATA
 
 .MAKE: check-am install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am check check-TESTS check-am clean \
-	clean-generic clean-libtool clean-pythonLTLIBRARIES \
-	cscopelist-am ctags ctags-am distclean distclean-compile \
-	distclean-generic distclean-libtool distclean-tags distdir dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-pythonDATA \
-	install-pythonLTLIBRARIES install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
+	clean-generic clean-libtool clean-local \
+	clean-pythonLTLIBRARIES cscopelist-am ctags ctags-am distclean \
+	distclean-compile distclean-generic distclean-libtool \
+	distclean-tags distdir dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-pythonLTLIBRARIES install-pythonmodDATA install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	recheck tags tags-am uninstall uninstall-am \
-	uninstall-pythonDATA uninstall-pythonLTLIBRARIES
+	uninstall-pythonLTLIBRARIES uninstall-pythonmodDATA
 
 
 # Old RHEL 5 autoconf doesn't have builddir.
 builddir ?= $(top_builddir)/python
+
+# For Python 3
+@HAVE_PYTHON_TRUE@clean-local:
+@HAVE_PYTHON_TRUE@	-rm -rf __pycache__/ hivex/__pycache__/
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

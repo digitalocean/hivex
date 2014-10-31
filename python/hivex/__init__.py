@@ -36,6 +36,8 @@ Read the hivex(3) man page to find out how to use the API.
 
 import libhivexmod
 
+__version__ = libhivexmod.__version__
+
 class Hivex(object):
     """Instances of this class are hivex API handles."""
 

@@ -32,6 +32,11 @@
 #include <hivex.h>
 #include <inttypes.h>
 
+/* For Perl < 5.12 */
+#ifndef newSVpvn_utf8
+#define newSVpvn_utf8(a,b,u) newSVpvn((a),(b))
+#endif
+
 static SV *
 my_newSVll(long long val) {
 #ifdef USE_64_BIT_ALL
