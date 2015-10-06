@@ -1,5 +1,5 @@
 # DO NOT EDIT! GENERATED AUTOMATICALLY!
-# Copyright (C) 2002-2014 Free Software Foundation, Inc.
+# Copyright (C) 2002-2015 Free Software Foundation, Inc.
 #
 # This file is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,10 +37,12 @@ AC_DEFUN([gl_EARLY],
   m4_pattern_allow([^gl_ES$])dnl a valid locale name
   m4_pattern_allow([^gl_LIBOBJS$])dnl a variable
   m4_pattern_allow([^gl_LTLIBOBJS$])dnl a variable
+  AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
   AC_REQUIRE([gl_PROG_AR_RANLIB])
   # Code from module absolute-header:
   # Code from module alloca-opt:
   # Code from module alloca-opt-tests:
+  # Code from module assure:
   # Code from module binary-io:
   # Code from module binary-io-tests:
   # Code from module byteswap:
@@ -49,6 +51,8 @@ AC_DEFUN([gl_EARLY],
   # Code from module c-ctype-tests:
   # Code from module close:
   # Code from module close-tests:
+  # Code from module ctype:
+  # Code from module ctype-tests:
   # Code from module dosname:
   # Code from module dup2:
   # Code from module dup2-tests:
@@ -59,7 +63,6 @@ AC_DEFUN([gl_EARLY],
   # Code from module error:
   # Code from module exitfail:
   # Code from module extensions:
-  AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
   # Code from module extern-inline:
   # Code from module fcntl:
   # Code from module fcntl-h:
@@ -95,6 +98,9 @@ AC_DEFUN([gl_EARLY],
   # Code from module gitlog-to-changelog:
   # Code from module gnu-make:
   # Code from module gnumakefile:
+  # Code from module havelib:
+  # Code from module iconv:
+  # Code from module iconv-tests:
   # Code from module ignore-value:
   # Code from module ignore-value-tests:
   # Code from module include_next:
@@ -143,6 +149,8 @@ AC_DEFUN([gl_EARLY],
   # Code from module ssize_t:
   # Code from module stat:
   # Code from module stat-tests:
+  # Code from module stdalign:
+  # Code from module stdalign-tests:
   # Code from module stdbool:
   # Code from module stdbool-tests:
   # Code from module stddef:
@@ -290,6 +298,9 @@ AC_DEFUN([gl_INIT],
           m4_defn([m4_PACKAGE_VERSION])), [1], [],
         [AC_CONFIG_LINKS([$GNUmakefile:$GNUmakefile], [],
           [GNUmakefile=$GNUmakefile])])
+  AM_ICONV
+  m4_ifdef([gl_ICONV_MODULE_INDICATOR],
+    [gl_ICONV_MODULE_INDICATOR([iconv])])
   gl_INTTYPES_H
   gl_INTTYPES_INCOMPLETE
   AC_CONFIG_COMMANDS_PRE([m4_ifdef([AH_HEADER],
@@ -440,6 +451,7 @@ changequote([, ])dnl
   AC_SUBST([gltests_WITNESS])
   gl_module_indicator_condition=$gltests_WITNESS
   m4_pushdef([gl_MODULE_INDICATOR_CONDITION], [$gl_module_indicator_condition])
+  gl_CTYPE_H
   gl_ENVIRON
   gl_UNISTD_MODULE_INDICATOR([environ])
   gl_FUNC_FDOPEN
@@ -511,6 +523,7 @@ changequote([, ])dnl
     gl_PREREQ_STAT
   fi
   gl_SYS_STAT_MODULE_INDICATOR([stat])
+  gl_STDALIGN_H
   AC_REQUIRE([gt_TYPE_WCHAR_T])
   AC_REQUIRE([gt_TYPE_WINT_T])
   dnl Check for prerequisites for memory fence checks.
@@ -627,6 +640,7 @@ AC_DEFUN([gltests_LIBSOURCES], [
 # This macro records the list of files which have been installed by
 # gnulib-tool and may be removed by future gnulib-tool invocations.
 AC_DEFUN([gl_FILE_LIST], [
+  build-aux/config.rpath
   build-aux/gitlog-to-changelog
   build-aux/snippet/_Noreturn.h
   build-aux/snippet/arg-nonnull.h
@@ -637,6 +651,7 @@ AC_DEFUN([gl_FILE_LIST], [
   lib/alloca.in.h
   lib/asnprintf.c
   lib/asprintf.c
+  lib/assure.h
   lib/byteswap.in.h
   lib/c-ctype.c
   lib/c-ctype.h
@@ -725,6 +740,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/alloca.m4
   m4/byteswap.m4
   m4/close.m4
+  m4/ctype.m4
   m4/dup2.m4
   m4/eealloc.m4
   m4/environ.m4
@@ -747,12 +763,16 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/gettimeofday.m4
   m4/gnu-make.m4
   m4/gnulib-common.m4
+  m4/iconv.m4
   m4/include_next.m4
   m4/intmax_t.m4
   m4/inttypes-pri.m4
   m4/inttypes.m4
   m4/inttypes_h.m4
   m4/largefile.m4
+  m4/lib-ld.m4
+  m4/lib-link.m4
+  m4/lib-prefix.m4
   m4/longlong.m4
   m4/lstat.m4
   m4/malloc.m4
@@ -781,6 +801,7 @@ AC_DEFUN([gl_FILE_LIST], [
   m4/size_max.m4
   m4/ssize_t.m4
   m4/stat.m4
+  m4/stdalign.m4
   m4/stdbool.m4
   m4/stddef_h.m4
   m4/stdint.m4
@@ -819,6 +840,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-byteswap.c
   tests/test-c-ctype.c
   tests/test-close.c
+  tests/test-ctype.c
   tests/test-dup2.c
   tests/test-environ.c
   tests/test-errno.c
@@ -837,6 +859,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-getopt.h
   tests/test-getopt_long.h
   tests/test-gettimeofday.c
+  tests/test-iconv.c
   tests/test-ignore-value.c
   tests/test-init.sh
   tests/test-intprops.c
@@ -854,6 +877,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/test-signal-h.c
   tests/test-stat.c
   tests/test-stat.h
+  tests/test-stdalign.c
   tests/test-stdbool.c
   tests/test-stddef.c
   tests/test-stdint.c
@@ -890,6 +914,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests/zerosize-ptr.h
   tests=lib/binary-io.c
   tests=lib/binary-io.h
+  tests=lib/ctype.in.h
   tests=lib/dosname.h
   tests=lib/fdopen.c
   tests=lib/fpucw.h
@@ -908,6 +933,7 @@ AC_DEFUN([gl_FILE_LIST], [
   tests=lib/same-inode.h
   tests=lib/setenv.c
   tests=lib/stat.c
+  tests=lib/stdalign.in.h
   tests=lib/symlink.c
   tests=lib/sys_stat.in.h
   tests=lib/sys_time.in.h

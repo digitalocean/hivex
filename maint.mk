@@ -2,7 +2,7 @@
 # This Makefile fragment tries to be general-purpose enough to be
 # used by many projects via the gnulib maintainer-makefile module.
 
-## Copyright (C) 2001-2014 Free Software Foundation, Inc.
+## Copyright (C) 2001-2015 Free Software Foundation, Inc.
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -20,13 +20,6 @@
 # This is reported not to work with make-3.79.1
 # ME := $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 ME := maint.mk
-
-# Diagnostic for continued use of deprecated variable.
-# Remove in 2013
-ifneq ($(build_aux),)
- $(error "$(ME): \
-set $$(_build-aux) relative to $$(srcdir) instead of $$(build_aux)")
-endif
 
 # Helper variables.
 _empty =
@@ -155,6 +148,7 @@ export LC_ALL = C
 ## Sanity checks.  ##
 ## --------------- ##
 
+ifneq ($(_gl-Makefile),)
 _cfg_mk := $(wildcard $(srcdir)/cfg.mk)
 
 # Collect the names of rules starting with 'sc_'.
@@ -196,6 +190,7 @@ local-check :=								\
     $(filter-out $(local-checks-to-skip), $(local-checks-available)))
 
 syntax-check: $(local-check)
+endif
 
 # _sc_search_regexp
 #
@@ -445,7 +440,7 @@ sc_require_config_h:
 # You must include <config.h> before including any other header file.
 # This can possibly be via a package-specific header, if given by cfg.mk.
 sc_require_config_h_first:
-	@if $(VC_LIST_EXCEPT) | grep -l '\.c$$' > /dev/null; then	\
+	@if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
 	  fail=0;							\
 	  for i in $$($(VC_LIST_EXCEPT) | grep '\.c$$'); do		\
 	    grep '^# *include\>' $$i | $(SED) 1q			\
@@ -469,7 +464,7 @@ sc_prohibit_HAVE_MBRTOWC:
 define _sc_header_without_use
   dummy=; : so we do not need a semicolon before each use;		\
   h_esc=`echo '[<"]'"$$h"'[">]'|$(SED) 's/\./\\\\./g'`;			\
-  if $(VC_LIST_EXCEPT) | grep -l '\.c$$' > /dev/null; then		\
+  if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then			\
     files=$$(grep -l '^# *include '"$$h_esc"				\
 	     $$($(VC_LIST_EXCEPT) | grep '\.c$$')) &&			\
     grep -LE "$$re" $$files | grep . &&					\
@@ -716,7 +711,7 @@ sc_changelog:
 # Ensure that each .c file containing a "main" function also
 # calls set_program_name.
 sc_program_name:
-	@require='set_program_name *\(m?argv\[0\]\);'			\
+	@require='set_program_name *\(.*\);'				\
 	in_vc_files='\.c$$'						\
 	containing='\<main *('						\
 	halt='the above files do not call set_program_name'		\
@@ -1000,6 +995,14 @@ sc_prohibit_undesirable_word_seq:
 	     $$($(VC_LIST_EXCEPT))					\
 	  | grep -vE '$(ignore_undesirable_word_sequence_RE_)' | grep .	\
 	  && { echo '$(ME): undesirable word sequence' >&2; exit 1; } || :
+
+# Except for shell files and for loops, double semicolon is probably a mistake
+sc_prohibit_double_semicolon:
+	@prohibit='; *;[	{} \]*(/[/*]|$$)'			\
+	in_vc_files='\.[chly]$$'					\
+	exclude='\bfor *\(.*\)'						\
+	halt="Double semicolon detected"				\
+	  $(_sc_search_regexp)
 
 _ptm1 = use "test C1 && test C2", not "test C1 -''a C2"
 _ptm2 = use "test C1 || test C2", not "test C1 -''o C2"
@@ -1645,14 +1648,14 @@ _gl_tight_scope: $(bin_PROGRAMS)
 	  perl -lne							\
 	     '$(_gl_TS_function_match) and print "^$$1\$$"' $$hdr;	\
 	) | sort -u > $$t;						\
-	nm -e $(_gl_TS_obj_files)|$(SED) -n 's/.* T //p'|grep -Ev -f $$t \
+	nm -g $(_gl_TS_obj_files)|$(SED) -n 's/.* T //p'|grep -Ev -f $$t \
 	  && { echo the above functions should have static scope >&2;	\
 	       exit 1; } || : ;						\
 	( printf '^%s$$\n' '__.*' $(_gl_TS_unmarked_extern_vars);	\
 	  perl -lne '$(_gl_TS_var_match) and print "^$$1\$$"'		\
 		$$hdr $(_gl_TS_other_headers)				\
 	) | sort -u > $$t;						\
-	nm -e $(_gl_TS_obj_files) | $(SED) -n 's/.* [BCDGRS] //p'	\
+	nm -g $(_gl_TS_obj_files) | $(SED) -n 's/.* [BCDGRS] //p'	\
             | sort -u | grep -Ev -f $$t					\
 	  && { echo the above variables should have static scope >&2;	\
 	       exit 1; } || :
