@@ -54,11 +54,14 @@ _hivex_recode (const char *input_encoding, const char *input, size_t input_len,
   const char *inp = input;
   char *outp = out;
 
-  /* Surely iconv doesn't really modify the input buffer? XXX */
-  size_t r = iconv (ic, (char **) &inp, &inlen, &outp, &outlen);
+  size_t r = iconv (ic, (ICONV_CONST char **) &inp, &inlen, &outp, &outlen);
   if (r == (size_t) -1) {
     if (errno == E2BIG) {
       int err = errno;
+      /* Reset errno here because we don't want to accidentally
+       * return E2BIG to a library caller.
+       */
+      errno = 0;
       size_t prev = outalloc;
       /* Try again with a larger output buffer. */
       free (out);

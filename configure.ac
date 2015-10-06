@@ -18,7 +18,7 @@
 # major/minor/release must be numbers
 m4_define([hivex_major],   [1])
 m4_define([hivex_minor],   [3])
-m4_define([hivex_release], [11])
+m4_define([hivex_release], [12])
 # extra can be any string
 m4_define([hivex_extra],   [])
 
@@ -376,9 +376,15 @@ AS_IF([test "x$enable_ruby" != "xno"],[
         libruby="$(cat conftest)"
         rm conftest
         AS_IF([test -n "$libruby"],[
+            ruby_cmd='puts RbConfig::CONFIG@<:@"libdir"@:>@'
+            echo running: $RUBY -rrbconfig -e \'$ruby_cmd\' >&AS_MESSAGE_LOG_FD
+            $RUBY -rrbconfig -e "$ruby_cmd" >conftest 2>&AS_MESSAGE_LOG_FD
+            libruby_libdir="$(cat conftest)"
+            rm conftest
+            test -n "$libruby_libdir" && libruby_libdir="-L$libruby_libdir"
             AC_MSG_RESULT([-l$libruby])
             AC_CHECK_LIB([$libruby],[ruby_init],
-                         [have_libruby=1],[have_libruby=])
+                         [have_libruby=1],[have_libruby=],[$libruby_libdir])
 
             dnl Symbols that we substitute when missing.
             AS_IF([test -n "$have_libruby"],[
