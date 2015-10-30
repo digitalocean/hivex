@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hivex 1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-05 17:53+0100\n"
+"POT-Creation-Date: 2015-10-29 15:53+0000\n"
 "PO-Revision-Date: 2011-03-22 11:29-0400\n"
 "Last-Translator: rjones <rjones@redhat.com>\n"
 "Language-Team: Kannada <None>\n"
@@ -120,8 +120,8 @@ msgid "%s: %s: key not found\n"
 msgstr "%s: %s: ಕೀಲಿಯು ಕಂಡುಬಂದಿಲ್ಲ\n"
 
 #: sh/hivexsh.c:859 sh/hivexsh.c:963 sh/hivexsh.c:989 sh/hivexsh.c:1018
-#, c-format
-msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
+#, fuzzy, c-format
+msgid "%s: %s: invalid integer parameter (%s returned %u)\n"
 msgstr "%s: %s: ಅಮಾನ್ಯವಾದ ಪೂರ್ಣ ನಿಯತಾಂಕ (%s ಮರಳಿಸಲಾಗಿದೆ %d)\n"
 
 #: sh/hivexsh.c:864 sh/hivexsh.c:969 sh/hivexsh.c:995 sh/hivexsh.c:1024
