@@ -79,7 +79,7 @@ static void set_prompt_string (void);
 static void initialize_readline (void);
 static void cleanup_readline (void);
 static void add_history_line (const char *);
-static char *rl_gets (const char *prompt_string);
+static char *rl_gets (const char *prompt);
 static void sort_strings (char **strings, int len);
 static int get_xdigit (char c);
 static int dispatch (char *cmd, char *args);
@@ -288,7 +288,7 @@ print_node_path (hive_node_h node, FILE *fp)
 static char *line_read = NULL;
 
 static char *
-rl_gets (const char *prompt_string)
+rl_gets (const char *prompt)
 {
 #ifdef HAVE_LIBREADLINE
 
@@ -298,7 +298,7 @@ rl_gets (const char *prompt_string)
       line_read = NULL;
     }
 
-    line_read = readline (prompt_string);
+    line_read = readline (prompt);
 
     if (line_read && *line_read)
       add_history_line (line_read);
@@ -312,7 +312,7 @@ rl_gets (const char *prompt_string)
   int len;
 
   if (is_tty)
-    printf ("%s", prompt_string);
+    printf ("%s", prompt);
   line_read = fgets (buf, sizeof buf, stdin);
 
   if (line_read) {
@@ -756,22 +756,22 @@ cmd_lsval (char *key)
 
     size_t i;
     for (i = 0; values[i] != 0; ++i) {
-      char *key = hivex_value_key (h, values[i]);
-      if (!key) goto error;
+      char *k = hivex_value_key (h, values[i]);
+      if (!k) goto error;
 
-      if (*key) {
+      if (*k) {
         putchar ('"');
         size_t j;
-        for (j = 0; key[j] != 0; ++j) {
-          if (key[j] == '"' || key[j] == '\\')
+        for (j = 0; k[j] != 0; ++j) {
+          if (k[j] == '"' || k[j] == '\\')
             putchar ('\\');
-          putchar (key[j]);
+          putchar (k[j]);
         }
         putchar ('"');
       } else
         printf ("\"@\"");       /* default key in regedit files */
       putchar ('=');
-      free (key);
+      free (k);
 
       hive_type t;
       size_t len;
@@ -787,7 +787,7 @@ cmd_lsval (char *key)
           goto error;
 
         if (t != hive_t_string)
-          printf ("str(%d):", t);
+          printf ("str(%u):", t);
         putchar ('"');
         size_t j;
         for (j = 0; str[j] != 0; ++j) {
@@ -803,7 +803,7 @@ cmd_lsval (char *key)
       case hive_t_dword:
       case hive_t_dword_be: {
         int32_t j = hivex_value_dword (h, values[i]);
-        printf ("dword:%08" PRIx32, j);
+        printf ("dword:%08" PRIx32, (uint32_t) j);
         break;
       }
 
@@ -820,7 +820,7 @@ cmd_lsval (char *key)
         if (!data)
           goto error;
 
-        printf ("hex(%d):", t);
+        printf ("hex(%u):", t);
         size_t j;
         for (j = 0; j < len; ++j) {
           if (j > 0)
@@ -856,7 +856,7 @@ cmd_setval (char *nrvals_str)
   long nrvals;
   xerr = xstrtol (nrvals_str, NULL, 0, &nrvals, "");
   if (xerr != LONGINT_OK) {
-    fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %d)\n"),
+    fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %u)\n"),
              "setval", "nrvals", "xstrtol", xerr);
     return -1;
   }
@@ -960,7 +960,7 @@ cmd_setval (char *nrvals_str)
       long n;
       xerr = xstrtol (buf, NULL, 0, &n, "");
       if (xerr != LONGINT_OK) {
-        fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %d)\n"),
+        fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %u)\n"),
                  "setval", "dword", "xstrtol", xerr);
         goto error;
       }
@@ -986,7 +986,7 @@ cmd_setval (char *nrvals_str)
       long long n;
       xerr = xstrtoll (buf, NULL, 0, &n, "");
       if (xerr != LONGINT_OK) {
-        fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %d)\n"),
+        fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %u)\n"),
                  "setval", "dword", "xstrtoll", xerr);
         goto error;
       }
@@ -1015,7 +1015,7 @@ cmd_setval (char *nrvals_str)
       long t;
       xerr = xstrtol (buf, NULL, 0, &t, "");
       if (xerr != LONGINT_OK) {
-        fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %d)\n"),
+        fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %u)\n"),
                  "setval", "hex", "xstrtol", xerr);
         goto error;
       }

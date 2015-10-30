@@ -1,3 +1,37 @@
+2015-10-29  Richard W.M. Jones  <rjones@redhat.com>
+
+	Version 1.3.13.
+
+	Enable more warnings in configure.
+	Includes some minor fixes in hivexsh.c to deal with the new warnings.
+
+	sh: Use %u formatter to print enum strtol_error.
+
+	sh: Cast value to unsigned type when printing dword: field.
+
+	hive_type enum needs %u printf formatter.
+
+	lib: block->seg_len is signed, use correct printf formatter.
+
+	lib: h->last_modified field is signed, so use correct printf formatter.
+
+	lib: Turn off -Warray-bounds warnings.
+	Causes false positives about our use of [1] for arbitrary length
+	arrays embedded in structs.
+
+	Update gnulib to latest.
+
+	Don't fail if libxml2 is not installed (RHBZ#1276364).
+	If no libxml2 found, don't compile hivexml, but compile the
+	rest of the library.
+
+2015-10-21  Pino Toscano  <ptoscano@redhat.com>
+
+	build: pass $(MAKE) to run-perl-tests
+	Instead of hardcoding "make" in run-perl-tests, pass the actual name of
+	make from the Makefile; the default is still "make", mostly to use the
+	script without having to set $MAKE.
+
 2015-10-05  Richard W.M. Jones  <rjones@redhat.com>
 
 	Fix EXTRA_DIST.

@@ -1,5 +1,5 @@
 # hivex
-# Copyright (C) 2009-2014 Red Hat Inc.
+# Copyright (C) 2009-2015 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 # major/minor/release must be numbers
 m4_define([hivex_major],   [1])
 m4_define([hivex_minor],   [3])
-m4_define([hivex_release], [12])
+m4_define([hivex_release], [13])
 # extra can be any string
 m4_define([hivex_extra],   [])
 
@@ -77,23 +77,9 @@ if test "$gl_gcc_warnings" = yes; then
   nw="$nw -Wc++-compat"             # We don't care about C++ compilers
   nw="$nw -Wundef"                  # Warns on '#if GNULIB_FOO' etc in gnulib
   nw="$nw -Wtraditional"            # Warns on #elif which we use often
-  nw="$nw -Wcast-qual"              # Too many warnings for now
-  nw="$nw -Wconversion"             # Too many warnings for now
   nw="$nw -Wsystem-headers"         # Don't let system headers trigger warnings
-  nw="$nw -Wsign-conversion"        # Too many warnings for now
-  nw="$nw -Wtraditional-conversion" # Too many warnings for now
-  nw="$nw -Wunreachable-code"       # Too many warnings for now
   nw="$nw -Wpadded"                 # Our structs are not padded
-  nw="$nw -Wredundant-decls"        # openat.h declares e.g., mkdirat
-  nw="$nw -Wlogical-op"             # any use of fwrite provokes this
-  nw="$nw -Wvla"                    # two warnings in mount.c
-  # things I might fix soon:
-  nw="$nw -Wmissing-format-attribute" # daemon.h's asprintf_nowarn
-  nw="$nw -Winline"                 # daemon.h's asprintf_nowarn
-  nw="$nw -Wshadow"                 # numerous, plus we're not unanimous
-  # ?? -Wstrict-overflow
-  nw="$nw -Wunsafe-loop-optimizations" # just a warning that an optimization
-                                    # was not possible, safe to ignore
+  nw="$nw -Wvla"                    # Allow variable length arrays.
   nw="$nw -Wpacked"                 # Allow attribute((packed)) on structs
   nw="$nw -Wlong-long"              # Allow long long since it's required
                                     # by xstrtoll.
@@ -117,6 +103,10 @@ if test "$gl_gcc_warnings" = yes; then
   # In spite of excluding -Wlogical-op above, it is enabled, as of
   # gcc 4.5.0 20090517, and it provokes warnings in cat.c, dd.c, truncate.c
   gl_WARN_ADD([-Wno-logical-op])
+
+  # False positives about our use of [1] for arbitrary length arrays
+  # embedded in structs.
+  gl_WARN_ADD([-Wno-array-bounds])
 
   gl_WARN_ADD([-fdiagnostics-show-option])
 
@@ -187,10 +177,15 @@ AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.17])
 AM_ICONV
 
-dnl libxml2.
-PKG_CHECK_MODULES([LIBXML2], [libxml-2.0])
-AC_SUBST([LIBXML2_CFLAGS])
-AC_SUBST([LIBXML2_LIBS])
+dnl libxml2 (optional).
+PKG_CHECK_MODULES([LIBXML2], [libxml-2.0], [
+    AC_SUBST([LIBXML2_CFLAGS])
+    AC_SUBST([LIBXML2_LIBS])
+    have_libxml2=yes
+], [
+    have_libxml2=no
+])
+AM_CONDITIONAL([HAVE_LIBXML2],[test "x$have_libxml2" = "xyes"])
 
 dnl hivexsh depends on open_memstream, which is absent on OS X.
 AC_CHECK_FUNC([open_memstream])
