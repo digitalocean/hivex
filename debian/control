@@ -121,7 +121,7 @@ Package: ruby-hivex
 Architecture: any
 Section: ruby
 XB-Ruby-Versions: ${ruby:Versions}
-Depends: ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Ruby bindings for hivex
  Ruby bindings for libhivex, a library for reading and writing
  Windows Registry "hive" binary files.
