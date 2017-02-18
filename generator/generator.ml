@@ -113,6 +113,7 @@ let open_flags = [
   1, "VERBOSE", "Verbose messages";
   2, "DEBUG", "Debug messages";
   4, "WRITE", "Enable writes to the hive";
+  8, "UNSAFE", "Enable heuristics to allow read/write of corrupted hives";
 ]
 
 (* The API calls. *)
@@ -144,6 +145,13 @@ is set to 1.
 Open the hive for writing.  If omitted, the hive is read-only.
 
 See L<hivex(3)/WRITING TO HIVE FILES>.
+
+=item HIVEX_OPEN_UNSAFE
+
+Open the hive in unsafe mode that enables heuristics to handle corrupted hives.
+
+This may allow to read or write registry keys/values that appear intact in an
+otherwise corrupted hive. Use at your own risk.
 
 =back";
 
@@ -210,6 +218,11 @@ Return the child of node with the name C<name>, if it exists.
 
 The name is matched case insensitively.";
 
+  "node_nr_children", (RSize, [AHive; ANode "node"]),
+    "return the number of children of a node",
+    "\
+Return the number of nodes as produced by C<hivex_node_children>.";
+
   "node_parent", (RNode, [AHive; ANode "node"]),
     "return the parent of node",
     "\
@@ -236,6 +249,12 @@ Note that to get the default key, you should pass the empty
 string C<\"\"> here.  The default key is often written C<\"@\">, but
 inside hives that has no meaning and won't give you the
 default key.";
+
+  "node_nr_values", (RSize, [AHive; ANode "node"]),
+    "return the number of values attached to a node",
+    "\
+Return the number of (key, value) pairs attached to this node
+as produced by C<hivex_node_values>.";
 
   "value_key_len", (RSize, [AHive; AValue "val"]),
     "return the length of a value's key",

@@ -1,3 +1,116 @@
+2017-02-17  Dawid Zamirski  <dzamirski@datto.com>
+
+	hivexregedit: allow to pass HIVEX_OPEN_UNSAFE
+	via new --unsafe flag. Also make --export catpure, log and skip over
+	errors when reading subkeys/values so that export in unsafe mode does
+	not abort at first sign of error.
+
+	hivexsh: add -u flag for HIVEX_OPEN_UNSAFE.
+	and pass it to hivex_open. Additionally make hivex_value_value failures
+	non-critical in this mode when iterating through node children/values.
+
+2017-02-17  Dawid Zamirski  <dzamirski@datto.com>
+
+	lib: allow to walk registry with corrupted blocks
+	Only when HIVEX_OPEN_UNSAFE flag is set.
+
+	There are some corrupted registry files that have invalid hbin cells
+	but are still readable. This patch makes the following changes:
+
+	* hivex_open - do not abort with complete failure if we run across a
+	  block with invalid size (unless it's the root block). Instead just
+	  log the event, and move on. This will allow open hives that have
+	  apparent invalid blocks but the ones of potential interest might be
+	  perfectly accessible.
+	* _hivex_get_children - similiarly, if the's invalid subkey, just skip
+	  it instead of failing so one can continue to browse other valid
+	  subkeys.
+
+	The above is similar to the behavior to Windows regedit where one can
+	load such corrupted hives with e.g. "reg load HKU\Corrupted" and
+	browse/change it despite some keys might be missing.
+
+2017-02-17  Dawid Zamirski  <dzamirski@datto.com>
+
+	lib: change how hbin sections are read.
+	Only when HIVEX_OPEN_UNSAFE flag is set:
+
+	* hivex_open: when looping over hbin sections (aka pages), handle a
+	  case where following hbin section may not begin at exactly at the end
+	  of previous one. If this happens, scan the page section until next
+	  one is found and validate it by checking declared offset with actual
+	  one - if they match, all is good and we can safely move on.
+
+	Rationale: there are registry hives there is some garbage data between
+	hbin section but the hive is still perfectly usable as long as the
+	offsets stated in hbin headers are correct.
+
+2017-02-17  Dawid Zamirski  <dzamirski@datto.com>
+
+	add HIVEX_OPEN_UNSAFE flag.
+	This flag will be used to control behavior of libhivex API functions so
+	that they tolerate corruption in hives by either using heuristic
+	recovery from unexpected situations or simply ignore bad registry
+	keys/values whenever possible.
+
+2017-02-15  Richard W.M. Jones  <rjones@redhat.com>
+
+	Disable -Wunsafe-loop-optimizations warning.
+	It doesn't indicate a bug, it indicates that GCC cannot make an
+	optimization (I think).
+
+2017-02-15  Richard W.M. Jones  <rjones@redhat.com>
+
+	sh: Fix signed/unsigned issues in setval command.
+	Use size_t instead of int for counting sizes of strings etc.
+
+	Also remove this warning:
+
+	hivexsh.c: In function 'main':
+	hivexsh.c:923:7: error: missed loop optimization, the loop counter may overflow [-Werror=unsafe-loop-optimizations]
+	       for (j = 0; j <= /* sic */ nr_chars; ++j) {
+	       ^~~
+	hivexsh.c:942:7: error: missed loop optimization, the loop counter may overflow [-Werror=unsafe-loop-optimizations]
+	       for (j = 0; j <= /* sic */ nr_chars; ++j) {
+	       ^~~
+
+2017-02-15  Richard W.M. Jones  <rjones@redhat.com>
+
+	lib: Temporarily disable -Wstrict-overflow warning around statement.
+
+2016-12-03  Matt Coleman  <matt@datto.com>
+
+	Increase HIVEX_MAX_SUBKEYS and HIVEX_MAX_VALUES
+	This increases the defined limits based on counts observed in the
+	Microsoft\Windows NT\CurrentVersion subkey of the software hive.
+
+2016-11-01  Richard W.M. Jones  <rjones@redhat.com>
+
+	test: Fix test that handle is not NULL.
+	Fixes commit 7964606fbb481c4725c202804a127168ac309020.
+
+	run: Add built programs to the PATH.
+	As a side effect of this change, this ensures we are testing
+	hivexregedit that has been built, not the installed version (and
+	failing when hivexregedit is not installed).
+
+2016-02-15  kupiakos  <kupiakos@gmail.com>
+
+	New API: hivex_node_nr_values
+
+2016-02-15  Richard W.M. Jones  <rjones@redhat.com>
+
+	New API: node_nr_children
+	A number of changes from the previous patch:
+
+	 - Change the name of the new API to node_nr_children.
+
+	 - Stylistic/whitespace changes.
+
+2016-02-14  kupiakos  <kupiakos@gmail.com>
+
+	lib: Add hivex_node_children_count
+
 2015-10-29  Richard W.M. Jones  <rjones@redhat.com>
 
 	Version 1.3.13.

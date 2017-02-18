@@ -41,6 +41,7 @@ struct hive_h {
   size_t size;
   int msglvl;                   /* 1 = verbose, 2 or 3 = debug */
   int writable;
+  int unsafe;
 
   /* Registry file, memory mapped if read-only, or malloc'd if writing. */
   union {
@@ -323,8 +324,8 @@ extern int _hivex_get_values (hive_h *h, hive_node_h node, hive_value_h **values
   } while (0)
 
 /* These limits are in place to stop really stupid stuff and/or exploits. */
-#define HIVEX_MAX_SUBKEYS       25000
-#define HIVEX_MAX_VALUES        10000
+#define HIVEX_MAX_SUBKEYS       70000
+#define HIVEX_MAX_VALUES        55000
 #define HIVEX_MAX_VALUE_LEN   8000000
 #define HIVEX_MAX_ALLOCATION  1000000
 

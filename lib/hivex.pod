@@ -5,7 +5,7 @@
    generator/generator.ml
  ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 
- Copyright (C) 2009-2015 Red Hat Inc.
+ Copyright (C) 2009-2017 Red Hat Inc.
  Derived from code by Petter Nordahl-Hagen under a compatible license:
    Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  Derived from code by Markus Stephany under a compatible license:
@@ -45,9 +45,11 @@ hivex - Windows Registry "hive" extraction library
  int64_t hivex_node_timestamp (hive_h *h, hive_node_h node);
  hive_node_h *hivex_node_children (hive_h *h, hive_node_h node);
  hive_node_h hivex_node_get_child (hive_h *h, hive_node_h node, const char *name);
+ size_t hivex_node_nr_children (hive_h *h, hive_node_h node);
  hive_node_h hivex_node_parent (hive_h *h, hive_node_h node);
  hive_value_h *hivex_node_values (hive_h *h, hive_node_h node);
  hive_value_h hivex_node_get_value (hive_h *h, hive_node_h node, const char *key);
+ size_t hivex_node_nr_values (hive_h *h, hive_node_h node);
  size_t hivex_value_key_len (hive_h *h, hive_value_h val);
  char *hivex_value_key (hive_h *h, hive_value_h val);
  int hivex_value_type (hive_h *h, hive_value_h val, hive_type *t, size_t *len);
@@ -200,6 +202,13 @@ Open the hive for writing.  If omitted, the hive is read-only.
 
 See L<hivex(3)/WRITING TO HIVE FILES>.
 
+=item HIVEX_OPEN_UNSAFE
+
+Open the hive in unsafe mode that enables heuristics to handle corrupted hives.
+
+This may allow to read or write registry keys/values that appear intact in an
+otherwise corrupted hive. Use at your own risk.
+
 =back
 
 Returns a new hive handle.
@@ -300,6 +309,15 @@ Returns a node handle.
 If the node was not found, this returns 0 without setting errno.
 On error this returns 0 and sets errno.
 
+=head2 hivex_node_nr_children
+
+ size_t hivex_node_nr_children (hive_h *h, hive_node_h node);
+
+Return the number of nodes as produced by C<hivex_node_children>.
+
+Returns a size.
+On error this returns 0 and sets errno.
+
 =head2 hivex_node_parent
 
  hive_node_h hivex_node_parent (hive_h *h, hive_node_h node);
@@ -338,6 +356,16 @@ inside hives that has no meaning and won't give you the
 default key.
 
 Returns a value handle.
+On error this returns 0 and sets errno.
+
+=head2 hivex_node_nr_values
+
+ size_t hivex_node_nr_values (hive_h *h, hive_node_h node);
+
+Return the number of (key, value) pairs attached to this node
+as produced by C<hivex_node_values>.
+
+Returns a size.
 On error this returns 0 and sets errno.
 
 =head2 hivex_value_key_len

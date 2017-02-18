@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2015 Red Hat Inc.
+ * Copyright (C) 2009-2017 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -311,6 +311,22 @@ PREINIT:
       RETVAL
 
 SV *
+node_nr_children (h, node)
+      hive_h *h;
+      int node;
+PREINIT:
+      /* hive_node_h = hive_value_h = size_t so we cheat
+         here to simplify the generator */
+      size_t r;
+   CODE:
+      r = hivex_node_nr_children (h, node);
+      if (r == 0)
+        croak ("%s: %s", "node_nr_children", strerror (errno));
+      RETVAL = newSViv (r);
+ OUTPUT:
+      RETVAL
+
+SV *
 node_parent (h, node)
       hive_h *h;
       int node;
@@ -356,6 +372,22 @@ PREINIT:
       r = hivex_node_get_value (h, node, key);
       if (r == 0)
         croak ("%s: %s", "node_get_value", strerror (errno));
+      RETVAL = newSViv (r);
+ OUTPUT:
+      RETVAL
+
+SV *
+node_nr_values (h, node)
+      hive_h *h;
+      int node;
+PREINIT:
+      /* hive_node_h = hive_value_h = size_t so we cheat
+         here to simplify the generator */
+      size_t r;
+   CODE:
+      r = hivex_node_nr_values (h, node);
+      if (r == 0)
+        croak ("%s: %s", "node_nr_values", strerror (errno));
       RETVAL = newSViv (r);
  OUTPUT:
       RETVAL

@@ -83,6 +83,7 @@ hivex_open (const char *filename, int flags)
   DEBUG (2, "created handle %p", h);
 
   h->writable = !!(flags & HIVEX_OPEN_WRITE);
+  h->unsafe = !!(flags & HIVEX_OPEN_UNSAFE);
   h->filename = strdup (filename);
   if (h->filename == NULL)
     goto error;
@@ -226,11 +227,42 @@ hivex_open (const char *filename, int flags)
         page->magic[1] != 'b' ||
         page->magic[2] != 'i' ||
         page->magic[3] != 'n') {
-      SET_ERRNO (ENOTSUP,
-                 "%s: trailing garbage at end of file "
-                 "(at 0x%zx, after %zu pages)",
-                 filename, off, pages);
-      goto error;
+
+      if (!h->unsafe) {
+        SET_ERRNO (ENOTSUP,
+                   "%s: trailing garbage at end of file "
+                   "(at 0x%zx, after %zu pages)",
+                   filename, off, pages);
+        goto error;
+      }
+
+      DEBUG (2,
+             "page not found at expected offset 0x%zx, "
+             "seeking until one is found or EOF is reached",
+             off);
+
+      int found = 0;
+      while (off < h->size) {
+        off += 0x1000;
+
+        if (off >= h->endpages)
+          break;
+
+        page = (struct ntreg_hbin_page *) ((char *) h->addr + off);
+        if (page->magic[0] == 'h' &&
+            page->magic[1] == 'b' &&
+            page->magic[2] == 'i' &&
+            page->magic[3] == 'n') {
+          DEBUG (2, "found next page by seeking at 0x%zx", off);
+          found = 1;
+          break;
+        }
+      }
+
+      if (!found) {
+        DEBUG (2, "page not found and end of pages section reached");
+        break;
+      }
     }
 
     size_t page_size = le32toh (page->page_size);
@@ -254,6 +286,16 @@ hivex_open (const char *filename, int flags)
       goto error;
     }
 
+    size_t page_offset = le32toh(page->offset_first) + 0x1000;
+
+    if (page_offset != off) {
+      SET_ERRNO (ENOTSUP,
+                 "%s: declared page offset (0x%zx) does not match computed "
+                 "offset (0x%zx), bad registry",
+                 filename, page_offset, off);
+      goto error;
+    }
+
     /* Read the blocks in this page. */
     size_t blkoff;
     struct ntreg_hbin_block *block;
@@ -270,11 +312,23 @@ hivex_open (const char *filename, int flags)
       block = (struct ntreg_hbin_block *) ((char *) h->addr + blkoff);
       int used;
       seg_len = block_len (h, blkoff, &used);
+/* https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78665 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
       if (seg_len <= 4 || (seg_len & 3) != 0) {
-        SET_ERRNO (ENOTSUP,
-                   "%s: block size %" PRIi32 " at 0x%zx, bad registry",
-                   filename, le32toh (block->seg_len), blkoff);
-        goto error;
+#pragma GCC diagnostic pop
+        if (is_root || !h->unsafe) {
+          SET_ERRNO (ENOTSUP,
+                     "%s, the block at 0x%zx has invalid size %" PRIi32
+                     ", bad registry",
+                     filename, blkoff, le32toh (block->seg_len));
+          goto error;
+        } else {
+          DEBUG (2,
+                 "%s: block at 0x%zx has invalid size %" PRIi32 ", skipping",
+                 filename, blkoff, le32toh (block->seg_len));
+          break;
+        }
       }
 
       if (h->msglvl >= 2) {
