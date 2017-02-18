@@ -67,6 +67,7 @@
 
 static int quit = 0;
 static int is_tty;
+static int unsafe = 0;
 static hive_h *h = NULL;
 static char *prompt_string = NULL; /* Normal prompt string. */
 static char *loaded = NULL;     /* Basename of loaded file, if any. */
@@ -97,7 +98,7 @@ static int cmd_setval (char *args);
 static void
 usage (void)
 {
-  fprintf (stderr, "hivexsh [-dfw] [hivefile]\n");
+  fprintf (stderr, "hivexsh [-dfwu] [hivefile]\n");
   exit (EXIT_FAILURE);
 }
 
@@ -115,7 +116,7 @@ main (int argc, char *argv[])
 
   set_prompt_string ();
 
-  while ((c = getopt (argc, argv, "df:w")) != EOF) {
+  while ((c = getopt (argc, argv, "df:wu")) != EOF) {
     switch (c) {
     case 'd':
       open_flags |= HIVEX_OPEN_DEBUG;
@@ -125,6 +126,10 @@ main (int argc, char *argv[])
       break;
     case 'w':
       open_flags |= HIVEX_OPEN_WRITE;
+      break;
+    case 'u':
+      open_flags |= HIVEX_OPEN_UNSAFE;
+      unsafe = 1;
       break;
     default:
       usage ();
@@ -775,6 +780,7 @@ cmd_lsval (char *key)
 
       hive_type t;
       size_t len;
+
       if (hivex_value_type (h, values[i], &t, &len) == -1)
         goto error;
 
@@ -783,8 +789,12 @@ cmd_lsval (char *key)
       case hive_t_expand_string:
       case hive_t_link: {
         char *str = hivex_value_string (h, values[i]);
-        if (!str)
-          goto error;
+        if (!str) {
+          if (unsafe)
+            continue;
+          else
+            goto error;
+        }
 
         if (t != hive_t_string)
           printf ("str(%u):", t);
@@ -817,8 +827,12 @@ cmd_lsval (char *key)
       default: {
         unsigned char *data =
           (unsigned char *) hivex_value_value (h, values[i], &t, &len);
-        if (!data)
-          goto error;
+        if (!data) {
+          if (unsafe)
+            continue;
+          else
+            goto error;
+        }
 
         printf ("hex(%u):", t);
         size_t j;
@@ -853,14 +867,14 @@ cmd_setval (char *nrvals_str)
   strtol_error xerr;
 
   /* Parse number of values. */
-  long nrvals;
-  xerr = xstrtol (nrvals_str, NULL, 0, &nrvals, "");
+  unsigned long nrvals;
+  xerr = xstrtoul (nrvals_str, NULL, 0, &nrvals, "");
   if (xerr != LONGINT_OK) {
     fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %u)\n"),
              "setval", "nrvals", "xstrtol", xerr);
     return -1;
   }
-  if (nrvals < 0 || nrvals > HIVEX_MAX_VALUES) {
+  if (nrvals > HIVEX_MAX_VALUES) {
     fprintf (stderr, _("%s: %s: integer out of range\n"),
              "setval", "nrvals");
     return -1;
@@ -878,7 +892,7 @@ cmd_setval (char *nrvals_str)
   /* Read nrvals * 2 lines of input, nrvals * (key, value) pairs, as
    * explained in the man page.
    */
-  int i, j;
+  size_t i, j;
   for (i = 0; i < nrvals; ++i) {
     /* Read key. */
     char *buf = rl_gets ("  key> ");
@@ -913,14 +927,14 @@ cmd_setval (char *nrvals_str)
     else if (STRPREFIX (buf, "string:")) {
       buf += 7;
       values[i].t = hive_t_string;
-      int nr_chars = strlen (buf);
+      size_t nr_chars = strlen (buf);
       values[i].len = 2 * (nr_chars + 1);
       values[i].value = malloc (values[i].len);
       if (!values[i].value) {
         perror ("malloc");
         exit (EXIT_FAILURE);
       }
-      for (j = 0; j <= /* sic */ nr_chars; ++j) {
+      for (j = 0; j < nr_chars + 1 /* sic */; ++j) {
         if (buf[j] & 0x80) {
           fprintf (stderr, _("hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"));
           goto error;
@@ -932,14 +946,14 @@ cmd_setval (char *nrvals_str)
     else if (STRPREFIX (buf, "expandstring:")) {
       buf += 13;
       values[i].t = hive_t_expand_string;
-      int nr_chars = strlen (buf);
+      size_t nr_chars = strlen (buf);
       values[i].len = 2 * (nr_chars + 1);
       values[i].value = malloc (values[i].len);
       if (!values[i].value) {
         perror ("malloc");
         exit (EXIT_FAILURE);
       }
-      for (j = 0; j <= /* sic */ nr_chars; ++j) {
+      for (j = 0; j < nr_chars + 1 /* sic */; ++j) {
         if (buf[j] & 0x80) {
           fprintf (stderr, _("hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"));
           goto error;

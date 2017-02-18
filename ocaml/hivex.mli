@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2015 Red Hat Inc.
+ * Copyright (C) 2009-2017 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -63,6 +63,7 @@ type open_flag =
   | OPEN_VERBOSE (** Verbose messages *)
   | OPEN_DEBUG (** Debug messages *)
   | OPEN_WRITE (** Enable writes to the hive *)
+  | OPEN_UNSAFE (** Enable heuristics to allow read/write of corrupted hives *)
 (** Open flags for {!open_file} call. *)
 
 type set_value = {
@@ -99,6 +100,9 @@ val node_children : t -> node -> node array
 val node_get_child : t -> node -> string -> node
 (** return named child of node *)
 
+val node_nr_children : t -> node -> int64
+(** return the number of children of a node *)
+
 val node_parent : t -> node -> node
 (** return the parent of node *)
 
@@ -107,6 +111,9 @@ val node_values : t -> node -> value array
 
 val node_get_value : t -> node -> string -> value
 (** return named key at node *)
+
+val node_nr_values : t -> node -> int64
+(** return the number of values attached to a node *)
 
 val value_key_len : t -> value -> int64
 (** return the length of a value's key *)

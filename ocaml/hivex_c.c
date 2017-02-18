@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2015 Red Hat Inc.
+ * Copyright (C) 2009-2017 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -343,6 +343,34 @@ ocaml_hivex_node_get_child (value hv, value nodev, value namev)
 }
 
 /* Automatically generated wrapper for function
+ * val node_nr_children : t -> node -> int64
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+CAMLprim value ocaml_hivex_node_nr_children (value hv, value nodev);
+
+CAMLprim value
+ocaml_hivex_node_nr_children (value hv, value nodev)
+{
+  CAMLparam2 (hv, nodev);
+  CAMLlocal1 (rv);
+
+  hive_h *h = Hiveh_val (hv);
+  if (h == NULL)
+    raise_closed ("node_nr_children");
+  hive_node_h node = Int_val (nodev);
+
+  size_t r;
+  r = hivex_node_nr_children (h, node);
+
+  if (r == 0)
+    raise_error ("node_nr_children");
+
+  rv = caml_copy_int64 (r);
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
  * val node_parent : t -> node -> node
  */
 
@@ -425,6 +453,34 @@ ocaml_hivex_node_get_value (value hv, value nodev, value keyv)
     raise_error ("node_get_value");
 
   rv = Val_int (r);
+  CAMLreturn (rv);
+}
+
+/* Automatically generated wrapper for function
+ * val node_nr_values : t -> node -> int64
+ */
+
+/* Emit prototype to appease gcc's -Wmissing-prototypes. */
+CAMLprim value ocaml_hivex_node_nr_values (value hv, value nodev);
+
+CAMLprim value
+ocaml_hivex_node_nr_values (value hv, value nodev)
+{
+  CAMLparam2 (hv, nodev);
+  CAMLlocal1 (rv);
+
+  hive_h *h = Hiveh_val (hv);
+  if (h == NULL)
+    raise_closed ("node_nr_values");
+  hive_node_h node = Int_val (nodev);
+
+  size_t r;
+  r = hivex_node_nr_values (h, node);
+
+  if (r == 0)
+    raise_error ("node_nr_values");
+
+  rv = caml_copy_int64 (r);
   CAMLreturn (rv);
 }
 

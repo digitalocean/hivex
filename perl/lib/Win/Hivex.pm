@@ -3,7 +3,7 @@
 #   generator/generator.ml
 # ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 #
-# Copyright (C) 2009-2015 Red Hat Inc.
+# Copyright (C) 2009-2017 Red Hat Inc.
 # Derived from code by Petter Nordahl-Hagen under a compatible license:
 #   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
 # Derived from code by Markus Stephany under a compatible license:
@@ -66,7 +66,8 @@ XSLoader::load ('Win::Hivex');
  $h = Win::Hivex->open ($filename,
                         [verbose => 1,]
                         [debug => 1,]
-                        [write => 1,])
+                        [write => 1,]
+                        [unsafe => 1,])
 
 Open a Windows Registry binary hive file.
 
@@ -94,6 +95,8 @@ sub open {
   $flags += 2 if $flags{debug};
   # Enable writes to the hive
   $flags += 4 if $flags{write};
+  # Enable heuristics to allow read/write of corrupted hives
+  $flags += 8 if $flags{unsafe};
 
   my $self = Win::Hivex::_open ($filename, $flags);
   bless $self, $class;
@@ -170,6 +173,14 @@ The name is matched case insensitively.
 
 This returns a node handle, or C<undef> if the node was not found.
 
+=item node_nr_children
+
+ $size = $h->node_nr_children ($node)
+
+Return the number of nodes as produced by C<node_children>.
+
+This returns a size.
+
 =item node_parent
 
  $node = $h->node_parent ($node)
@@ -205,6 +216,15 @@ inside hives that has no meaning and won't give you the
 default key.
 
 This returns a value handle.
+
+=item node_nr_values
+
+ $size = $h->node_nr_values ($node)
+
+Return the number of (key, value) pairs attached to this node
+as produced by C<node_values>.
+
+This returns a size.
 
 =item value_key_len
 
@@ -388,7 +408,7 @@ C<node> is the node to modify.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2009-2015 Red Hat Inc.
+Copyright (C) 2009-2017 Red Hat Inc.
 
 =head1 LICENSE
 

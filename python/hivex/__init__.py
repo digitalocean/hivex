@@ -3,7 +3,7 @@
 #   generator/generator.ml
 # ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
 #
-# Copyright (C) 2009-2015 Red Hat Inc.
+# Copyright (C) 2009-2017 Red Hat Inc.
 # Derived from code by Petter Nordahl-Hagen under a compatible license:
 #   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
 # Derived from code by Markus Stephany under a compatible license:
@@ -41,7 +41,7 @@ __version__ = libhivexmod.__version__
 class Hivex(object):
     """Instances of this class are hivex API handles."""
 
-    def __init__ (self, filename, verbose = False, debug = False, write = False):
+    def __init__ (self, filename, verbose = False, debug = False, write = False, unsafe = False):
         """Create a new hivex handle."""
         flags = 0
         # Verbose messages
@@ -50,6 +50,8 @@ class Hivex(object):
         if debug: flags += 2
         # Enable writes to the hive
         if write: flags += 4
+        # Enable heuristics to allow read/write of corrupted hives
+        if unsafe: flags += 8
         self._o = libhivexmod.open (filename, flags)
 
     def __del__ (self):
@@ -83,6 +85,10 @@ class Hivex(object):
         """return named child of node"""
         return libhivexmod.node_get_child (self._o, node, name)
 
+    def node_nr_children (self, node):
+        """return the number of children of a node"""
+        return libhivexmod.node_nr_children (self._o, node)
+
     def node_parent (self, node):
         """return the parent of node"""
         return libhivexmod.node_parent (self._o, node)
@@ -94,6 +100,10 @@ class Hivex(object):
     def node_get_value (self, node, key):
         """return named key at node"""
         return libhivexmod.node_get_value (self._o, node, key)
+
+    def node_nr_values (self, node):
+        """return the number of values attached to a node"""
+        return libhivexmod.node_nr_values (self._o, node)
 
     def value_key_len (self, val):
         """return the length of a value's key"""

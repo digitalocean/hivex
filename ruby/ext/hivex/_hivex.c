@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2015 Red Hat Inc.
+ * Copyright (C) 2009-2017 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -121,6 +121,14 @@ get_values (VALUE valuesv, size_t *nr_values)
  * read-only.
  * 
  * See "WRITING TO HIVE FILES" in hivex(3).
+ * 
+ * HIVEX_OPEN_UNSAFE
+ * Open the hive in unsafe mode that enables heuristics
+ * to handle corrupted hives.
+ * 
+ * This may allow to read or write registry keys/values
+ * that appear intact in an otherwise corrupted hive.
+ * Use at your own risk.
  *
  *
  * (For the C API documentation for this function, see
@@ -137,6 +145,8 @@ ruby_hivex_open (VALUE modulev, VALUE filenamev, VALUE flagsv)
     flags += 2;
   if (RTEST (rb_hash_lookup (flagsv, ID2SYM (rb_intern ("write")))))
     flags += 4;
+  if (RTEST (rb_hash_lookup (flagsv, ID2SYM (rb_intern ("unsafe")))))
+    flags += 8;
 
   hive_h *r;
 
@@ -457,6 +467,39 @@ ruby_hivex_node_get_child (VALUE hv, VALUE nodev, VALUE namev)
 
 /*
  * call-seq:
+ *   h.node_nr_children(node) -> integer
+ *
+ * return the number of children of a node
+ *
+ * Return the number of nodes as produced by
+ * "h.node_children".
+ *
+ *
+ * (For the C API documentation for this function, see
+ * +hivex_node_nr_children+[http://libguestfs.org/hivex.3.html#hivex_node_nr_children]).
+ */
+static VALUE
+ruby_hivex_node_nr_children (VALUE hv, VALUE nodev)
+{
+  hive_h *h;
+  Data_Get_Struct (hv, hive_h, h);
+  if (!h)
+    rb_raise (rb_eArgError, "%s: used handle after closing it",
+              "node_nr_children");
+  hive_node_h node = NUM2ULL (nodev);
+
+  size_t r;
+
+  r = hivex_node_nr_children (h, node);
+
+  if (r == 0)
+    rb_raise (e_Error, "%s", strerror (errno));
+
+  return ULL2NUM (r);
+}
+
+/*
+ * call-seq:
  *   h.node_parent(node) -> integer
  *
  * return the parent of node
@@ -565,6 +608,39 @@ ruby_hivex_node_get_value (VALUE hv, VALUE nodev, VALUE keyv)
   hive_value_h r;
 
   r = hivex_node_get_value (h, node, key);
+
+  if (r == 0)
+    rb_raise (e_Error, "%s", strerror (errno));
+
+  return ULL2NUM (r);
+}
+
+/*
+ * call-seq:
+ *   h.node_nr_values(node) -> integer
+ *
+ * return the number of values attached to a node
+ *
+ * Return the number of (key, value) pairs attached to this
+ * node as produced by "h.node_values".
+ *
+ *
+ * (For the C API documentation for this function, see
+ * +hivex_node_nr_values+[http://libguestfs.org/hivex.3.html#hivex_node_nr_values]).
+ */
+static VALUE
+ruby_hivex_node_nr_values (VALUE hv, VALUE nodev)
+{
+  hive_h *h;
+  Data_Get_Struct (hv, hive_h, h);
+  if (!h)
+    rb_raise (rb_eArgError, "%s: used handle after closing it",
+              "node_nr_values");
+  hive_node_h node = NUM2ULL (nodev);
+
+  size_t r;
+
+  r = hivex_node_nr_values (h, node);
 
   if (r == 0)
     rb_raise (e_Error, "%s", strerror (errno));
@@ -1234,12 +1310,16 @@ void Init__hivex ()
                     ruby_hivex_node_children, 1);
   rb_define_method (c_hivex, "node_get_child",
                     ruby_hivex_node_get_child, 2);
+  rb_define_method (c_hivex, "node_nr_children",
+                    ruby_hivex_node_nr_children, 1);
   rb_define_method (c_hivex, "node_parent",
                     ruby_hivex_node_parent, 1);
   rb_define_method (c_hivex, "node_values",
                     ruby_hivex_node_values, 1);
   rb_define_method (c_hivex, "node_get_value",
                     ruby_hivex_node_get_value, 2);
+  rb_define_method (c_hivex, "node_nr_values",
+                    ruby_hivex_node_nr_values, 1);
   rb_define_method (c_hivex, "value_key_len",
                     ruby_hivex_value_key_len, 1);
   rb_define_method (c_hivex, "value_key",

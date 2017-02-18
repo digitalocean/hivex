@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2015 Red Hat Inc.
+ * Copyright (C) 2009-2017 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -56,6 +56,7 @@ type open_flag =
   | OPEN_VERBOSE (** Verbose messages *)
   | OPEN_DEBUG (** Debug messages *)
   | OPEN_WRITE (** Enable writes to the hive *)
+  | OPEN_UNSAFE (** Enable heuristics to allow read/write of corrupted hives *)
 
 type set_value = {
   key : string;
@@ -72,9 +73,11 @@ external node_name_len : t -> node -> int64 = "ocaml_hivex_node_name_len"
 external node_timestamp : t -> node -> int64 = "ocaml_hivex_node_timestamp"
 external node_children : t -> node -> node array = "ocaml_hivex_node_children"
 external node_get_child : t -> node -> string -> node = "ocaml_hivex_node_get_child"
+external node_nr_children : t -> node -> int64 = "ocaml_hivex_node_nr_children"
 external node_parent : t -> node -> node = "ocaml_hivex_node_parent"
 external node_values : t -> node -> value array = "ocaml_hivex_node_values"
 external node_get_value : t -> node -> string -> value = "ocaml_hivex_node_get_value"
+external node_nr_values : t -> node -> int64 = "ocaml_hivex_node_nr_values"
 external value_key_len : t -> value -> int64 = "ocaml_hivex_value_key_len"
 external value_key : t -> value -> string = "ocaml_hivex_value_key"
 external value_type : t -> value -> hive_type * int = "ocaml_hivex_value_type"

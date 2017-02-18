@@ -18,7 +18,7 @@
 # major/minor/release must be numbers
 m4_define([hivex_major],   [1])
 m4_define([hivex_minor],   [3])
-m4_define([hivex_release], [13])
+m4_define([hivex_release], [14])
 # extra can be any string
 m4_define([hivex_extra],   [])
 
@@ -107,6 +107,10 @@ if test "$gl_gcc_warnings" = yes; then
   # False positives about our use of [1] for arbitrary length arrays
   # embedded in structs.
   gl_WARN_ADD([-Wno-array-bounds])
+
+  # This is a warning about GCC being unable to optimize a loop.  It
+  # is not a bug.
+  gl_WARN_ADD([-Wno-unsafe-loop-optimizations])
 
   gl_WARN_ADD([-fdiagnostics-show-option])
 

@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2015 Red Hat Inc.
+ * Copyright (C) 2009-2017 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -111,6 +111,8 @@ typedef enum hive_type hive_type;
 #define HIVEX_OPEN_DEBUG      2
   /* Enable writes to the hive */
 #define HIVEX_OPEN_WRITE      4
+  /* Enable heuristics to allow read/write of corrupted hives */
+#define HIVEX_OPEN_UNSAFE     8
 
 /* Array of (key, value) pairs passed to hivex_node_set_values. */
 struct hive_set_value {
@@ -131,9 +133,11 @@ extern size_t hivex_node_name_len (hive_h *h, hive_node_h node);
 extern int64_t hivex_node_timestamp (hive_h *h, hive_node_h node);
 extern hive_node_h *hivex_node_children (hive_h *h, hive_node_h node);
 extern hive_node_h hivex_node_get_child (hive_h *h, hive_node_h node, const char *name);
+extern size_t hivex_node_nr_children (hive_h *h, hive_node_h node);
 extern hive_node_h hivex_node_parent (hive_h *h, hive_node_h node);
 extern hive_value_h *hivex_node_values (hive_h *h, hive_node_h node);
 extern hive_value_h hivex_node_get_value (hive_h *h, hive_node_h node, const char *key);
+extern size_t hivex_node_nr_values (hive_h *h, hive_node_h node);
 extern size_t hivex_value_key_len (hive_h *h, hive_value_h val);
 extern char *hivex_value_key (hive_h *h, hive_value_h val);
 extern int hivex_value_type (hive_h *h, hive_value_h val, hive_type *t, size_t *len);

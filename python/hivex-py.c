@@ -3,7 +3,7 @@
  *   generator/generator.ml
  * ANY CHANGES YOU MAKE TO THIS FILE WILL BE LOST.
  *
- * Copyright (C) 2009-2015 Red Hat Inc.
+ * Copyright (C) 2009-2017 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -462,6 +462,29 @@ py_hivex_node_get_child (PyObject *self, PyObject *args)
 }
 
 static PyObject *
+py_hivex_node_nr_children (PyObject *self, PyObject *args)
+{
+  PyObject *py_r;
+  size_t r;
+  hive_h *h;
+  PyObject *py_h;
+  long node;
+
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_node_nr_children", &py_h, &node))
+    return NULL;
+  h = get_handle (py_h);
+  r = hivex_node_nr_children (h, node);
+  if (r == 0) {
+    PyErr_SetString (PyExc_RuntimeError,
+                     strerror (errno));
+    return NULL;
+  }
+
+  py_r = PyLong_FromLongLong (r);
+  return py_r;
+}
+
+static PyObject *
 py_hivex_node_parent (PyObject *self, PyObject *args)
 {
   PyObject *py_r;
@@ -522,6 +545,29 @@ py_hivex_node_get_value (PyObject *self, PyObject *args)
     return NULL;
   h = get_handle (py_h);
   r = hivex_node_get_value (h, node, key);
+  if (r == 0) {
+    PyErr_SetString (PyExc_RuntimeError,
+                     strerror (errno));
+    return NULL;
+  }
+
+  py_r = PyLong_FromLongLong (r);
+  return py_r;
+}
+
+static PyObject *
+py_hivex_node_nr_values (PyObject *self, PyObject *args)
+{
+  PyObject *py_r;
+  size_t r;
+  hive_h *h;
+  PyObject *py_h;
+  long node;
+
+  if (!PyArg_ParseTuple (args, (char *) "Ol:hivex_node_nr_values", &py_h, &node))
+    return NULL;
+  h = get_handle (py_h);
+  r = hivex_node_nr_values (h, node);
   if (r == 0) {
     PyErr_SetString (PyExc_RuntimeError,
                      strerror (errno));
@@ -935,9 +981,11 @@ static PyMethodDef methods[] = {
   { (char *) "node_timestamp", py_hivex_node_timestamp, METH_VARARGS, NULL },
   { (char *) "node_children", py_hivex_node_children, METH_VARARGS, NULL },
   { (char *) "node_get_child", py_hivex_node_get_child, METH_VARARGS, NULL },
+  { (char *) "node_nr_children", py_hivex_node_nr_children, METH_VARARGS, NULL },
   { (char *) "node_parent", py_hivex_node_parent, METH_VARARGS, NULL },
   { (char *) "node_values", py_hivex_node_values, METH_VARARGS, NULL },
   { (char *) "node_get_value", py_hivex_node_get_value, METH_VARARGS, NULL },
+  { (char *) "node_nr_values", py_hivex_node_nr_values, METH_VARARGS, NULL },
   { (char *) "value_key_len", py_hivex_value_key_len, METH_VARARGS, NULL },
   { (char *) "value_key", py_hivex_value_key, METH_VARARGS, NULL },
   { (char *) "value_type", py_hivex_value_type, METH_VARARGS, NULL },
