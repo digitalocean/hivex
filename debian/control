@@ -98,7 +98,7 @@ Description: OCaml bindings for hivex -- development files
  Windows Registry "hive" binary files.
  .
  This package contains all the files needed to develop OCaml programs
- wich use OCaml bindings to libhivex.
+ which use OCaml bindings to libhivex.
 
 Package: python-hivex
 Architecture: any
