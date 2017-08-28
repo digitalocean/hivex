@@ -45,17 +45,6 @@ Description: library for reading and writing Windows Registry hives
  .
  This package provides static libraries and header files.
 
-Package: libhivex0-dbg
-Section: debug
-Architecture: any
-Multi-Arch: same
-Depends: libhivex0, ${shlibs:Depends}, ${misc:Depends}
-Description: library for reading and writing Windows Registry hives
- libhivex is a self-contained library for reading and writing Windows
- Registry "hive" binary files.
- .
- This package contains debug symbols for libhivex.
-
 Package: libhivex-bin
 Section: otherosfs
 Architecture: any

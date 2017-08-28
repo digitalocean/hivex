@@ -81,8 +81,5 @@ override_dh_auto_clean:
 		dh_auto_clean --builddir=$(CURDIR)/debian/build-$$p ; \
 	done
 
-override_dh_strip:
-	dh_strip --dbg-package=libhivex0-dbg
-
 override_dh_install:
 	dh_install --fail-missing -X.la -X.so.owner
