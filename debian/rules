@@ -17,7 +17,7 @@ RUBY_DEFAULT   := $(shell which ruby | xargs readlink -f | xargs basename)
 %:
 	dh $@ \
 		--without python-support \
-		--with autoreconf,ocaml,python2,python3,ruby
+		--with ocaml,python2,python3,ruby
 
 override_dh_auto_configure:
 	dh_auto_configure --builddir=$(CURDIR)/debian/build-default \
