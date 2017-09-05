@@ -1,0 +1,32 @@
+From: Hilko Bengen <bengen@debian.org>
+Date: Tue, 5 Sep 2017 23:17:23 +0200
+Subject: run.in: Quote contents of @VAR@ substitutions
+
+---
+ run.in | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/run.in b/run.in
+index 0d10983..0f23a7c 100755
+--- a/run.in
++++ b/run.in
+@@ -62,7 +62,7 @@ export PERL_VALGRIND=1
+ export PERL_DESTRUCT_LEVEL=2
+ 
+ # For Python.
+-export PYTHON=@PYTHON@
++export PYTHON="@PYTHON@"
+ if [ -z "$PYTHONPATH" ]; then
+     PYTHONPATH="$s/python:$b/python:$b/python/.libs"
+ else
+@@ -71,8 +71,8 @@ fi
+ export PYTHONPATH
+ 
+ # For Ruby.
+-export RUBY=@RUBY@
+-export RAKE=@RAKE@
++export RUBY="@RUBY@"
++export RAKE="@RAKE@"
+ if [ -z "$RUBYLIB" ]; then
+     RUBYLIB="$s/ruby/lib:$b/ruby/ext/hivex"
+ else
