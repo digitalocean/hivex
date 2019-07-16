@@ -1,95 +1,41 @@
 #!/usr/bin/make -f
-# -*- makefile -*-
 
-# Notes
-# -----
-#
-# - Bindings for all available Ruby and Python versions (as determined
-#   in RUBY_VERSIONS, PYTHON_VERSIONS, respectively) are built, using
-#   the minimum number of configure/make/make test/install cycles
-#   (BUILD_COUNT, BUILDS). Builds are performed out-of-tree, in
-#   directories debian/build-1, debian/build-2, etc..
-#
-# - Targets for individual builds are generated in GNU Make on the
-#   fly, by evaluating expansions of the `DH_AUTO_TEMPLATE' variable
-#   multiple times. (See the foreach loop below the variable
-#   definition.) Multiple recipies for the `override_dh_auto_clean'
-#   target as well as multiple prerequisites for the
-#   `override_dh_auto_{configure,build,test}' targets are defined.
-#   Only the last build contains the full feature set (including Perl
-#   and OCaml bindings).
-#
-# - Running `debian/rules output_template' can be used to inspect the
-#   targets that have been generated using `DH_AUTO_TEMPLATE'.
+# -*- makefile -*-
 
 #export DH_VERBOSE=1
 
 include /usr/share/dpkg/pkg-info.mk
 
-PYTHON_VERSIONS := $(shell pyversions --installed; py3versions --installed)
-RUBY_VERSIONS   := $(shell find /usr/bin/ -name 'ruby[12]*' \
-			| xargs -n1 readlink -f | xargs -n1 basename)
-
-# Determine the number of builds needed due to script language version
-# variants
-BUILD_COUNT := $(lastword $(sort $(foreach lang,PYTHON RUBY,$(words $($(lang)_VERSIONS)))))
-BUILDS := $(foreach n,$(wordlist 1,$(BUILD_COUNT),1 2 3 4 5 6 7 8 9),$(n))
-
-# Template for generating dh_{clean,configure,build,test} overrides.
-# $1 is replaced with the build number.
-define DH_AUTO_TEMPLATE
 override_dh_auto_clean::
-	dh_auto_clean --builddir=$(CURDIR)/debian/build-$1
+	dh_auto_clean --builddir=$(CURDIR)/debian/build
 
-$(CURDIR)/debian/build-$1/config.status:
-	dh_auto_configure --builddir=$(CURDIR)/debian/build-$1 \
-		-- \
-		$(if $(findstring $1,$(BUILD_COUNT)),\
-			,\
-			--disable-ocaml --disable-perl )\
-		$(if $(word $1,$(RUBY_VERSIONS)),\
-			RUBY=$(word $1,$(RUBY_VERSIONS)) \
-			RAKE="$(word $1,$(RUBY_VERSIONS)) -S rake" \
-			,\
-			--disable-ruby) \
-		$(if $(word $1,$(PYTHON_VERSIONS)),\
-			PYTHON=$(word $1,$(PYTHON_VERSIONS)) \
-			,\
-			--disable-python)
+$(CURDIR)/debian/build/config.status:
+	dh_auto_configure --builddir=$(CURDIR)/debian/build \
+		-- --enable-ocaml --disable-python --disable-perl --disable-ruby
 
-override_dh_auto_configure: $(CURDIR)/debian/build-$1/config.status
+override_dh_auto_configure: $(CURDIR)/debian/build/config.status
 
-$(CURDIR)/debian/build-$1/build-stamp:
-	dh_auto_build --builddir=$(CURDIR)/debian/build-$1 \
-		-- INSTALLDIRS=vendor LD_RUN_PATH=""
-	touch $$@
+$(CURDIR)/debian/build/build-stamp:
+	dh_auto_build --builddir=$(CURDIR)/debian/build \
+		-- LD_RUN_PATH=""
+	touch $@
 
-override_dh_auto_build: $(CURDIR)/debian/build-$1/build-stamp
+override_dh_auto_build: $(CURDIR)/debian/build/build-stamp
 
-$(CURDIR)/debian/build-$1/test-stamp:
-	dh_auto_test --builddir=$(CURDIR)/debian/build-$1
-	touch $$@
+$(CURDIR)/debian/build/test-stamp:
+	dh_auto_test --builddir=$(CURDIR)/debian/build
+	touch $@
 
-override_dh_auto_test: $(CURDIR)/debian/build-$1/test-stamp
-
-endef
-
-$(foreach build,$(BUILDS),$(eval $(call DH_AUTO_TEMPLATE,$(build))))
-
-output_template:
-	$(foreach build,$(BUILDS),$(info $(call DH_AUTO_TEMPLATE,$(build))))
+override_dh_auto_test: $(CURDIR)/debian/build/test-stamp
 
 override_dh_auto_install:
-	for build in $(BUILDS); do \
-		dh_auto_install --builddir=$(CURDIR)/debian/build-$$build \
-			-- INSTALLDIRS=vendor; \
-	done
+	dh_auto_install --builddir=$(CURDIR)/debian/build \
 
 %:
 	dh $@ \
 		--buildsystem=autoconf \
 		--without python-support \
-		--with ocaml,python2,python3,ruby
+		--with ocaml
 
 override_dh_install:
 	dh_install --fail-missing -X.la -X.so.owner

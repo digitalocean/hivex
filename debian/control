@@ -3,13 +3,13 @@ Section: libs
 Priority: extra
 Maintainer: Debian Libvirt Maintainers <pkg-libvirt-maintainers@lists.alioth.debian.org>
 Uploaders: Hilko Bengen <bengen@debian.org>
-Build-Depends: debhelper (>= 10~),
+Build-Depends: debhelper (>= 9~),
  autopoint,
  pkg-config,
  libxml2-dev,
  libreadline-dev,
  libio-stringy-perl,
- ocaml-findlib, dh-ocaml (>= 0.9~), ocaml-nox (>= 3.11.1-3~),
+ ocaml-findlib, dh-ocaml (>= 0.9~), ocaml-nox  (>= 4.02.3~),
  python-all-dev, python3-all-dev,
  gem2deb, rake,
 Standards-Version: 4.1.2
@@ -55,17 +55,6 @@ Description: utilities for reading and writing Windows Registry hives
  .
  This package contains a few command line programs that utilize libhivex.
 
-Package: libwin-hivex-perl
-Section: perl
-Architecture: any
-Depends: ${perl:Depends}, ${shlibs:Depends}, ${misc:Depends}
-Description: Perl bindings to hivex
- Perl bindings for libhivex, a library for reading and writing
- Windows Registry "hive" binary files.
- .
- This package also contains hivexregedit, a low-level command-line
- tool for manipulating and dumping registry hives.
-
 Package: libhivex-ocaml
 Architecture: any
 Section: ocaml
@@ -88,30 +77,3 @@ Description: OCaml bindings for hivex -- development files
  .
  This package contains all the files needed to develop OCaml programs
  which use OCaml bindings to libhivex.
-
-Package: python-hivex
-Architecture: any
-Section: python
-Depends: ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
-Description: Python bindings for hivex
- Python bindings for libhivex, a library for reading and writing
- Windows Registry "hive" binary files.
-
-Package: python3-hivex
-Architecture: any
-Section: python
-Breaks: python-hivex (<< 1.3.7-5~)
-Depends: ${python3:Depends}, ${shlibs:Depends}, ${misc:Depends}
-Description: Python 3 bindings for hivex
- Python 3 bindings for libhivex, a library for reading and writing
- Windows Registry "hive" binary files.
-
-Package: ruby-hivex
-Architecture: any
-Multi-Arch: same
-Section: ruby
-XB-Ruby-Versions: ${ruby:Versions}
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Ruby bindings for hivex
- Ruby bindings for libhivex, a library for reading and writing
- Windows Registry "hive" binary files.

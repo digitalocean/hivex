@@ -1,3 +1,10 @@
+hivex (1.3.14-4digitalocean0) trusty; urgency=low
+
+  * Re-build for Trusty
+  * Only ocaml bindings
+
+ -- Andrew James <ajames@digitalocean.com>  Fri, 19 Jul 2019 23:38:42 -0600
+
 hivex (1.3.14-4) unstable; urgency=medium
 
   * Reduce number of configure/make/install runs
