@@ -1,0 +1,62 @@
+This package can be built with ghgbpsb (an sbuild wrapper). To do so:
+
+Install ghgbpsb:
+  If your system has the packagecloud/systems-eng mirror added:
+
+    # apt install ghgbpsb
+
+  If your system does not have the packagecloud/systems-eng mirror added:
+
+    Install the depencencies manually:
+
+    # apt install sbuild git-buildpackage debhelper dh-autoreconf
+
+    Then either get the package file from Spaces
+    (systems-builds.sfo2.digitaloceanspaces.com/ghgbpsb/ghgbpsb_0.17-1_all.deb)
+    or from stage2-jump 
+    (scp stage2-jump.internal.digitalocean.com:/home/ajames/ghgbpsb_0.17-1_all.deb .).
+    Then install it:
+
+      # dpkg -i ghgbpsb_0.17-1_all.deb
+
+    Alternatively, ghgbpsb can be executed from it's source directory:
+
+      $ git clone git@github.com:digitalocean/ghgbpsb.git -b digitalocean
+      $ cd ghgbpsb
+      $ export QUILT_PATCHES=debian/patches; quilt push -a
+
+There are instructions for the rest of this in the ghgbpsb man page but for
+this use case, here's the summary (adjust paths if the source install method
+was chosen above):
+
+Set up ghgbpsb:
+
+    # sbuild-adduser <your normal user>
+    # cp /usr/share/doc/ghgbpsb/examples/sudoers-nopasswd /etc/sudoers.d/ghgbpsb
+
+After this, <your normal user> will need to log in again for their processes to
+be in the new group.
+
+Set up a dependency repository:
+  Get the following from Bionic:
+    libfindlib-ocaml_1.5.5-2build1_amd64.deb
+    libfindlib-ocaml-dev_1.5.5-2build1_amd64.deb
+    ocaml-findlib_1.5.5-2build1_amd64.deb
+  
+  Build the do/trusty branches of these projects:
+    ocaml
+
+  Place all these deb files in a directory and then:
+    $ aptly publish drop trusty; aptly repo drop libguestfs-build; aptly repo create libguestfs-build; aptly repo add libguestfs-build <your chosen repo direcory>/*deb; aptly publish repo -distribution=trusty -gpg-key=<id of your gpg key> libguestfs-build; aptly serve &
+
+Use ghgbpsb:
+  Create a build tag. An example tag message is provided but it is always safe
+  to copy the message from the last production release.
+
+    $ cd hivex
+    $ git tag exampletag -m 'distribution=trusty; archive_components="main,universe"; extra_repository="deb http://127.0.0.1:8080/ trusty main"; extra_repository_key="<path to your public gpg key>"; DEB_BUILD_OPTIONS="reproducible=+all"'
+
+  Build the tag:
+
+    $ cd ..
+    $ ghgbpsb hivex exampletag
